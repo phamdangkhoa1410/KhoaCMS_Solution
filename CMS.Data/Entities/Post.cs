@@ -16,7 +16,7 @@ namespace CMS.Data.Entities
     public class Post
     {
         public int Id { get; set; }
-        public string Title { get; set; } // Tiêu đề bài viết
+        public string Title { get; set; } // Tiêu đề bài viếttttttt
         public string Content { get; set; } // Nội dung chi tiết
         public string ImageUrl { get; set; } // Hình ảnh đại diện
         public DateTime CreatedDate { get; set; } = DateTime.Now;
