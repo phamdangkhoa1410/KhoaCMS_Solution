@@ -1,44 +1,76 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CMS.Data.Entities; // Sử dụng đúng namespace entity của bạn
-using System.Collections.Generic;
-using System;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using CMS.Data;
+using CMS.Data.Entities;
+using System.Linq;
 
 namespace CMS.Backend.Controllers
 {
     public class PostController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public PostController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // 1. DANH SÁCH BÀI VIẾT
         public IActionResult Index()
         {
-            // Tạo danh sách dữ liệu giả (Mock Data) theo yêu cầu thử thách
-            var posts = new List<Post>
-            {
-                new Post
-                {
-                    Id = 1,
-                    Title = "Lộ trình học ASP.NET Core cho người mới",
-                    Content = "Nội dung bài viết về lộ trình học .NET Core từ cơ bản đến nâng cao...",
-                    ImageUrl = "https://via.placeholder.com/300x150",
-                    CreatedDate = new DateTime(2026, 4, 7)
-                },
-                new Post
-                {
-                    Id = 2,
-                    Title = "ReactJS và WebAPI: Xu hướng Fullstack 2026",
-                    Content = "Nội dung bài viết về sự kết hợp mạnh mẽ giữa React và ASP.NET Web API...",
-                    ImageUrl = "https://via.placeholder.com/300x150",
-                    CreatedDate = new DateTime(2026, 4, 6)
-                },
-                new Post
-                {
-                    Id = 3,
-                    Title = "Hướng dẫn cài đặt môi trường Visual Studio",
-                    Content = "Các bước cài đặt công cụ cần thiết để bắt đầu lập trình C# và .NET...",
-                    ImageUrl = "https://via.placeholder.com/300x150",
-                    CreatedDate = new DateTime(2026, 4, 5)
-                }
-            };
+            // Include Category để hiển thị tên danh mục thay vì chỉ hiển thị ID
+            var data = _context.Posts.Include(p => p.Category).ToList();
+            return View(data);
+        }
 
-            return View(posts);
+        // 2. THÊM MỚI (Giao diện)
+        public IActionResult Create()
+        {
+            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
+            return View();
+        }
+
+        // 2. THÊM MỚI (Xử lý lưu)
+        [HttpPost]
+        public IActionResult Create(Post post)
+        {
+            // Mặc định ngày tạo là hiện tại
+            post.CreatedDate = DateTime.Now;
+            _context.Posts.Add(post);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // 3. CHỈNH SỬA (Giao diện)
+        public IActionResult Edit(int id)
+        {
+            var post = _context.Posts.Find(id);
+            if (post == null) return NotFound();
+
+            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", post.CategoryId);
+            return View(post);
+        }
+
+        // 3. CHỈNH SỬA (Xử lý cập nhật)
+        [HttpPost]
+        public IActionResult Edit(Post post)
+        {
+            _context.Update(post);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // 4. XÓA
+        public IActionResult Delete(int id)
+        {
+            var post = _context.Posts.Find(id);
+            if (post != null)
+            {
+                _context.Posts.Remove(post);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
         }
     }
 }

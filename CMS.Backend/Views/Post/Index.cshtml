@@ -1,48 +1,67 @@
-﻿@using CMS.Data.Entities
-@model IEnumerable<Post>
+﻿@model IEnumerable<CMS.Data.Entities.Post>
 
 @{
     ViewData["Title"] = "Quản lý bài viết";
 }
 
-<div class="container mt-4">
-    <!-- Tiêu đề đỏ, in hoa giống image_b09c1e.png -->
-    <h2 class="text-danger text-uppercase fw-bold mb-4">DANH SÁCH BÀI VIẾT MỚI NHẤT</h2>
+<div class="container pb-5">
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <h2 class="text-primary fw-bold"><i class="bi bi-file-earmark-richtext me-2"></i>DANH SÁCH BÀI VIẾT</h2>
+        <a asp-action="Create" class="btn btn-success shadow-sm px-4">
+            <i class="bi bi-plus-lg"></i> VIẾT BÀI MỚI
+        </a>
+    </div>
 
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm border-0" style="border: 1px solid #eee !important;">
-                    <!-- Ảnh Thumbnail -->
-                    <img src="@item.ImageUrl" class="card-img-top" alt="Thumbnail">
-
-                    <div class="card-body">
-                        <!-- Tiêu đề bài viết màu xanh -->
-                        <h5 class="card-title text-primary fw-bold" style="font-size: 1.1rem;">@item.Title</h5>
-
-                        <!-- Nội dung tóm tắt -->
-                        <p class="card-text text-muted" style="font-size: 0.9rem;">
-                            @if (item.Content.Length > 50)
+    <div class="table-responsive mt-4 bg-white p-3 rounded shadow-sm border">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark text-uppercase small">
+                <tr>
+                    <th class="text-center" style="width: 70px;">ID</th>
+                    <th style="width: 120px;">Ảnh</th>
+                    <th>Tiêu đề bài viết</th>
+                    <th>Danh mục</th>
+                    <th>Ngày đăng</th>
+                    <th class="text-center" style="width: 150px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center"><span class="badge bg-light text-dark border">#@item.Id</span></td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
                             {
-                                @(item.Content.Substring(0, 50) + "...")
+                                <img src="@item.ImageUrl" style="width:100px; height:60px; object-fit:cover;" class="rounded border" />
                             }
                             else
                             {
-                                @item.Content
+                                <div class="bg-light text-center rounded border pt-2" style="width:100px; height:60px;">
+                                    <i class="bi bi-image text-muted"></i>
+                                </div>
                             }
-                        </p>
-
-                        <!-- Ngày đăng -->
-                        <p class="card-text">
-                            <small class="text-secondary">Ngày đăng: @item.CreatedDate.ToString("dd/MM/yyyy")</small>
-                        </p>
-
-                        <!-- Nút xem chi tiết -->
-                        <a href="#" class="btn btn-outline-primary btn-sm px-3">Xem chi tiết</a>
-                    </div>
-                </div>
-            </div>
-        }
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">@item.Title</div>
+                            <small class="text-muted text-truncate d-block" style="max-width: 300px;">@item.Content</small>
+                        </td>
+                        <td><span class="badge bg-info text-dark">@(item.Category?.Name ?? "Chưa phân loại")</span></td>
+                        <td class="small">@item.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   onclick="return confirm('Khoa có chắc muốn xóa bài này không?')"
+                                   class="btn btn-sm btn-outline-danger" title="Xóa">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

@@ -5,107 +5,136 @@
 }
 
 <style>
-    /* Custom CSS để bảng trông xịn hơn */
+    /* Container chính */
     .table-container {
         background: #ffffff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        margin-top: 20px;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        margin-top: 25px;
     }
 
+    /* Định dạng bảng */
     .table thead {
-        background-color: #0d6efd; /* Màu xanh Primary */
+        background: linear-gradient(45deg, #0d6efd, #004dbb);
         color: white;
     }
 
-    .table thead th {
-        border: none;
-        padding: 15px;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-    }
+        .table thead th {
+            border: none;
+            padding: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
 
     .table tbody tr {
-        transition: all 0.3s ease;
+        transition: all 0.2s ease-in-out;
     }
 
-    /* Hiệu ứng khi di chuột qua hàng */
-    .table tbody tr:hover {
-        background-color: #f8f9fa;
-        transform: scale(1.005);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
+        .table tbody tr:hover {
+            background-color: #fbfcfe;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
 
     .table td {
-        padding: 12px 15px;
+        padding: 15px;
         vertical-align: middle;
-        border-color: #f1f1f1;
+        border-bottom: 1px solid #f1f1f1;
     }
 
+    /* Badge cho ID */
     .badge-id {
-        background-color: #e9ecef;
-        color: #495057;
-        padding: 5px 10px;
-        border-radius: 6px;
-        font-weight: bold;
+        background-color: #f0f2f5;
+        color: #555;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* Hiệu ứng nút bấm */
+    .btn-action {
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        transition: 0.3s;
     }
 </style>
 
-<div class="container">
-    <div class="d-flex justify-content-between align-items-center mt-4">
-        <h2 class="text-primary fw-bold m-0">
-            <i class="bi bi-grid-3x3-gap-fill me-2"></i>DANH SÁCH DANH MỤC
-        </h2>
-        <button class="btn btn-success shadow-sm">
-            <i class="bi bi-plus-lg"></i> Thêm mới
-        </button>
+<div class="container pb-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mt-4 px-2">
+        <div>
+            <h2 class="text-primary fw-bold m-0">
+                <i class="bi bi-grid-3x3-gap-fill me-2"></i>DANH SÁCH DANH MỤC
+            </h2>
+            <p class="text-muted small mb-0">Quản lý các loại tin tức và sản phẩm trong hệ thống</p>
+        </div>
+        <a asp-action="Create" class="btn btn-success shadow-sm px-4 py-2 fw-bold">
+            <i class="bi bi-plus-lg me-1"></i> THÊM MỚI
+        </a>
     </div>
 
+    <!-- Bảng dữ liệu -->
     <div class="table-container">
-        <table class="table table-hover">
+        <table class="table table-borderless">
             <thead>
                 <tr>
-                    <th class="text-center" style="width: 80px;">ID</th>
+                    <th class="text-center" style="width: 100px;">Mã số</th>
                     <th>Tên danh mục</th>
                     <th>Mô tả chi tiết</th>
-                    <th class="text-center" style="width: 150px;">Thao tác</th>
+                    <th class="text-center" style="width: 200px;">Hành động</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                <span class="badge-id">#@item.Id</span>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-dark fs-6">@item.Name</span>
+                            </td>
+                            <td>
+                                <span class="text-muted d-inline-block text-truncate" style="max-width: 400px;">
+                                    @(string.IsNullOrEmpty(item.Description) ? "Không có mô tả" : item.Description)
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group shadow-sm">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-outline-primary btn-action" title="Chỉnh sửa">
+                                        <i class="bi bi-pencil-square"></i> Sửa
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       onclick="return confirm('Khoa có chắc muốn xóa danh mục này không?')"
+                                       class="btn btn-sm btn-outline-danger btn-action" title="Xóa bỏ">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td class="text-center">
-                            <span class="badge-id">@item.Id</span>
-                        </td>
-                        <td>
-                            <span class="fw-bold text-dark">@item.Name</span>
-                        </td>
-                        <td class="text-muted">
-                            @item.Description
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group" role="group">
-                                <a href="#" class="btn btn-sm btn-outline-primary" title="Sửa">
-                                    <i class="bi bi-pencil-square"></i> Sửa
-                                </a>
-                                <a href="#" class="btn btn-sm btn-outline-danger" title="Xóa">
-                                    <i class="bi bi-trash"></i> Xóa
-                                </a>
+                        <td colspan="4" class="text-center py-5">
+                            <div class="py-4">
+                                <i class="bi bi-database-exclamation text-warning display-4"></i>
+                                <p class="mt-3 text-muted fs-5">Hiện tại chưa có dữ liệu nào trong Database!</p>
+                                <a asp-action="Create" class="btn btn-primary mt-2">Thêm dữ liệu ngay</a>
                             </div>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-
-        @if (!Model.Any())
-        {
-            <div class="text-center py-5">
-                <p class="text-muted italic">Chưa có dữ liệu danh mục nào để hiển thị.</p>
-            </div>
-        }
     </div>
 </div>

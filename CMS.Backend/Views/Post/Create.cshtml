@@ -1,0 +1,55 @@
+﻿@model CMS.Data.Entities.Post
+
+@{
+    ViewData["Title"] = "Tạo bài viết mới";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow border-0">
+                <div class="card-header bg-success text-white py-3">
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>SOẠN THẢO BÀI VIẾT</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        <div class="row">
+                            <div class="col-md-8 border-end">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Tiêu đề</label>
+                                    <input asp-for="Title" class="form-control form-control-lg" placeholder="Nhập tiêu đề hấp dẫn..." required />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Nội dung chi tiết</label>
+                                    <textarea asp-for="Content" class="form-control" rows="12" placeholder="Nội dung bài viết viết tại đây..."></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-primary">Danh mục bài viết</label>
+                                    <select asp-for="CategoryId" class="form-select shadow-sm" asp-items="ViewBag.Categories">
+                                        <option value="">-- Chọn danh mục --</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-primary">Link hình ảnh đại diện</label>
+                                    <input asp-for="ImageUrl" class="form-control" placeholder="Dán link ảnh (https://...)" />
+                                    <div class="form-text">Bạn có thể dùng link ảnh từ mạng để hiển thị.</div>
+                                </div>
+                                <hr />
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg fw-bold shadow-sm">
+                                        <i class="bi bi-send-fill me-1"></i> ĐĂNG BÀI
+                                    </button>
+                                    <a asp-action="Index" class="btn btn-outline-secondary">
+                                        <i class="bi bi-x-circle me-1"></i> HỦY BỎ
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

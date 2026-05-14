@@ -1,0 +1,40 @@
+﻿@model CMS.Data.Entities.User
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-dark text-white py-3 text-center">
+                    <h4 class="mb-0 fw-bold">TẠO TÀI KHOẢN MỚI</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên đăng nhập (Username)</label>
+                            <input asp-for="Username" class="form-control" placeholder="Ví dụ: khoapham" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mật khẩu</label>
+                            <input asp-for="PasswordHash" type="password" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Họ và tên</label>
+                            <input asp-for="FullName" class="form-control" placeholder="Phạm Đăng Khoa" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Vai trò hệ thống</label>
+                            <select asp-for="Role" class="form-select">
+                                <option value="Biên tập viên">Biên tập viên</option>
+                                <option value="Quản trị viên">Quản trị viên</option>
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">XÁC NHẬN TẠO</button>
+                            <a asp-action="Index" class="btn btn-light border">QUAY LẠI</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
