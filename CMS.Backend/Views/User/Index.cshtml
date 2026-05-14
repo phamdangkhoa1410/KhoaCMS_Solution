@@ -1,0 +1,55 @@
+﻿@using CMS.Data.Entities
+@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold text-uppercase">Danh sách người dùng hệ thống</h2>
+        <button class="btn btn-success shadow-sm">
+            <i class="bi bi-person-plus-fill me-1"></i> Thêm người dùng
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="ps-4">ID</th>
+                        <th>Tài khoản</th>
+                        <th>Họ và tên</th>
+                        <th>Vai trò</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted">#@user.Id</td>
+                            <td class="fw-bold">@user.Username</td>
+                            <td>@user.FullName</td>
+                            <td>
+                                @if (user.Role == "Quản trị viên")
+                                {
+                                    <span class="badge bg-danger">@user.Role</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info text-dark">@user.Role</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,19 +1,111 @@
 ﻿@model IEnumerable<CMS.Data.Entities.Category>
 
-<h2 class="text-primary">DANH SÁCH DANH MỤC (DỮ LIỆU MẪU)</h2>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th> <th>Tên danh mục</th> <th>Mô tả</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-            </tr>
+@{
+    ViewData["Title"] = "Quản lý danh mục";
+}
+
+<style>
+    /* Custom CSS để bảng trông xịn hơn */
+    .table-container {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-top: 20px;
+    }
+
+    .table thead {
+        background-color: #0d6efd; /* Màu xanh Primary */
+        color: white;
+    }
+
+    .table thead th {
+        border: none;
+        padding: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    /* Hiệu ứng khi di chuột qua hàng */
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.005);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .table td {
+        padding: 12px 15px;
+        vertical-align: middle;
+        border-color: #f1f1f1;
+    }
+
+    .badge-id {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <h2 class="text-primary fw-bold m-0">
+            <i class="bi bi-grid-3x3-gap-fill me-2"></i>DANH SÁCH DANH MỤC
+        </h2>
+        <button class="btn btn-success shadow-sm">
+            <i class="bi bi-plus-lg"></i> Thêm mới
+        </button>
+    </div>
+
+    <div class="table-container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center" style="width: 80px;">ID</th>
+                    <th>Tên danh mục</th>
+                    <th>Mô tả chi tiết</th>
+                    <th class="text-center" style="width: 150px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <span class="badge-id">@item.Id</span>
+                        </td>
+                        <td>
+                            <span class="fw-bold text-dark">@item.Name</span>
+                        </td>
+                        <td class="text-muted">
+                            @item.Description
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a href="#" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                    <i class="bi bi-pencil-square"></i> Sửa
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                    <i class="bi bi-trash"></i> Xóa
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <p class="text-muted italic">Chưa có dữ liệu danh mục nào để hiển thị.</p>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>

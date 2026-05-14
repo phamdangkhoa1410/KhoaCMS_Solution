@@ -3,47 +3,105 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CMS.Backend</title>
+    <title>@ViewData["Title"] - CMS Backend</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CMS.Backend.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* KỸ THUẬT STICKY FOOTER */
+        html, body {
+            height: 100%; /* Cần thiết để xác định chiều cao màn hình */
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column; /* Xếp nội dung theo chiều dọc */
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        header {
+            flex-shrink: 0; /* Không cho header bị co lại */
+        }
+
+        .container-main {
+            flex: 1 0 auto; /* Tự động phình ra để chiếm hết khoảng trống còn lại, đẩy footer xuống */
+        }
+
+        footer {
+            flex-shrink: 0; /* Không cho footer bị co lại */
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            padding: 1.5rem 0;
+        }
+
+        /* Tùy chỉnh Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+            padding: 0.75rem 1rem;
+            border-bottom: 3px solid #38bdf8;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            color: #38bdf8 !important;
+        }
+
+        .nav-link {
+            color: #94a3b8 !important;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-radius: 6px;
+            margin: 0 4px;
+        }
+
+            .nav-link:hover {
+                color: #fff !important;
+                background: rgba(255,255,255,0.1);
+            }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark mb-4">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CMS.Backend</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-shield-check-fill me-2"></i>KHOA-CMS
+                </a>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Index">Danh mục</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Post" asp-action="Index">Bài viết</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="User" asp-action="Index">Người dùng</a></li>
                     </ul>
+                    <div class="navbar-text text-white-50 small me-3">
+                        MSSV: 2123110058
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <!-- Thêm class container-main để xử lý đẩy footer -->
+    <div class="container container-main">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted text-center mt-auto">
         <div class="container">
-            &copy; 2026 - CMS.Backend - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <p class="mb-0 fw-bold">&copy; 2026 - Phạm Đăng Khoa - Cao Đẳng Công Thương TP.HCM</p>
+            <small>Hệ thống quản lý nội dung - Lớp CCQ2311B</small>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
