@@ -4,51 +4,99 @@
     ViewData["Title"] = "Quản lý tài khoản";
 }
 
-<div class="container pb-5">
-    <div class="d-flex justify-content-between align-items-center mt-4">
-        <h2 class="text-dark fw-bold"><i class="bi bi-people-fill me-2 text-primary"></i>QUẢN TRỊ NGƯỜI DÙNG</h2>
-        <a asp-action="Create" class="btn btn-primary shadow-sm px-4">
-            <i class="bi bi-person-plus-fill"></i> THÊM TÀI KHOẢN
-        </a>
+<div class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
+        <div>
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
+                <i class="bi bi-people-fill text-sky-500 mr-2.5"></i>QUẢN TRỊ NGƯỜI DÙNG
+            </h2>
+            <p class="mt-1 text-sm text-slate-500">Phân quyền, quản lý danh sách tài khoản nhân viên truy cập hệ thống</p>
+        </div>
+        <div>
+            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-sky-700 hover:shadow-md focus:outline-hidden">
+                <i class="bi bi-person-plus-fill mr-1.5 text-base"></i> THÊM TÀI KHOẢN
+            </a>
+        </div>
     </div>
 
-    <div class="table-responsive mt-4 bg-white p-3 rounded shadow-sm border">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th style="width: 80px;">ID</th>
-                    <th>Tài khoản</th>
-                    <th>Họ và tên</th>
-                    <th>Quyền hạn</th>
-                    <th class="text-center">Thao tác</th>
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-24">ID</th>
+                    <th class="p-4">Tài khoản</th>
+                    <th class="p-4">Họ và tên</th>
+                    <th class="p-4 w-48">Quyền hạn</th>
+                    <th class="p-4 text-center w-36">Thao tác</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var item in Model)
+            <tbody class="divide-y divide-slate-100">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="group hover:bg-slate-50/60 transition-all duration-200">
+                            <td class="p-4 text-center">
+                                <span class="inline-block rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 font-mono text-xs font-bold text-slate-600">
+                                    #@item.Id
+                                </span>
+                            </td>
+
+                            <td class="p-4">
+                                <code class="rounded-md bg-slate-100 px-2 py-1 font-mono text-sm font-bold text-indigo-600">
+                                    @item.Username
+                                </code>
+                            </td>
+
+                            <td class="p-4">
+                                <span class="font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
+                                    @item.FullName
+                                </span>
+                            </td>
+
+                            <td class="p-4">
+                                @if (item.Role == "Quản trị viên" || item.Role == "Admin")
+                                {
+                                    <span class="inline-flex items-center rounded-md bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 ring-1 ring-inset ring-rose-600/10">
+                                        <span class="mr-1 h-1.5 w-1.5 rounded-full bg-rose-600"></span>@item.Role
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
+                                        <span class="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-600"></span>@item.Role
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="p-4 text-center">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-sky-600 transition-colors" title="Sửa tài khoản">
+                                        <i class="bi bi-pencil-square mr-1 text-sky-500"></i> Sửa
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       onclick="return confirm('Khoa có chắc chắn muốn xóa tài khoản này không?')"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa tài khoản">
+                                        <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td><b class="text-muted">#@item.Id</b></td>
-                        <td><code class="fs-6">@item.Username</code></td>
-                        <td class="fw-bold">@item.FullName</td>
-                        <td>
-                            @if (item.Role == "Quản trị viên")
-                            {
-                                <span class="badge bg-danger">@item.Role</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-success">@item.Role</span>
-                            }
-                        </td>
-                        <td class="text-center">
-                            <div class="btn-group">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id"
-                                   onclick="return confirm('Xóa tài khoản này?')"
-                                   class="btn btn-sm btn-outline-danger">
-                                    <i class="bi bi-trash"></i>
+                        <td colspan="5" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                                    <i class="bi bi-people text-2xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-base font-bold text-slate-900">Danh sách trống!</h3>
+                                <p class="mt-1 text-sm text-slate-500 text-center">Hệ thống chưa ghi nhận bất kỳ tài khoản người dùng nào.</p>
+                                <a asp-action="Create" class="mt-4 inline-flex items-center rounded-lg bg-sky-500 px-3.5 py-2 text-xs font-bold text-white no-underline shadow-xs hover:bg-sky-600 transition-colors">
+                                    Tạo tài khoản đầu tiên
                                 </a>
                             </div>
                         </td>

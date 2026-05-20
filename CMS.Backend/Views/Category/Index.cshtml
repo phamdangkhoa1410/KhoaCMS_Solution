@@ -4,118 +4,65 @@
     ViewData["Title"] = "Quản lý danh mục";
 }
 
-<style>
-    /* Container chính */
-    .table-container {
-        background: #ffffff;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        margin-top: 25px;
-    }
-
-    /* Định dạng bảng */
-    .table thead {
-        background: linear-gradient(45deg, #0d6efd, #004dbb);
-        color: white;
-    }
-
-        .table thead th {
-            border: none;
-            padding: 18px;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-        }
-
-    .table tbody tr {
-        transition: all 0.2s ease-in-out;
-    }
-
-        .table tbody tr:hover {
-            background-color: #fbfcfe;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-        }
-
-    .table td {
-        padding: 15px;
-        vertical-align: middle;
-        border-bottom: 1px solid #f1f1f1;
-    }
-
-    /* Badge cho ID */
-    .badge-id {
-        background-color: #f0f2f5;
-        color: #555;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-weight: 700;
-        font-family: 'Courier New', Courier, monospace;
-    }
-
-    /* Hiệu ứng nút bấm */
-    .btn-action {
-        border-radius: 8px;
-        padding: 6px 12px;
-        font-size: 0.85rem;
-        transition: 0.3s;
-    }
-</style>
-
-<div class="container pb-5">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mt-4 px-2">
+<div class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
         <div>
-            <h2 class="text-primary fw-bold m-0">
-                <i class="bi bi-grid-3x3-gap-fill me-2"></i>DANH SÁCH DANH MỤC
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
+                <i class="bi bi-grid-3x3-gap-fill text-sky-500 mr-2.5"></i>DANH SÁCH DANH MỤC
             </h2>
-            <p class="text-muted small mb-0">Quản lý các loại tin tức và sản phẩm trong hệ thống</p>
+            <p class="mt-1 text-sm text-slate-500">Quản lý các loại phân loại tin tức và sản phẩm trong hệ thống CMS</p>
         </div>
-        <a asp-action="Create" class="btn btn-success shadow-sm px-4 py-2 fw-bold">
-            <i class="bi bi-plus-lg me-1"></i> THÊM MỚI
-        </a>
+        <div>
+            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-emerald-700 hover:shadow-md focus:outline-hidden">
+                <i class="bi bi-plus-lg mr-1.5 font-bold"></i> THÊM MỚI
+            </a>
+        </div>
     </div>
 
-    <!-- Bảng dữ liệu -->
-    <div class="table-container">
-        <table class="table table-borderless">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <table class="w-full text-left border-collapse m-0">
             <thead>
-                <tr>
-                    <th class="text-center" style="width: 100px;">Mã số</th>
-                    <th>Tên danh mục</th>
-                    <th>Mô tả chi tiết</th>
-                    <th class="text-center" style="width: 200px;">Hành động</th>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-24">Mã số</th>
+                    <th class="p-4">Tên danh mục</th>
+                    <th class="p-4">Mô tả chi tiết</th>
+                    <th class="p-4 text-center w-48">Hành động</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-slate-100">
                 @if (Model != null && Model.Any())
                 {
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td class="text-center">
-                                <span class="badge-id">#@item.Id</span>
-                            </td>
-                            <td>
-                                <span class="fw-bold text-dark fs-6">@item.Name</span>
-                            </td>
-                            <td>
-                                <span class="text-muted d-inline-block text-truncate" style="max-width: 400px;">
-                                    @(string.IsNullOrEmpty(item.Description) ? "Không có mô tả" : item.Description)
+                        <tr class="group hover:bg-slate-50/60 transition-all duration-200">
+                            <td class="p-4 text-center">
+                                <span class="inline-block rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 font-mono text-xs font-bold text-slate-600">
+                                    #@item.Id
                                 </span>
                             </td>
-                            <td class="text-center">
-                                <div class="btn-group shadow-sm">
+
+                            <td class="p-4">
+                                <span class="font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
+                                    @item.Name
+                                </span>
+                            </td>
+
+                            <td class="p-4">
+                                <p class="m-0 text-sm text-slate-500 max-w-md truncate" title="@item.Description">
+                                    @(string.IsNullOrEmpty(item.Description) ? "Không có mô tả" : item.Description)
+                                </p>
+                            </td>
+
+                            <td class="p-4 text-center">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
                                     <a asp-action="Edit" asp-route-id="@item.Id"
-                                       class="btn btn-sm btn-outline-primary btn-action" title="Chỉnh sửa">
-                                        <i class="bi bi-pencil-square"></i> Sửa
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-sky-600 transition-colors" title="Chỉnh sửa">
+                                        <i class="bi bi-pencil-square mr-1 text-sky-500"></i> Sửa
                                     </a>
                                     <a asp-action="Delete" asp-route-id="@item.Id"
                                        onclick="return confirm('Khoa có chắc muốn xóa danh mục này không?')"
-                                       class="btn btn-sm btn-outline-danger btn-action" title="Xóa bỏ">
-                                        <i class="bi bi-trash"></i> Xóa
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa bỏ">
+                                        <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
                                     </a>
                                 </div>
                             </td>
@@ -125,11 +72,16 @@
                 else
                 {
                     <tr>
-                        <td colspan="4" class="text-center py-5">
-                            <div class="py-4">
-                                <i class="bi bi-database-exclamation text-warning display-4"></i>
-                                <p class="mt-3 text-muted fs-5">Hiện tại chưa có dữ liệu nào trong Database!</p>
-                                <a asp-action="Create" class="btn btn-primary mt-2">Thêm dữ liệu ngay</a>
+                        <td colspan="4" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-amber-50 text-amber-500 shadow-inner">
+                                    <i class="bi bi-database-exclamation text-2xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-base font-bold text-slate-900">Database trống!</h3>
+                                <p class="mt-1 text-sm text-slate-500 text-center">Hiện tại hệ thống chưa ghi nhận dữ liệu danh mục nào trong SQL Server.</p>
+                                <a asp-action="Create" class="mt-4 inline-flex items-center rounded-lg bg-sky-500 px-3.5 py-2 text-xs font-bold text-white no-underline shadow-xs hover:bg-sky-600 transition-colors">
+                                    Thêm dữ liệu ngay
+                                </a>
                             </div>
                         </td>
                     </tr>

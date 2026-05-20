@@ -4,58 +4,101 @@
     ViewData["Title"] = "Quản lý bài viết";
 }
 
-<div class="container pb-5">
-    <div class="d-flex justify-content-between align-items-center mt-4">
-        <h2 class="text-primary fw-bold"><i class="bi bi-file-earmark-richtext me-2"></i>DANH SÁCH BÀI VIẾT</h2>
-        <a asp-action="Create" class="btn btn-success shadow-sm px-4">
-            <i class="bi bi-plus-lg"></i> VIẾT BÀI MỚI
-        </a>
+<div class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
+        <div>
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
+                <i class="bi bi-file-earmark-richtext text-sky-500 mr-2.5"></i>DANH SÁCH BÀI VIẾT
+            </h2>
+            <p class="mt-1 text-sm text-slate-500">Quản lý nội dung bài viết, hình ảnh đại diện và phân mục tin tức website</p>
+        </div>
+        <div>
+            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-emerald-700 hover:shadow-md focus:outline-hidden">
+                <i class="bi bi-plus-lg mr-1.5 font-bold"></i> VIẾT BÀI MỚI
+            </a>
+        </div>
     </div>
 
-    <div class="table-responsive mt-4 bg-white p-3 rounded shadow-sm border">
-        <table class="table table-hover align-middle">
-            <thead class="table-dark text-uppercase small">
-                <tr>
-                    <th class="text-center" style="width: 70px;">ID</th>
-                    <th style="width: 120px;">Ảnh</th>
-                    <th>Tiêu đề bài viết</th>
-                    <th>Danh mục</th>
-                    <th>Ngày đăng</th>
-                    <th class="text-center" style="width: 150px;">Thao tác</th>
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-24">Mã số</th>
+                    <th class="p-4 w-32">Hình ảnh</th>
+                    <th class="p-4">Nội dung bài viết</th>
+                    <th class="p-4 w-40">Danh mục</th>
+                    <th class="p-4 w-44">Ngày đăng</th>
+                    <th class="p-4 text-center w-36">Thao tác</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var item in Model)
+            <tbody class="divide-y divide-slate-100">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="group hover:bg-slate-50/60 transition-all duration-200">
+                            <td class="p-4 text-center">
+                                <span class="inline-block rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 font-mono text-xs font-bold text-slate-600">
+                                    #@item.Id
+                                </span>
+                            </td>
+
+                            <td class="p-4">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" class="h-14 w-24 rounded-lg border border-slate-200 object-cover shadow-xs group-hover:scale-[1.03] transition-transform duration-200" />
+                                }
+                                else
+                                {
+                                    <div class="flex h-14 w-24 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-400">
+                                        <i class="bi bi-image text-lg"></i>
+                                    </div>
+                                }
+                            </td>
+
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900 group-hover:text-sky-600 transition-colors line-clamp-1 text-sm sm:text-base">@item.Title</div>
+                                <p class="m-0 mt-1 text-xs text-slate-400 line-clamp-1 max-w-md">@item.Content</p>
+                            </td>
+
+                            <td class="p-4">
+                                <span class="inline-flex items-center rounded-md bg-sky-50 px-2 py-1 text-xs font-bold text-sky-700 ring-1 ring-inset ring-sky-700/10">
+                                    @(item.Category?.Name ?? "Chưa phân loại")
+                                </span>
+                            </td>
+
+                            <td class="p-4 text-xs font-medium text-slate-500">
+                                @item.CreatedDate.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+
+                            <td class="p-4 text-center">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-sky-600 transition-colors" title="Sửa bài viết">
+                                        <i class="bi bi-pencil-square mr-1 text-sky-500"></i> Sửa
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       onclick="return confirm('Khoa có chắc muốn xóa bài viết này không?')"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa bài viết">
+                                        <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
                 {
                     <tr>
-                        <td class="text-center"><span class="badge bg-light text-dark border">#@item.Id</span></td>
-                        <td>
-                            @if (!string.IsNullOrEmpty(item.ImageUrl))
-                            {
-                                <img src="@item.ImageUrl" style="width:100px; height:60px; object-fit:cover;" class="rounded border" />
-                            }
-                            else
-                            {
-                                <div class="bg-light text-center rounded border pt-2" style="width:100px; height:60px;">
-                                    <i class="bi bi-image text-muted"></i>
+                        <td colspan="6" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-sky-50 text-sky-500 shadow-inner">
+                                    <i class="bi bi-file-earmark-richtext text-2xl"></i>
                                 </div>
-                            }
-                        </td>
-                        <td>
-                            <div class="fw-bold text-dark">@item.Title</div>
-                            <small class="text-muted text-truncate d-block" style="max-width: 300px;">@item.Content</small>
-                        </td>
-                        <td><span class="badge bg-info text-dark">@(item.Category?.Name ?? "Chưa phân loại")</span></td>
-                        <td class="small">@item.CreatedDate.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td class="text-center">
-                            <div class="btn-group">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Sửa">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id"
-                                   onclick="return confirm('Khoa có chắc muốn xóa bài này không?')"
-                                   class="btn btn-sm btn-outline-danger" title="Xóa">
-                                    <i class="bi bi-trash"></i>
+                                <h3 class="mt-4 text-base font-bold text-slate-900">Chưa có bài viết!</h3>
+                                <p class="mt-1 text-sm text-slate-500 text-center">Hãy thêm bài viết mới từ máy tính của bạn để hiển thị dữ liệu lên bảng thống kê.</p>
+                                <a asp-action="Create" class="mt-4 inline-flex items-center rounded-lg bg-sky-500 px-3.5 py-2 text-xs font-bold text-white no-underline shadow-xs hover:bg-sky-600 transition-colors">
+                                    Soạn bài viết ngay
                                 </a>
                             </div>
                         </td>

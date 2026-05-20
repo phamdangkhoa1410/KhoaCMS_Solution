@@ -1,0 +1,85 @@
+﻿@model CMS.Data.Entities.Post
+
+@{
+    ViewData["Title"] = "Chỉnh sửa bài viết";
+}
+
+<div class="mx-auto max-w-5xl">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+
+        <div class="bg-sky-600 px-6 py-4">
+            <h4 class="m-0 text-base font-bold text-white flex items-center tracking-wide">
+                <i class="bi bi-pencil-square mr-2 text-lg"></i> CẬP NHẬT BÀI VIẾT
+            </h4>
+        </div>
+
+        <div class="p-6 sm:p-8">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data" class="m-0">
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+
+                    <div class="lg:col-span-2 space-y-5 lg:border-r lg:border-slate-100 lg:pr-8">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Tiêu đề bài viết</label>
+                            <input asp-for="Title"
+                                   class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-500/10"
+                                   required />
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Nội dung chi tiết</label>
+                            <textarea asp-for="Content" rows="11"
+                                      class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-500/10"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="space-y-5">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Danh mục bài viết</label>
+                            <select asp-for="CategoryId"
+                                    class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-hidden transition-all focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-500/10"
+                                    asp-items="ViewBag.Categories" required>
+                            </select>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Hình ảnh hiện tại</label>
+                            <div class="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100 p-2 text-center">
+                                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                {
+                                    <img src="@Model.ImageUrl" class="mx-auto max-h-32 rounded-lg object-cover shadow-xs" />
+                                }
+                                else
+                                {
+                                    <div class="py-6 text-slate-400 text-xs">
+                                        <i class="bi bi-image text-2xl d-block mb-1"></i> Chưa có hình ảnh
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Thay đổi hình ảnh đại diện</label>
+                            <input type="file" name="imageFile" accept="image/*"
+                                   class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100 cursor-pointer border border-slate-200 rounded-xl bg-slate-50 p-1.5" />
+                            <p class="mt-1 text-xs text-slate-400">Để trống nếu Khoa muốn giữ nguyên hình ảnh cũ.</p>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-100 space-y-2">
+                            <button type="submit" class="flex w-full items-center justify-center rounded-xl bg-sky-600 py-3 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-sky-700 hover:shadow-md cursor-pointer">
+                                <i class="bi bi-save mr-2"></i> CẬP NHẬT BÀI VIẾT
+                            </button>
+
+                            <a asp-action="Index" class="flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white py-3 text-sm font-bold text-slate-700 no-underline shadow-xs transition-all duration-200 hover:bg-slate-50 hover:text-slate-900">
+                                <i class="bi bi-arrow-left mr-2"></i> QUAY LẠI
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
