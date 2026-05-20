@@ -1,8 +1,4 @@
-Chào Khoa! Mình đã đọc kỹ hình ảnh cây thư mục thực tế từ dự án KhoaCMS_Solution bạn gửi cùng nội dung bài học. Mình sẽ tổng hợp lại thành một file README.md hoàn chỉnh 100%, bám sát thiết kế đa dự án (CMS.Data chứa 8 thực thể dữ liệu thực tế và CMS.Backend chứa 4 bộ Controller/View chuẩn cấu trúc MVC của bạn), bao gồm toàn bộ tiến độ từ Buổi 1 đến hết Buổi 2.
-
-Khoa mở file README.md ở thư mục gốc của dự án (ngang hàng với file .sln) ra, xóa sạch code cũ và dán đè toàn bộ nội dung chuyên nghiệp dưới đây vào nhé:
-
-Markdown
+ Markdown
 # 🖥️ HỆ THỐNG QUẢN TRỊ NỘI DUNG VÀ THƯƠNG MẠI ĐIỆN TỬ (KHOA-CMS)
 
 > **Đồ án môn học: Phát triển ứng dụng Web / Công nghệ phần mềm**
