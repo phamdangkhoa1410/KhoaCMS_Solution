@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CMS.Data.Entities.CategoryProduct>
+
+@{
+    ViewData["Title"] = "Danh mục sản phẩm";
+}
+
+<div class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
+        <div>
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
+                <i class="bi bi-box-seam-fill text-indigo-500 mr-2.5"></i>DANH MỤC SẢN PHẨM
+            </h2>
+            <p class="mt-1 text-sm text-slate-500">Quản lý các nhóm phân loại sản phẩm kinh doanh của cửa hàng thương mại</p>
+        </div>
+        <div>
+            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-emerald-700 hover:shadow-md">
+                <i class="bi bi-plus-lg mr-1.5 font-bold"></i> THÊM DANH MỤC MỚI
+            </a>
+        </div>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-24">Mã số</th>
+                    <th class="p-4">Tên danh mục hàng</th>
+                    <th class="p-4">Mô tả tóm tắt</th>
+                    <th class="p-4 text-center w-48">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="group hover:bg-slate-50/60 transition-all duration-200">
+                            <td class="p-4 text-center">
+                                <span class="inline-block rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 font-mono text-xs font-bold text-slate-600">
+                                    #@item.Id
+                                </span>
+                            </td>
+
+                            <td class="p-4">
+                                <span class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                                    @item.Name
+                                </span>
+                            </td>
+
+                            <td class="p-4">
+                                <p class="m-0 text-sm text-slate-500 max-w-md truncate" title="@item.Description">
+                                    @(string.IsNullOrEmpty(item.Description) ? "Không có mô tả chi tiết" : item.Description)
+                                </p>
+                            </td>
+
+                            <td class="p-4 text-center">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-indigo-600 transition-colors" title="Chỉnh sửa">
+                                        <i class="bi bi-pencil-square mr-1 text-indigo-500"></i> Sửa
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       onclick="return confirm('Khoa có chắc muốn xóa danh mục sản phẩm này không?')"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa bỏ">
+                                        <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-50 text-indigo-500 shadow-inner">
+                                    <i class="bi bi-box-seam text-2xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-base font-bold text-slate-900">Chưa có danh mục nào!</h3>
+                                <p class="mt-1 text-sm text-slate-500 text-center">Hiện tại hệ thống chưa ghi nhận dữ liệu danh mục sản phẩm nào trong SQL Server.</p>
+                                <a asp-action="Create" class="mt-4 inline-flex items-center rounded-lg bg-indigo-500 px-3.5 py-2 text-xs font-bold text-white no-underline shadow-xs hover:bg-indigo-600 transition-colors">
+                                    Thêm dữ liệu ngay
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,48 @@
+﻿@model CMS.Data.Entities.CategoryProduct
+
+@{
+    ViewData["Title"] = "Thêm danh mục sản phẩm";
+}
+
+<div class="mx-auto max-w-2xl">
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-xl overflow-hidden">
+
+        <div class="bg-emerald-600 px-6 py-4">
+            <h4 class="m-0 text-base font-bold text-white flex items-center tracking-wide">
+                <i class="bi bi-plus-circle mr-2 text-lg"></i> THÊM DANH MỤC SẢN PHẨM MỚI
+            </h4>
+        </div>
+
+        <div class="p-6 sm:p-8">
+            <form asp-action="Create" method="post" class="space-y-6 m-0">
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-slate-700">Tên danh mục sản phẩm</label>
+                    <input asp-for="Name"
+                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                           placeholder="Ví dụ: Thiết Bị Điện Tử, Đồ Gia Dụng..." required />
+                    <span asp-validation-for="Name" class="block text-xs font-semibold text-rose-500"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-slate-700">Mô tả ngắn</label>
+                    <textarea asp-for="Description" rows="4"
+                              class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
+                              placeholder="Nhập mô tả ngắn gọn về nhóm sản phẩm này..."></textarea>
+                    <span asp-validation-for="Description" class="block text-xs font-semibold text-rose-500"></span>
+                </div>
+
+                <div class="pt-2 border-t border-slate-100 flex items-center gap-3">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-emerald-700 hover:shadow-md cursor-pointer">
+                        <i class="bi bi-check-lg mr-1.5 text-base"></i> LƯU DỮ LIỆU
+                    </button>
+
+                    <a asp-action="Index" class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 no-underline shadow-xs transition-all duration-200 hover:bg-slate-50 hover:text-slate-900">
+                        <i class="bi bi-arrow-left mr-1.5"></i> QUAY LẠI
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

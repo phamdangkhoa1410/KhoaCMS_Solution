@@ -1,0 +1,115 @@
+﻿@model IEnumerable<CMS.Data.Entities.Product>
+
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+}
+
+<div class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
+        <div>
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
+                <i class="bi bi-tags-fill text-indigo-500 mr-2.5"></i>DANH SÁCH SẢN PHẨM
+            </h2>
+            <p class="mt-1 text-sm text-slate-500">Quản lý kho hàng, giá bán, hình ảnh và thông số sản phẩm thương mại</p>
+        </div>
+        <div>
+            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-emerald-700 hover:shadow-md">
+                <i class="bi bi-plus-lg mr-1.5 font-bold"></i> THÊM SẢN PHẨM MỚI
+            </a>
+        </div>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-24">Mã số</th>
+                    <th class="p-4 w-32">Hình ảnh</th>
+                    <th class="p-4">Thông tin sản phẩm</th>
+                    <th class="p-4 w-40">Danh mục</th>
+                    <th class="p-4 w-36">Giá bán</th>
+                    <th class="p-4 w-28 text-center">Kho hàng</th>
+                    <th class="p-4 text-center w-36">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="group hover:bg-slate-50/60 transition-all duration-200">
+                            <td class="p-4 text-center">
+                                <span class="inline-block rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 font-mono text-xs font-bold text-slate-600">
+                                    #@item.Id
+                                </span>
+                            </td>
+
+                            <td class="p-4">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" class="h-14 w-20 rounded-lg border border-slate-200 object-cover shadow-xs group-hover:scale-[1.03] transition-transform duration-200" />
+                                }
+                                else
+                                {
+                                    <div class="flex h-14 w-20 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-400">
+                                        <i class="bi bi-box-seam text-lg"></i>
+                                    </div>
+                                }
+                            </td>
+
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors text-sm sm:text-base">@item.Name</div>
+                                <p class="m-0 mt-1 text-xs text-slate-400 line-clamp-1 max-w-xs">@item.Description</p>
+                            </td>
+
+                            <td class="p-4">
+                                <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-bold text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+                                    @(item.CategoryProduct?.Name ?? "Chưa phân loại")
+                                </span>
+                            </td>
+
+                            <td class="p-4 text-sm font-extrabold text-slate-900">
+                                @item.Price.ToString("#,##0") <span class="text-xs text-slate-500 font-semibold">VND</span>
+                            </td>
+
+                            <td class="p-4 text-center text-sm font-bold text-slate-700">
+                                @item.StockQuantity
+                            </td>
+
+                            <td class="p-4 text-center">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-indigo-600 transition-colors" title="Sửa sản phẩm">
+                                        <i class="bi bi-pencil-square mr-1 text-indigo-500"></i> Sửa
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       onclick="return confirm('Khoa có chắc chắn muốn xóa sản phẩm này không?')"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa sản phẩm">
+                                        <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-50 text-indigo-500 shadow-inner">
+                                    <i class="bi bi-box-seam text-2xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-base font-bold text-slate-900">Kho hàng trống!</h3>
+                                <p class="mt-1 text-sm text-slate-500 text-center">Hiện tại hệ thống chưa ghi nhận dữ liệu sản phẩm thương mại nào.</p>
+                                <a asp-action="Create" class="mt-4 inline-flex items-center rounded-lg bg-indigo-500 px-3.5 py-2 text-xs font-bold text-white no-underline shadow-xs hover:bg-indigo-600 transition-colors">
+                                    Thêm sản phẩm đầu tiên
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
