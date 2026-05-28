@@ -89,10 +89,31 @@
                 <div>
                     <h5 class="m-0 text-sm font-bold tracking-wide text-slate-500 uppercase">Hệ thống Quản trị Nội dung</h5>
                 </div>
-                <div>
-                    <div class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-1.5 font-mono text-xs font-bold text-slate-700">
-                        <i class="bi bi-person-badge text-sky-500 mr-1.5 text-sm"></i> MSSV: 2123110058
-                    </div>
+
+                <div class="flex items-center gap-4">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <div class="text-sm font-medium text-slate-600 flex items-center bg-slate-50 border border-slate-200 rounded-xl px-4 py-1.5">
+                            <i class="bi bi-person-circle text-indigo-500 mr-2 text-base"></i>
+                            <span>
+                                Chào, <strong class="text-slate-900 font-bold">@User.FindFirst("FullName")?.Value</strong>
+                                <span class="mx-1 text-slate-300">|</span>
+                                <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-bold text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+                                    @User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value
+                                </span>
+                            </span>
+                        </div>
+
+                        <a asp-controller="Account" asp-action="Logout" class="inline-flex items-center justify-center rounded-xl bg-rose-50 border border-rose-200 px-3.5 py-1.5 text-xs font-bold text-rose-600 no-underline shadow-xs transition-all duration-200 hover:bg-rose-600 hover:text-white cursor-pointer">
+                            <i class="bi bi-box-arrow-right mr-1.5 text-sm"></i> Đăng xuất
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="inline-flex items-center rounded-lg border border-slate-200 bg-slate-50 px-3.5 py-1.5 font-mono text-xs font-bold text-slate-700">
+                            <i class="bi bi-person-badge text-sky-500 mr-1.5 text-sm"></i> MSSV: 2123110058
+                        </div>
+                    }
                 </div>
             </header>
 

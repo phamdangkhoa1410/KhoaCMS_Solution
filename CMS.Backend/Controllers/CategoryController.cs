@@ -2,10 +2,11 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Version 3.5 - Hoàn thiện CategoryController chuẩn nghiệp vụ Buổi 3 (Bảo vệ ràng buộc dữ liệu)
+ * Version 5.3 - Hoàn thiện Phân quyền chi tiết (Role-based) cho Category theo kịch bản của Thầy
  */
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization; // BƯỚC KHAI BÁO: Nhúng thư viện bảo mật hệ thống
 using CMS.Data;
 using CMS.Data.Entities;
 using System;
@@ -13,6 +14,8 @@ using System.Linq;
 
 namespace CMS.Backend.Controllers
 {
+    // Ổ KHÓA TỔNG: Cả khoản "Quản trị viên" và "Editor" đều được quyền truy cập vào phân hệ này
+    [Authorize(Roles = "Quản trị viên,Editor")]
     public class CategoryController : Controller
     {
         // Khai báo đối tượng đại diện cho Cơ sở dữ liệu (Database Context)
@@ -30,7 +33,6 @@ namespace CMS.Backend.Controllers
         public IActionResult Index()
         {
             // Truy vấn lấy toàn bộ dữ liệu THẬT từ bảng Categories trong SQL Server
-            // Sắp xếp theo Id giảm dần để danh mục mới tạo hiển thị lên vị trí đầu tiên
             var data = _context.Categories.OrderByDescending(c => c.Id).ToList();
 
             // Trả về View danh sách và truyền kèm dữ liệu sang giao diện hiển thị
@@ -52,10 +54,7 @@ namespace CMS.Backend.Controllers
         [HttpPost]
         public IActionResult Create(Category category)
         {
-            // BƯỚC 1: Đăng ký - Thêm đối tượng vào tập hợp dữ liệu theo dõi của EF (Bộ nhớ tạm)
             _context.Categories.Add(category);
-
-            // BƯỚC 2: Chốt đơn - Thực thi lệnh lưu thay đổi, đẩy dữ liệu xuống bảng SQL Server
             _context.SaveChanges();
 
             // Sau khi lưu thành công, điều hướng người dùng quay trở lại trang danh sách (Index)
@@ -70,16 +69,14 @@ namespace CMS.Backend.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            // Sử dụng hàm Find để tìm kiếm nhanh bản ghi trong bảng Categories dựa vào khóa chính ID
             var category = _context.Categories.Find(id);
 
             // ĐỒNG BỘ THEO BÀI HỌC: Kiểm tra nếu không tìm thấy danh mục (tránh lỗi màn hình trắng)
             if (category == null)
             {
-                return NotFound(); // Trả về trang lỗi 404 chuẩn của hệ thống
+                return NotFound();
             }
 
-            // Trả về View chỉnh sửa cùng với dữ liệu của danh mục tìm thấy
             return View(category);
         }
 
@@ -87,19 +84,18 @@ namespace CMS.Backend.Controllers
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            // Đánh dấu bản ghi này đã được cập nhật thông tin trong bộ nhớ tạm
             _context.Update(category);
-
-            // Lưu các thay đổi vừa cập nhật xuống cơ sở dữ liệu SQL Server
             _context.SaveChanges();
 
-            // Điều hướng quay lại trang danh sách sau khi cập nhật thành công
             return RedirectToAction("Index");
         }
 
         // ==========================================
-        // 4. CHỨC NĂNG: XÓA DANH MỤC (BẢO VỆ TOÀN VẸN DỮ LIỆU)
+        // 4. CHỨC NĂNG: XÓA DANH MỤC (PHÂN QUYỀN CAO CẤP)
         // ==========================================
+        // Ổ KHÓA RIÊNG BIỆT: Đè lên ổ khóa tổng, chỉ duy nhất tài khoản có quyền "Quản trị viên" mới được chạy hàm này.
+        // Tài khoản "Editor" nếu cố tình bấm vào nút Xóa hoặc gọi URL /Category/Delete sẽ lập tức bị hệ thống đá văng sang trang AccessDenied!
+        [Authorize(Roles = "Quản trị viên")]
         public IActionResult Delete(int id)
         {
             // Bước 1: Tìm kiếm đối tượng danh mục cần xóa trong Database dựa vào ID
@@ -119,7 +115,6 @@ namespace CMS.Backend.Controllers
                 catch (Exception)
                 {
                     // LƯU Ý QUAN TRỌNG THEO YÊU CẦU: Khóa ngoại ràng buộc (Nếu danh mục đang chứa bài viết)
-                    // Bắn thông báo lỗi qua TempData để ngoài giao diện hiển thị hộp cảnh báo màu đỏ
                     TempData["DeleteError"] = "Không thể xóa danh mục này! Vì danh mục đang có chứa các Bài viết bên trong. Vui lòng xóa hết bài viết thuộc danh mục này trước.";
                 }
             }

@@ -2,11 +2,12 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Version 3.8 - Buổi 4: Hoàn thiện UserController chuẩn giáo trình (Chặn trùng Username & Trùng mật khẩu cũ)
+ * Version 5.3 - Hoàn thiện Bước 1 & Bước 2 Phần B: Gắn bộ phân quyền nghiêm ngặt "Quản trị viên"
  */
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization; // PHẦN B - BƯỚC 1: Khai báo thư viện bảo mật hệ thống
 using CMS.Data;
 using CMS.Data.Entities;
 using System;
@@ -14,6 +15,9 @@ using System.Linq;
 
 namespace CMS.Backend.Controllers
 {
+    // PHẦN B - BƯỚC 2: Chỉ tài khoản có Role là "Quản trị viên" mới được phép truy cập vào Controller này.
+    // Nếu tài khoản mang quyền "Editor" cố tình truy cập vào, Middleware sẽ tự động chặn lại và đá sang trang cấm /Account/AccessDenied.
+    [Authorize(Roles = "Quản trị viên")]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -81,7 +85,7 @@ namespace CMS.Backend.Controllers
                     return View(user);
                 }
 
-                // KHU VỰC CHẶN 2: LOGIC KIỂM TRA ĐỔI TRÙNG MẬT KHẨU CŨ (Đồng bộ theo tham số NewPassword của Buổi 4)
+                // KHU VỰC CHẶN 2: LOGIC KIỂM TRA ĐỔI TRÙNG MẬT KHẨU CŨ
                 if (!string.IsNullOrWhiteSpace(NewPassword))
                 {
                     var newPasswordTrimmed = NewPassword.Trim();
