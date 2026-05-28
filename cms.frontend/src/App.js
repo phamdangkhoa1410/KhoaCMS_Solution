@@ -2,57 +2,65 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Phần thực hành mở rộng Buổi 7: Tích hợp phân hệ Tin tức & Blog thời trang (Hoàn chỉnh)
+ * BUỔI 8: HOÀN THÀNH XỬ LÝ VÒNG ĐỜI USEEFFECT & TÍCH HỢP FULL NÂNG CAO PHÂN HỆ TIN TỨC
  */
 
 import React from 'react';
-import CategoryProductList from './components/CategoryProductList';
-import PostList from './components/PostList'; // Import linh kiện tin tức mới tạo ở Bước 2
+import CategoryProductList from './components/CategoryProductList'; // Danh mục sản phẩm (Từ Buổi 7)
+import PostList from './components/PostList';                     // Danh sách bài viết tin tức (Thực hành chung Buổi 8)
+import BlogCategoryList from './components/BlogCategoryList';     // BÀI TẬP TỰ LÀM: Chuyên mục tin tức Blog (Bài tập tự làm Buổi 8)
 import './App.css';
 
 function App() {
     return (
         <div className="container mt-5">
             {/* ========================================================== */}
-            {/* PHẦN HEADER TỔNG CỦA WEBSITE                               */}
+            {/* PHẦN HEADER TỔNG CỦA WEBSITE ĐỒ ÁN                         */}
             {/* ========================================================== */}
-            <header className="pb-3 mb-4 border-bottom">
-                <span className="font-weight-bold text-dark text-uppercase" style={{ fontSize: '1.5rem', display: 'block' }}>
-                    👗 FASHION BOUTIQUE - THỜI TRANG CÔNG SỞ & DẠ HỘI
+            <header className="pb-3 mb-4 border-bottom d-flex justify-content-between align-items-center">
+                <span className="font-weight-bold text-dark text-uppercase" style={{ fontSize: '1.4rem' }}>
+                    👗 Fashion Boutique - Hệ Thống Quản Trị Nội Dung & Bán Hàng
+                </span>
+                <span className="badge badge-success px-3 py-2 font-weight-bold" style={{ fontSize: '0.85rem' }}>
+                    Học Phần Chuyên Đề ASP.NET + ReactJS
                 </span>
             </header>
 
             {/* ========================================================== */}
-            {/* KHU VỰC 1: SHOPPING (Sidebar danh mục và nội dung chào mừng) */}
+            {/* PHẦN THÂN TRANG CHỦ - CẤU TRÚC PHÂN LUỒNG SONG SONG        */}
             {/* ========================================================== */}
             <div className="row">
-                {/* Cột bên trái (Sidebar): Hiện hộp danh mục sản phẩm của Khoa */}
-                <div className="col-md-3 mb-4">
+
+                {/* -------------------------------------------------------- */}
+                {/* CỘT TRÁI (BỀ RỘNG 4): SIDEBAR CHỨA BỘ ĐÔI BỘ LỌC DỮ LIỆU */}
+                {/* -------------------------------------------------------- */}
+                <div className="col-md-4">
+                    {/* Phân loại 1: Bộ lọc phục vụ thương mại điện tử mua sắm sản phẩm (CategoryProduct) */}
                     <CategoryProductList />
+
+                    {/* Phân loại 2 [BÀI TẬP TỰ LÀM BUỔI 8]: Chuyên mục nội dung tin tức blog (Category) */}
+                    <BlogCategoryList />
                 </div>
 
-                {/* Cột bên phải (Content): Hiện khung Jumbotron thông tin */}
-                <div className="col-md-9 mb-4">
-                    <div className="jumbotron bg-light border p-5 rounded shadow-sm">
-                        <h2 className="display-5 font-weight-normal" style={{ fontSize: '2rem' }}>Chào mừng đến với không gian trải nghiệm!</h2>
-                        <p className="lead mt-3 text-secondary" style={{ fontSize: '1.1rem' }}>
-                            Khối dữ liệu bên thanh điều hướng trái đang được tải <strong>Real-time</strong> trực tiếp từ bảng
-                            <strong> CategoryProduct</strong> trong Database SQL Server thông qua nền tảng ASP.NET Core Web API.
-                        </p>
-                        <hr className="my-4" />
-                        <p className="text-muted">Hãy đảm bảo rằng bạn đã bật chạy Backend song song để dữ liệu không bị chặn hiển thị.</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* ========================================================== */}
-            {/* KHU VỰC 2: BLOG & TIN TỨC MỚI (Dàn ngang toàn bộ ở phía dưới) */}
-            {/* ========================================================== */}
-            <div className="row mt-4">
-                <div className="col-12">
+                {/* -------------------------------------------------------- */}
+                {/* CỘT PHẢI (BỀ RỘNG 8): KHU VỰC HIỂN THỊ TIN TỨC CHÍNH     */}
+                {/* -------------------------------------------------------- */}
+                <div className="col-md-8">
+                    {/* Nội dung tin tức lấy Real-time từ Database bằng Hook useEffect */}
                     <PostList />
                 </div>
+
             </div>
+
+            {/* ========================================================== */}
+            {/* PHẦN FOOTER ĐỒ ÁN - MINH CHỨNG THÔNG TIN SINH VIÊN        */}
+            {/* ========================================================== */}
+            <footer className="pt-3 mt-5 text-muted border-top text-center small">
+                <p>© 2026 - Đồ án thực hành phân tầng ASP.NET Core Web API kết hợp ReactJS Client-side</p>
+                <p className="font-weight-bold text-secondary" style={{ fontSize: '11px', letterSpacing: '0.3px' }}>
+                    Sinh viên: Phạm Đăng Khoa | MSV: 2123110058 | Lớp: CCQ2311B - Trường Cao đẳng Công Thương TP.HCM
+                </p>
+            </footer>
         </div>
     );
 }

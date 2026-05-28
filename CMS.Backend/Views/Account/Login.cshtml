@@ -2,15 +2,15 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Version 5.3 - Giao diện Đăng nhập Hệ thống độc lập chuẩn Tailwind UI cao cấp
+ * Version 6.1 - Sửa lỗi cú pháp Razor chú thích & Hoàn thiện giao diện Neumorphism Tailwind CSS
 *@
 
 @{
-    Layout = null; // Trang đăng nhập độc lập, không kế thừa thanh Sidebar của Layout chung
+    Layout = null; // Trang đăng nhập độc lập
 }
 
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-950">
+<html lang="en" class="h-full bg-[#e0e5ec]">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,86 +20,136 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <script>
+        // Cấu hình các hiệu ứng bóng đổ Neumorphism tùy biến vào cấu trúc lõi của Tailwind
+        tailwind.config = {
+            theme: {
+                extend: {
+                    boxShadow: {
+                        'neu-card': '20px 20px 60px #bec3cf, -20px -20px 60px #ffffff',
+                        'neu-card-hover': '25px 25px 70px #b5bbc6, -25px -25px 70px #ffffff',
+                        'neu-icon': '8px 8px 20px #bec3cf, -8px -8px 20px #ffffff',
+                        'neu-icon-active': 'inset 4px 4px 10px #bec3cf, inset -4px -4px 10px #ffffff',
+                        'neu-input': 'inset 6px 6px 12px #bec3cf, inset -6px -6px 12px #ffffff',
+                        'neu-input-focus': 'inset 3px 3px 6px #bec3cf, inset -3px -3px 6px #ffffff',
+                        'neu-btn': '6px 6px 15px #bec3cf, -6px -6px 15px #ffffff',
+                        'neu-btn-active': 'inset 4px 4px 10px #bec3cf, inset -4px -4px 10px #ffffff',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
     </style>
 </head>
-<body class="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-slate-950 relative overflow-hidden">
-
-    <div class="absolute top-0 -left-4 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-    <div class="absolute bottom-0 -right-4 w-72 h-72 bg-sky-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+<body class="flex min-h-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-[#e0e5ec] relative select-none">
 
     <div class="w-full max-w-md space-y-8 relative z-10">
-        <div class="text-center">
-            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/30">
-                <i class="bi bi-shield-lock-fill text-2xl"></i>
-            </div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold tracking-tight text-white uppercase">
-                KHOA<span class="text-indigo-500">-CMS</span> ADMIN
-            </h2>
-            <p class="mt-2 text-center text-sm text-slate-400">
-                Hệ thống Quản trị Nội dung & Bán hàng Tích hợp
-            </p>
-        </div>
 
-        <div class="mt-8 overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/50 p-6 sm:p-10 shadow-2xl backdrop-blur-md">
+        @* PHẦN KHỐI CARD CHÍNH - HIỆU ỨNG ĐỔ BÓNG KÉP NEUMORPHISM *@
+        <div id="loginCard" class="overflow-hidden rounded-[30px] bg-[#e0e5ec] p-8 sm:p-11 shadow-neu-card transition-shadow duration-300 ease-out">
+
+            @* PHẦN HEADER CHÀO MỪNG *@
+            <div class="text-center mb-10">
+                <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#e0e5ec] text-slate-600 shadow-neu-icon transition-all duration-300 hover:shadow-neu-icon-active group cursor-pointer">
+                    <i class="bi bi-shield-lock-fill text-3xl text-indigo-600 transition-transform duration-300 group-hover:scale-110"></i>
+                </div>
+                <h2 class="mt-6 text-center text-2xl font-extrabold tracking-tight text-[#3d4468] uppercase">
+                    KHOA<span class="text-indigo-600">-CMS</span> ADMIN
+                </h2>
+                <p class="mt-2 text-center text-sm text-[#9499b7] font-medium">
+                    Vui lòng đăng nhập hệ thống để tiếp tục
+                </p>
+            </div>
+
+            @* FORM XỬ LÝ ĐĂNG NHẬP (ASP.NET CORE CODES) *@
             <form asp-controller="Account" asp-action="Login" method="post" class="space-y-6">
 
+                @* HỘP TÀI KHOẢN TRÚNG MẪU NEU-INPUT *@
                 <div class="space-y-2">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400">Tên đăng nhập</label>
-                    <div class="relative rounded-xl shadow-xs">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                            <i class="bi bi-person-fill text-base"></i>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#6c7293] ml-2">Tên đăng nhập</label>
+                    <div class="relative rounded-2xl shadow-neu-input transition-all duration-300 focus-within:shadow-neu-input-focus group bg-[#e0e5ec]">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5 text-[#9499b7] group-focus-within:text-indigo-600 transition-colors">
+                            <i class="bi bi-person-fill text-lg"></i>
                         </div>
                         <input type="text" name="username" required
-                               class="block w-full rounded-xl border border-slate-800 bg-slate-950/60 pl-11 pr-4 py-3.5 text-sm font-medium text-white outline-none transition-all placeholder:text-slate-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                               class="block w-full rounded-2xl border-none bg-transparent pl-12 pr-5 py-4 text-sm font-semibold text-[#3d4468] outline-none placeholder-[#9499b7]"
                                placeholder="Nhập tài khoản quản trị..." />
                     </div>
                 </div>
 
+                @* HỘP MẬT KHẨU TRÚNG MẪU NEU-INPUT *@
                 <div class="space-y-2">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400">Mật khẩu</label>
-                    <div class="relative rounded-xl shadow-xs">
-                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
-                            <i class="bi bi-lock-fill text-base"></i>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#6c7293] ml-2">Mật khẩu</label>
+                    <div class="relative rounded-2xl shadow-neu-input transition-all duration-300 focus-within:shadow-neu-input-focus group bg-[#e0e5ec]">
+                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5 text-[#9499b7] group-focus-within:text-indigo-600 transition-colors">
+                            <i class="bi bi-lock-fill text-lg"></i>
                         </div>
                         <input id="txtLoginPassword" type="password" name="password" required
-                               class="block w-full rounded-xl border border-slate-200/5 bg-slate-950/60 pl-11 pr-12 py-3.5 text-sm font-medium text-white outline-none transition-all placeholder:text-slate-600 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10"
+                               class="block w-full rounded-2xl border-none bg-transparent pl-12 pr-14 py-4 text-sm font-semibold text-[#3d4468] outline-none placeholder-[#9499b7]"
                                placeholder="••••••••" />
 
+                        @* NÚT BẤM ẨN HIỆN MẬT KHẨU PHONG CÁCH SOFT-UI CHUYÊN NGHIỆP *@
                         <button type="button" onclick="toggleLoginPassword()"
-                                class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 hover:text-slate-300 transition-colors cursor-pointer focus:outline-none">
-                            <i id="eyeLoginIcon" class="bi bi-eye-slash text-lg"></i>
+                                class="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-xl bg-[#e0e5ec] text-[#9499b7] shadow-neu-btn hover:text-indigo-600 active:shadow-neu-btn-active transition-all focus:outline-none">
+                            <i id="eyeLoginIcon" class="bi bi-eye-slash text-base"></i>
                         </button>
                     </div>
                 </div>
 
+                @* BÁO LỖI HỆ THỐNG *@
                 @if (ViewBag.Error != null)
                 {
-                    <div class="rounded-xl bg-rose-500/10 border border-rose-500/20 p-3.5 text-xs font-bold text-rose-400 flex items-center shadow-xs animate-shake">
-                        <i class="bi bi-exclamation-triangle-fill mr-2.5 text-base text-rose-500"></i>
+                    <div class="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4 text-xs font-bold text-rose-500 flex items-center shadow-xs animate-pulse">
+                        <i class="bi bi-exclamation-triangle-fill mr-2.5 text-base"></i>
                         <span>@ViewBag.Error</span>
                     </div>
                 }
 
-                <div>
+                @* NÚT BẤM ĐĂNG NHẬP CHÍNH *@
+                <div class="pt-2">
                     <button type="submit"
-                            class="flex w-full items-center justify-center rounded-xl bg-indigo-600 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 transition-all duration-200 hover:bg-indigo-500 hover:shadow-indigo-500/30 active:scale-[0.98] cursor-pointer focus:outline-none">
+                            class="flex w-full items-center justify-center rounded-2xl bg-[#e0e5ec] py-4 text-sm font-bold text-[#3d4468] shadow-neu-btn transition-all duration-200 hover:text-indigo-600 active:shadow-neu-btn-active focus:outline-none">
                         <i class="bi bi-box-arrow-in-right mr-2 text-base"></i> ĐĂNG NHẬP HỆ THỐNG
                     </button>
                 </div>
             </form>
         </div>
 
-        <div class="text-center text-xs font-medium text-slate-600 space-y-1">
+        @* THÔNG TIN BẢN QUYỀN SINH VIÊN *@
+        <div class="text-center text-xs font-medium text-[#9499b7] space-y-1">
             <p class="m-0">&copy; 2026 - Phạm Đăng Khoa - MSV: 2123110058</p>
-            <p class="font-mono text-[10px] text-slate-700">Lớp: CCQ2311B - Cao Đẳng Công Thương TP.HCM</p>
+            <p class="font-mono text-[10px] text-[#6c7293]">Lớp: CCQ2311B - Cao Đẳng Công Thương TP.HCM</p>
         </div>
     </div>
 
+    @* SCRIPT ĐIỀU HƯỚNG HIỆU ỨNG THEO CON TRỎ CHUỘT NÂNG CAO *@
     <script>
+        const card = document.getElementById('loginCard');
+        if (card) {
+            document.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                // Tính toán khoảng cách từ con trỏ chuột tới tâm vật lý của hộp Card
+                const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+                const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+
+                // Giới hạn biên độ đổ bóng tối đa để tránh bị vỡ khối giao diện
+                const shadowX = Math.max(-25, Math.min(25, x * 20));
+                const shadowY = Math.max(-25, Math.min(25, y * 20));
+
+                // Đổ bóng kép động đổi hướng mượt mà theo góc nhìn ánh sáng
+                card.style.boxShadow = `${shadowX}px ${shadowY}px 50px #bec3cf, ${-shadowX}px ${-shadowY}px 50px #ffffff`;
+            });
+
+            // Khi chuột rời khỏi màn hình thì trả card về vị trí cân bằng mặc định
+            document.addEventListener('mouseleave', () => {
+                card.style.boxShadow = '20px 20px 60px #bec3cf, -20px -20px 60px #ffffff';
+            });
+        }
+
         function toggleLoginPassword() {
             const passwordInput = document.getElementById("txtLoginPassword");
             const eyeIcon = document.getElementById("eyeLoginIcon");
