@@ -47,11 +47,11 @@
                             </span>
                         </div>
 
-                        <h3 class="font-bold text-slate-900 line-clamp-1 group-hover:text-sky-600 transition-colors text-base sm:text-lg" title="@item.Title">
+                        <h3 class="font-bold text-slate-900 line-clamp-1 group-hover:text-sky-600 transition-colors text-base sm:text-lg m-0" title="@item.Title">
                             @item.Title
                         </h3>
 
-                        <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">
+                        <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1 m-0">
                             @item.Content
                         </p>
 
@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="flex items-center gap-2 pt-3">
-                            <a href="/Post/Details/@item.Id" class="inline-flex flex-1 items-center justify-center rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-bold text-sky-700 no-underline hover:bg-sky-100 transition-colors">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="inline-flex flex-1 items-center justify-center rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-bold text-sky-700 no-underline hover:bg-sky-100 transition-colors">
                                 Xem chi tiết
                             </a>
                             <a asp-action="Edit" asp-route-id="@item.Id" class="inline-flex items-center justify-center rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-700 no-underline hover:bg-amber-100 transition-colors" title="Sửa">

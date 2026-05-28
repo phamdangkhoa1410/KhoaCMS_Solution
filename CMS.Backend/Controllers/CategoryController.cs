@@ -1,12 +1,14 @@
 ﻿/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
- * Version 1.0
+ * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
+ * Version 3.5 - Hoàn thiện CategoryController chuẩn nghiệp vụ Buổi 3 (Bảo vệ ràng buộc dữ liệu)
  */
 
 using Microsoft.AspNetCore.Mvc;
 using CMS.Data;
 using CMS.Data.Entities;
+using System;
 using System.Linq;
 
 namespace CMS.Backend.Controllers
@@ -27,10 +29,11 @@ namespace CMS.Backend.Controllers
         // ==========================================
         public IActionResult Index()
         {
-            // Truy vấn lấy toàn bộ dữ liệu THẬT từ bảng Categories trong SQL Server và chuyển thành List
-            var data = _context.Categories.ToList();
+            // Truy vấn lấy toàn bộ dữ liệu THẬT từ bảng Categories trong SQL Server
+            // Sắp xếp theo Id giảm dần để danh mục mới tạo hiển thị lên vị trí đầu tiên
+            var data = _context.Categories.OrderByDescending(c => c.Id).ToList();
 
-            // Trả về View danh sách và truyền kèm dữ liệu vừa lấy được sang giao diện hiển thị
+            // Trả về View danh sách và truyền kèm dữ liệu sang giao diện hiển thị
             return View(data);
         }
 
@@ -39,16 +42,20 @@ namespace CMS.Backend.Controllers
         // ==========================================
 
         // [GET] Hiển thị giao diện Form để người dùng nhập thông tin danh mục mới
-        public IActionResult Create() => View();
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
 
         // [POST] Tiếp nhận thông tin từ Form gửi lên và tiến hành lưu vào Cơ sở dữ liệu
         [HttpPost]
         public IActionResult Create(Category category)
         {
-            // Thêm đối tượng category mới vào tập hợp dữ liệu theo dõi của Entity Framework
+            // BƯỚC 1: Đăng ký - Thêm đối tượng vào tập hợp dữ liệu theo dõi của EF (Bộ nhớ tạm)
             _context.Categories.Add(category);
 
-            // Thực thi lệnh lưu thay đổi, chính thức đẩy dữ liệu mới xuống bảng SQL Server
+            // BƯỚC 2: Chốt đơn - Thực thi lệnh lưu thay đổi, đẩy dữ liệu xuống bảng SQL Server
             _context.SaveChanges();
 
             // Sau khi lưu thành công, điều hướng người dùng quay trở lại trang danh sách (Index)
@@ -60,10 +67,17 @@ namespace CMS.Backend.Controllers
         // ==========================================
 
         // [GET] Tìm danh mục cần sửa theo mã ID và hiển thị thông tin cũ lên Form
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             // Sử dụng hàm Find để tìm kiếm nhanh bản ghi trong bảng Categories dựa vào khóa chính ID
             var category = _context.Categories.Find(id);
+
+            // ĐỒNG BỘ THEO BÀI HỌC: Kiểm tra nếu không tìm thấy danh mục (tránh lỗi màn hình trắng)
+            if (category == null)
+            {
+                return NotFound(); // Trả về trang lỗi 404 chuẩn của hệ thống
+            }
 
             // Trả về View chỉnh sửa cùng với dữ liệu của danh mục tìm thấy
             return View(category);
@@ -73,7 +87,7 @@ namespace CMS.Backend.Controllers
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            // Đánh dấu bản ghi này đã được thay đổi thông tin
+            // Đánh dấu bản ghi này đã được cập nhật thông tin trong bộ nhớ tạm
             _context.Update(category);
 
             // Lưu các thay đổi vừa cập nhật xuống cơ sở dữ liệu SQL Server
@@ -84,21 +98,30 @@ namespace CMS.Backend.Controllers
         }
 
         // ==========================================
-        // 4. CHỨC NĂNG: XÓA DANH MỤC
+        // 4. CHỨC NĂNG: XÓA DANH MỤC (BẢO VỆ TOÀN VẸN DỮ LIỆU)
         // ==========================================
         public IActionResult Delete(int id)
         {
-            // Tìm kiếm đối tượng danh mục cần xóa trong Database dựa vào ID được truyền tới
+            // Bước 1: Tìm kiếm đối tượng danh mục cần xóa trong Database dựa vào ID
             var category = _context.Categories.Find(id);
 
             // Kiểm tra xem danh mục đó có tồn tại hay không nhằm tránh lỗi hệ thống
             if (category != null)
             {
-                // Thực hiện lệnh xóa đối tượng danh mục ra khỏi tập hợp dữ liệu
-                _context.Categories.Remove(category);
+                try
+                {
+                    // Bước 2: Thực hiện lệnh xóa đối tượng danh mục ra khỏi bộ nhớ tạm
+                    _context.Categories.Remove(category);
 
-                // Lưu lại thay đổi để SQL Server chính thức xóa bản ghi này
-                _context.SaveChanges();
+                    // Bước 3: Chốt phiên làm việc - EF Core tạo câu lệnh DELETE gửi xuống SQL Server
+                    _context.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    // LƯU Ý QUAN TRỌNG THEO YÊU CẦU: Khóa ngoại ràng buộc (Nếu danh mục đang chứa bài viết)
+                    // Bắn thông báo lỗi qua TempData để ngoài giao diện hiển thị hộp cảnh báo màu đỏ
+                    TempData["DeleteError"] = "Không thể xóa danh mục này! Vì danh mục đang có chứa các Bài viết bên trong. Vui lòng xóa hết bài viết thuộc danh mục này trước.";
+                }
             }
 
             // Quay trở lại trang danh sách sau khi thực hiện xong thao tác xóa

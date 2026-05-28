@@ -6,7 +6,7 @@
 
 <div class="mx-auto max-w-4xl space-y-6">
     <div class="flex items-center justify-between border-b border-slate-200 pb-4">
-        <div class="flex items-center space-x-2 text-sm font-semibold text-slate-50">
+        <div class="flex items-center space-x-2 text-sm font-semibold">
             <a asp-action="Index" class="text-slate-500 no-underline hover:text-sky-600 transition-colors">Quản lý bài viết</a>
             <i class="bi bi-chevron-right text-xs text-slate-400"></i>
             <span class="text-slate-900 line-clamp-1">@Model.Title</span>
@@ -56,7 +56,7 @@
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="inline-flex items-center justify-center rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-amber-600 hover:shadow-md">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="inline-flex items-center justify-center rounded-xl bg-amber-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-amber-700 hover:shadow-md">
                     <i class="bi bi-pencil-square mr-1.5"></i> Chỉnh sửa
                 </a>
                 <a asp-action="Delete" asp-route-id="@Model.Id"

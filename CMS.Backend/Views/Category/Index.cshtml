@@ -13,11 +13,22 @@
             <p class="mt-1 text-sm text-slate-500">Quản lý các loại phân loại tin tức và sản phẩm trong hệ thống CMS</p>
         </div>
         <div>
-            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-emerald-700 hover:shadow-md focus:outline-hidden">
+            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-emerald-700 hover:shadow-md focus:outline-none">
                 <i class="bi bi-plus-lg mr-1.5 font-bold"></i> THÊM MỚI
             </a>
         </div>
     </div>
+
+    @if (TempData["DeleteError"] != null)
+    {
+        <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm font-bold text-rose-700 flex items-start shadow-sm transition-all duration-200">
+            <i class="bi bi-exclamation-octagon-fill mr-2.5 text-lg text-rose-500"></i>
+            <div>
+                <span class="block font-extrabold text-rose-800 mb-0.5">Không thể xóa danh mục!</span>
+                <span class="font-medium text-rose-600">@TempData["DeleteError"]</span>
+            </div>
+        </div>
+    }
 
     <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
         <table class="w-full text-left border-collapse m-0">
@@ -42,9 +53,9 @@
                             </td>
 
                             <td class="p-4">
-                                <span class="font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
+                                <a href="/Post/Index/@item.Id" class="font-bold text-slate-900 no-underline group-hover:text-sky-600 transition-colors" title="Bấm vào để xem danh sách bài viết thuộc mục này">
                                     @item.Name
-                                </span>
+                                </a>
                             </td>
 
                             <td class="p-4">
