@@ -1,6 +1,7 @@
 ﻿@model CMS.Data.Entities.User
 
 @{
+    Layout = "_Layout"; 
     ViewData["Title"] = "Tạo tài khoản mới";
 }
 
@@ -19,43 +20,43 @@
                 <div class="space-y-1.5">
                     <label class="block text-sm font-bold text-slate-700">Tên đăng nhập (Username)</label>
                     <input asp-for="Username"
-                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
+                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
                            placeholder="Ví dụ: khoapham, admin..." required />
-                    <span asp-validation-for="Username" class="block text-xs font-semibold text-rose-500"></span>
+                    <span asp-validation-for="Username" class="block text-xs font-semibold text-rose-500 mt-1"></span>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="block text-sm font-bold text-slate-700">Mật khẩu</label>
+                    <label class="block text-sm font-bold text-slate-700">Mật khẩu tài khoản</label>
                     <input asp-for="PasswordHash" type="password"
-                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
+                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
                            placeholder="••••••••" required />
-                    <span asp-validation-for="PasswordHash" class="block text-xs font-semibold text-rose-500"></span>
+                    <span asp-validation-for="PasswordHash" class="block text-xs font-semibold text-rose-500 mt-1"></span>
                 </div>
 
                 <div class="space-y-1.5">
                     <label class="block text-sm font-bold text-slate-700">Họ và tên</label>
                     <input asp-for="FullName"
-                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
-                           placeholder="Ví dụ: Phạm Đăng Khoa" />
-                    <span asp-validation-for="FullName" class="block text-xs font-semibold text-rose-500"></span>
+                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
+                           placeholder="Ví dụ: Phạm Đăng Khoa" required />
+                    <span asp-validation-for="FullName" class="block text-xs font-semibold text-rose-500 mt-1"></span>
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="block text-sm font-bold text-slate-700">Vai trò hệ thống</label>
+                    <label class="block text-sm font-bold text-slate-700">Vai trò hệ thống (Role)</label>
                     <select asp-for="Role"
-                            class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-hidden transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10" required>
-                        <option value="Biên tập viên">Biên tập viên</option>
-                        <option value="Quản trị viên">Quản trị viên</option>
+                            class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10" required>
+                        <option value="Admin">Quản trị viên (Admin)</option>
+                        <option value="Editor">Biên tập viên (Editor)</option>
                     </select>
-                    <span asp-validation-for="Role" class="block text-xs font-semibold text-rose-500"></span>
+                    <span asp-validation-for="Role" class="block text-xs font-semibold text-rose-500 mt-1"></span>
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3">
-                    <button type="submit" class="flex w-full sm:w-auto items-center justify-center rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-indigo-700 hover:shadow-md focus:outline-hidden cursor-pointer">
+                    <button type="submit" class="flex w-full sm:w-auto items-center justify-center rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-indigo-700 hover:shadow-md cursor-pointer focus:outline-none">
                         <i class="bi bi-check-lg mr-1.5 text-base"></i> XÁC NHẬN TẠO
                     </button>
 
-                    <a asp-action="Index" class="flex w-full sm:w-auto items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-sm font-bold text-slate-700 no-underline shadow-xs transition-all duration-200 hover:bg-slate-50 hover:text-slate-900 focus:outline-hidden">
+                    <a asp-action="Index" class="flex w-full sm:w-auto items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-sm font-bold text-slate-700 no-underline shadow-sm transition-all duration-200 hover:bg-slate-50 hover:text-slate-900 focus:outline-none">
                         <i class="bi bi-arrow-left mr-1.5"></i> QUAY LẠI
                     </a>
                 </div>

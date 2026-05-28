@@ -2,7 +2,7 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Version 3.7 - Hoàn thiện UserController (Chặn đổi trùng mật khẩu cũ của chính mình)
+ * Version 3.8 - Buổi 4: Hoàn thiện UserController chuẩn giáo trình (Chặn trùng Username & Trùng mật khẩu cũ)
  */
 
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +35,7 @@ namespace CMS.Backend.Controllers
         // ===================================================
         // 2. CHỨC NĂNG: TẠO TÀI KHOẢN MỚI (CREATE)
         // ===================================================
+        [HttpGet]
         public IActionResult Create() => View();
 
         [HttpPost]
@@ -55,6 +56,7 @@ namespace CMS.Backend.Controllers
         // ===================================================
         // 3. CHỨC NĂNG: CHỈNH SỬA TÀI KHOẢN (EDIT)
         // ===================================================
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             var user = _context.Users.Find(id);
@@ -63,7 +65,7 @@ namespace CMS.Backend.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(User user)
+        public IActionResult Edit(User user, string NewPassword)
         {
             try
             {
@@ -79,10 +81,10 @@ namespace CMS.Backend.Controllers
                     return View(user);
                 }
 
-                // KHU VỰC CHẶN 2: LOGIC KIỂM TRA ĐỔI TRÙNG MẬT KHẨU CŨ
-                if (!string.IsNullOrWhiteSpace(user.PasswordHash))
+                // KHU VỰC CHẶN 2: LOGIC KIỂM TRA ĐỔI TRÙNG MẬT KHẨU CŨ (Đồng bộ theo tham số NewPassword của Buổi 4)
+                if (!string.IsNullOrWhiteSpace(NewPassword))
                 {
-                    var newPasswordTrimmed = user.PasswordHash.Trim();
+                    var newPasswordTrimmed = NewPassword.Trim();
 
                     // Nếu mật khẩu mới nhập vào trùng khớp 100% với mật khẩu cũ trong DB
                     if (newPasswordTrimmed == existingUser.PasswordHash)
@@ -91,12 +93,12 @@ namespace CMS.Backend.Controllers
                         return View(user);
                     }
 
-                    // Nếu không trùng, gán mật khẩu mới đã làm sạch vào hệ thống
+                    // Nếu không trùng, gán mật khẩu mới vào thực thể để cập nhật
                     user.PasswordHash = newPasswordTrimmed;
                 }
                 else
                 {
-                    // Nếu bỏ trống, giữ nguyên mật khẩu cũ để không bị mất dữ liệu
+                    // Nếu bỏ trống, giữ nguyên mật khẩu cũ từ DB để tránh mất dữ liệu
                     user.PasswordHash = existingUser.PasswordHash;
                 }
 

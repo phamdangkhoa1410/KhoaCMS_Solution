@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<CMS.Data.Entities.User>
 
 @{
+    Layout = "_Layout";
     ViewData["Title"] = "Quản lý tài khoản";
 }
 
@@ -13,13 +14,13 @@
             <p class="mt-1 text-sm text-slate-500">Phân quyền, quản lý danh sách tài khoản nhân viên truy cập hệ thống</p>
         </div>
         <div>
-            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-sky-700 hover:shadow-md focus:outline-hidden">
+            <a asp-action="Create" class="inline-flex items-center justify-center rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-sky-700 hover:shadow-md">
                 <i class="bi bi-person-plus-fill mr-1.5 text-base"></i> THÊM TÀI KHOẢN
             </a>
         </div>
     </div>
 
-    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <table class="w-full text-left border-collapse m-0">
             <thead>
                 <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -43,7 +44,7 @@
                             </td>
 
                             <td class="p-4">
-                                <code class="rounded-md bg-slate-100 px-2 py-1 font-mono text-sm font-bold text-indigo-600">
+                                <code class="rounded-md bg-indigo-50 border border-indigo-100 px-2 py-1 font-mono text-sm font-bold text-indigo-600">
                                     @item.Username
                                 </code>
                             </td>
@@ -55,28 +56,29 @@
                             </td>
 
                             <td class="p-4">
-                                @if (item.Role == "Quản trị viên" || item.Role == "Admin")
+                                @if (string.Equals(item.Role, "Admin", StringComparison.OrdinalIgnoreCase) ||
+                                                        string.Equals(item.Role, "Quản trị viên", StringComparison.OrdinalIgnoreCase))
                                 {
                                     <span class="inline-flex items-center rounded-md bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700 ring-1 ring-inset ring-rose-600/10">
-                                        <span class="mr-1 h-1.5 w-1.5 rounded-full bg-rose-600"></span>@item.Role
+                                        <span class="mr-1.5 h-1.5 w-1.5 rounded-full bg-rose-600"></span>@item.Role
                                     </span>
                                 }
                                 else
                                 {
                                     <span class="inline-flex items-center rounded-md bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
-                                        <span class="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-600"></span>@item.Role
+                                        <span class="mr-1.5 h-1.5 w-1.5 rounded-full bg-emerald-600"></span>@item.Role
                                     </span>
                                 }
                             </td>
 
                             <td class="p-4 text-center">
-                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
                                     <a asp-action="Edit" asp-route-id="@item.Id"
                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-sky-600 transition-colors" title="Sửa tài khoản">
                                         <i class="bi bi-pencil-square mr-1 text-sky-500"></i> Sửa
                                     </a>
                                     <a asp-action="Delete" asp-route-id="@item.Id"
-                                       onclick="return confirm('Khoa có chắc chắn muốn xóa tài khoản này không?')"
+                                       onclick="return confirm('Khoa có chắc chắn muốn xóa tài khoản [@item.Username] này không?')"
                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa tài khoản">
                                         <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
                                     </a>
@@ -90,12 +92,12 @@
                     <tr>
                         <td colspan="5" class="p-12 text-center">
                             <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
-                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400 border border-slate-200">
                                     <i class="bi bi-people text-2xl"></i>
                                 </div>
                                 <h3 class="mt-4 text-base font-bold text-slate-900">Danh sách trống!</h3>
-                                <p class="mt-1 text-sm text-slate-500 text-center">Hệ thống chưa ghi nhận bất kỳ tài khoản người dùng nào.</p>
-                                <a asp-action="Create" class="mt-4 inline-flex items-center rounded-lg bg-sky-500 px-3.5 py-2 text-xs font-bold text-white no-underline shadow-xs hover:bg-sky-600 transition-colors">
+                                <p class="mt-1 text-sm text-slate-500 text-center">Hệ thống chưa ghi nhận bất kỳ tài khoản người dùng nào lưu trữ trong CSDL.</p>
+                                <a asp-action="Create" class="mt-4 inline-flex items-center rounded-lg bg-sky-500 px-3.5 py-2 text-xs font-bold text-white no-underline shadow-sm hover:bg-sky-600 transition-colors">
                                     Tạo tài khoản đầu tiên
                                 </a>
                             </div>

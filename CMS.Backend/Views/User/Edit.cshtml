@@ -1,6 +1,7 @@
 ﻿@model CMS.Data.Entities.User
 
 @{
+    Layout = "_Layout";
     ViewData["Title"] = "Chỉnh sửa tài khoản";
 }
 
@@ -20,7 +21,7 @@
 
                 @if (ViewBag.ValidationError != null)
                 {
-                    <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm font-bold text-rose-700 flex items-start shadow-xs">
+                    <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm font-bold text-rose-700 flex items-start shadow-sm">
                         <i class="bi bi-exclamation-octagon-fill mr-2.5 text-lg text-rose-500"></i>
                         <div>
                             <span class="block font-extrabold text-rose-800 mb-0.5">Không thể cập nhật!</span>
@@ -32,14 +33,15 @@
                 <div class="space-y-1.5">
                     <label class="block text-sm font-bold text-slate-700">Tên đăng nhập (Username)</label>
                     <input asp-for="Username"
-                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-mono font-bold text-slate-900 outline-none transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
-                           placeholder="Nhập tên đăng nhập tài khoản..." required />
+                           class="block w-full rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-mono font-bold text-slate-500 cursor-not-allowed select-none outline-none"
+                           readonly />
+                    <p class="mt-1 text-[11px] text-slate-400 font-medium">🔒 Tên đăng nhập là định danh cố định, không được phép chỉnh sửa.</p>
                 </div>
 
                 <div class="space-y-1.5">
                     <label class="block text-sm font-bold text-slate-700">Mật khẩu mới</label>
                     <div class="relative">
-                        <input id="txtPassword" asp-for="PasswordHash" type="password" value=""
+                        <input id="txtPassword" name="NewPassword" type="password" value=""
                                class="block w-full rounded-xl border border-slate-200 bg-slate-50 pl-4 pr-12 py-3 text-sm font-medium text-slate-900 outline-none transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
                                placeholder="Nhập mật khẩu mới nếu muốn thay đổi..." />
 
@@ -54,15 +56,15 @@
                 <div class="space-y-1.5">
                     <label class="block text-sm font-bold text-slate-700">Họ và tên</label>
                     <input asp-for="FullName"
-                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10" placeholder="Nhập họ và tên đầy đủ..." />
+                           class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10" placeholder="Nhập họ và tên đầy đủ..." required />
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="block text-sm font-bold text-slate-700">Vai trò hệ thống</label>
+                    <label class="block text-sm font-bold text-slate-700">Vai trò hệ thống (Role)</label>
                     <select asp-for="Role"
                             class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 outline-none transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10" required>
-                        <option value="Biên tập viên">Biên tập viên</option>
-                        <option value="Quản trị viên">Quản trị viên</option>
+                        <option value="Admin">Quản trị viên (Admin)</option>
+                        <option value="Editor">Biên tập viên (Editor)</option>
                     </select>
                 </div>
 
@@ -71,7 +73,7 @@
                         <i class="bi bi-save mr-1.5 text-base"></i> LƯU CẬP NHẬT
                     </button>
 
-                    <a asp-action="Index" class="flex w-full sm:w-auto items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-sm font-bold text-slate-700 no-underline shadow-xs transition-all duration-200 hover:bg-slate-50 hover:text-slate-900">
+                    <a asp-action="Index" class="flex w-full sm:w-auto items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-2.5 text-sm font-bold text-slate-700 no-underline shadow-sm transition-all duration-200 hover:bg-slate-50 hover:text-slate-900">
                         <i class="bi bi-arrow-left mr-1.5"></i> QUAY LẠI
                     </a>
                 </div>
