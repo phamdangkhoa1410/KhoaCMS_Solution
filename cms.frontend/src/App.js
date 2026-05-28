@@ -2,31 +2,37 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Buổi 7: Gắn linh kiện CategoryProductList vào giao diện chính App.js
+ * Phần thực hành mở rộng Buổi 7: Tích hợp phân hệ Tin tức & Blog thời trang (Hoàn chỉnh)
  */
 
 import React from 'react';
 import CategoryProductList from './components/CategoryProductList';
-import './App.css'; // File chứa các style tùy biến riêng của dự án
+import PostList from './components/PostList'; // Import linh kiện tin tức mới tạo ở Bước 2
+import './App.css';
 
 function App() {
     return (
         <div className="container mt-5">
-            {/* Phần Header của Website */}
+            {/* ========================================================== */}
+            {/* PHẦN HEADER TỔNG CỦA WEBSITE                               */}
+            {/* ========================================================== */}
             <header className="pb-3 mb-4 border-bottom">
                 <span className="font-weight-bold text-dark text-uppercase" style={{ fontSize: '1.5rem', display: 'block' }}>
-                    🛒 HỆ THỐNG CỬA HÀNG TRỰC TUYẾN - KHOACMS RETAIL
+                    👗 FASHION BOUTIQUE - THỜI TRANG CÔNG SỞ & DẠ HỘI
                 </span>
             </header>
 
+            {/* ========================================================== */}
+            {/* KHU VỰC 1: SHOPPING (Sidebar danh mục và nội dung chào mừng) */}
+            {/* ========================================================== */}
             <div className="row">
-                {/* Cột bên trái (Sidebar): Chiếm 3 phần chiều rộng để hiện hộp danh mục sản phẩm */}
+                {/* Cột bên trái (Sidebar): Hiện hộp danh mục sản phẩm của Khoa */}
                 <div className="col-md-3 mb-4">
                     <CategoryProductList />
                 </div>
 
-                {/* Cột bên phải (Content): Chiếm 9 phần chiều rộng để hiện nội dung chào mừng */}
-                <div className="col-md-9">
+                {/* Cột bên phải (Content): Hiện khung Jumbotron thông tin */}
+                <div className="col-md-9 mb-4">
                     <div className="jumbotron bg-light border p-5 rounded shadow-sm">
                         <h2 className="display-5 font-weight-normal" style={{ fontSize: '2rem' }}>Chào mừng đến với không gian trải nghiệm!</h2>
                         <p className="lead mt-3 text-secondary" style={{ fontSize: '1.1rem' }}>
@@ -36,6 +42,15 @@ function App() {
                         <hr className="my-4" />
                         <p className="text-muted">Hãy đảm bảo rằng bạn đã bật chạy Backend song song để dữ liệu không bị chặn hiển thị.</p>
                     </div>
+                </div>
+            </div>
+
+            {/* ========================================================== */}
+            {/* KHU VỰC 2: BLOG & TIN TỨC MỚI (Dàn ngang toàn bộ ở phía dưới) */}
+            {/* ========================================================== */}
+            <div className="row mt-4">
+                <div className="col-12">
+                    <PostList />
                 </div>
             </div>
         </div>
