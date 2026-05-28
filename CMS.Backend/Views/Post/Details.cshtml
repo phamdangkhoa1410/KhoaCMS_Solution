@@ -1,0 +1,71 @@
+﻿@model CMS.Data.Entities.Post
+
+@{
+    ViewData["Title"] = "Chi tiết bài viết - " + Model.Title;
+}
+
+<div class="mx-auto max-w-4xl space-y-6">
+    <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+        <div class="flex items-center space-x-2 text-sm font-semibold text-slate-50">
+            <a asp-action="Index" class="text-slate-500 no-underline hover:text-sky-600 transition-colors">Quản lý bài viết</a>
+            <i class="bi bi-chevron-right text-xs text-slate-400"></i>
+            <span class="text-slate-900 line-clamp-1">@Model.Title</span>
+        </div>
+        <div>
+            <a asp-action="Index" class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 no-underline shadow-sm transition-all duration-200 hover:bg-slate-50 hover:text-slate-900">
+                <i class="bi bi-arrow-left mr-1.5"></i> Quay lại danh sách
+            </a>
+        </div>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+
+        <div class="relative w-full overflow-hidden bg-slate-900 border-b border-slate-100 flex items-center justify-center" style="max-height: 420px;">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="w-full h-auto object-cover opacity-95 transition-all duration-300" style="max-height: 420px;" alt="Post Banner Image" />
+            }
+            else
+            {
+                <div class="flex h-64 w-full items-center justify-center bg-slate-50 text-slate-400">
+                    <i class="bi bi-image text-5xl"></i>
+                </div>
+            }
+        </div>
+
+        <div class="p-6 sm:p-10 space-y-6">
+
+            <div class="flex flex-wrap items-center gap-4 text-xs font-medium text-slate-400 border-b border-slate-100 pb-4">
+                <span class="inline-flex items-center rounded-md bg-sky-50 px-3 py-1 text-xs font-bold text-sky-700 ring-1 ring-inset ring-sky-700/10">
+                    <i class="bi bi-bookmark-fill mr-1"></i> @(Model.Category?.Name ?? "Chưa phân loại")
+                </span>
+                <span class="flex items-center">
+                    <i class="bi bi-calendar3 mr-1.5 text-slate-400"></i> Ngày đăng: @Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")
+                </span>
+                <span class="flex items-center">
+                    <i class="bi bi-hash mr-0.5 text-slate-400"></i> Mã bài viết: #@Model.Id
+                </span>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight leading-tight m-0">
+                @Model.Title
+            </h1>
+
+            <div class="text-slate-700 text-base sm:text-lg leading-relaxed font-normal whitespace-pre-line antialiased">
+                @Model.Content
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="inline-flex items-center justify-center rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-amber-600 hover:shadow-md">
+                    <i class="bi bi-pencil-square mr-1.5"></i> Chỉnh sửa
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.Id"
+                   onclick="return confirm('Khoa có chắc chắn muốn xóa bài viết này không?')"
+                   class="inline-flex items-center justify-center rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-rose-700 hover:shadow-md">
+                    <i class="bi bi-trash mr-1.5"></i> Xóa bài viết
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

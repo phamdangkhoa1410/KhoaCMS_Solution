@@ -2,7 +2,7 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Version 3.2 - Hoàn thiện logic CRUD Bài viết kèm Upload/Xóa file ảnh vật lý
+ * Version 3.5 - Hoàn thiện logic CRUD, Bộ lọc linh hoạt & Xem chi tiết bài viết
  */
 
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +12,7 @@ using CMS.Data;
 using CMS.Data.Entities;
 using System.IO;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CMS.Backend.Controllers
@@ -28,11 +29,56 @@ namespace CMS.Backend.Controllers
         // ===================================================
         // 1. CHỨC NĂNG: TRANG DANH SÁCH BÀI VIẾT (INDEX)
         // ===================================================
-        public IActionResult Index()
+        // Tham số 'id' (CategoryId) nhận vào từ URL tùy chọn (ví dụ: /Post/Index hoặc /Post/Index/5)
+        public IActionResult Index(int? id)
         {
-            // Lấy danh sách bài viết kèm danh mục, sắp xếp bài mới nhất lên đầu
-            var data = _context.Posts.Include(p => p.Category).OrderByDescending(p => p.Id).ToList();
+            List<Post> data;
+
+            if (id == null)
+            {
+                // 1.1. Nếu không có id danh mục: Lấy TOÀN BỘ bài viết hệ thống
+                data = _context.Posts
+                               .Include(p => p.Category)
+                               .OrderByDescending(p => p.Id)
+                               .ToList();
+                ViewBag.CurrentCategoryName = "Tất cả bài viết";
+            }
+            else
+            {
+                // 1.2. Nếu có id danh mục: Tiến hành lọc bài viết theo CategoryId bằng LINQ
+                data = _context.Posts
+                               .Where(p => p.CategoryId == id)
+                               .Include(p => p.Category)
+                               .OrderByDescending(p => p.CreatedDate)
+                               .ToList();
+
+                // Lấy thêm tên danh mục hiện tại để hiển thị ra ngoài giao diện tiêu đề bài viết
+                var cat = _context.Categories.Find(id);
+                ViewBag.CurrentCategoryName = cat != null ? "Danh mục: " + cat.Name : "Danh mục không tồn tại";
+            }
+
+            // Gửi dữ liệu ra View hiển thị
             return View(data);
+        }
+
+        // ===================================================
+        // 1.3. CHỨC NĂNG: XEM CHI TIẾT BÀI VIẾT (DETAILS)
+        // ===================================================
+        // Đường dẫn gọi đến hệ thống: /Post/Details/5
+        public IActionResult Details(int id)
+        {
+            // Tìm bài viết theo Id và nạp kèm thông tin danh mục liên kết (Include)
+            var post = _context.Posts
+                               .Include(p => p.Category)
+                               .FirstOrDefault(p => p.Id == id);
+
+            // Nếu không tìm thấy bài viết, đá lỗi về trang không tìm thấy 404
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return View(post);
         }
 
         // ===================================================
@@ -90,7 +136,7 @@ namespace CMS.Backend.Controllers
         {
             try
             {
-                // Lấy thông tin bản ghi cũ trong database ra để so sánh hình ảnh (dùng AsNoTracking để tránh trùng entity)
+                // Lấy thông tin bản ghi cũ trong database ra để so sánh hình ảnh
                 var existingPost = _context.Posts.AsNoTracking().FirstOrDefault(p => p.Id == post.Id);
                 if (existingPost == null) return NotFound();
 
