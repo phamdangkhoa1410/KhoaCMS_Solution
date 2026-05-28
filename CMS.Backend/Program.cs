@@ -2,7 +2,7 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Version 6.0 - Buổi 6: Cấu hình kiến trúc lai Hybrid (Sửa đổi theo từng bước thực hành)
+ * Version 7.0 - Buổi 7: Cấu hình CORS bảo mật kết nối Frontend ReactJS với Backend Web API
  */
 
 using Microsoft.EntityFrameworkCore;
@@ -35,12 +35,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(); // -- Kích hoạt bộ sinh tài liệu API Swagger
 
-// [BUỔI 6 - PHẦN 4]: Đăng ký chính sách CORS (Cho phép ReactJS kết nối rút dữ liệu ở Buổi 7)
-builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", policy => {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+// ==================================================================================
+// --- [BUỔI 7 - PHẦN 1.1]: ĐĂNG KÝ CHÍNH SÁCH CORS CHUẨN ĐÚNG THEO YÊU CẦU CỦA THẦY ---
+// ==================================================================================
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3001") // Cho phép duy nhất ReactJS ở port 3000 gọi tới
+              .AllowAnyHeader()                     // Cho phép mọi loại Header (Content-Type, Authorization...)
+              .AllowAnyMethod()                     // Cho phép mọi phương thức HTTP (GET, POST, PUT, DELETE)
+              .AllowCredentials();                  // Hỗ trợ truyền Cookie/Session bảo mật nếu cần sau này
     });
 });
 
@@ -66,8 +71,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// [BUỔI 6 - VỊ TRÍ ĐẶT CORS]: Phải nằm ngay giữa UseRouting và app.UseAuthentication()
-app.UseCors("AllowAll");
+// ====================================================================================
+// --- [BUỔI 7 - PHẦN 1.2]: KÍCH HOẠT CORS ĐÚNG VỊ TRÍ VÀNG (DƯỚI ROUTING - TRÊN AUTH) ---
+// ====================================================================================
+app.UseCors("AllowReactApp");
 
 // --- BƯỚC 3: SẮP XẾP THỨ TỰ VÀNG MIDLLEWARE BẢO MẬT HỆ THỐNG ---
 app.UseAuthentication();
