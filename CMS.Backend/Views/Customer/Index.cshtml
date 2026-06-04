@@ -1,0 +1,111 @@
+﻿@model IEnumerable<CMS.Data.Entities.Customer>
+
+@{
+    ViewData["Title"] = "Quản lý khách hàng";
+}
+
+<div class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
+        <div>
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
+                <i class="bi bi-people-fill text-sky-500 mr-2.5"></i>DANH SÁCH KHÁCH HÀNG
+            </h2>
+            <p class="mt-1 text-sm text-slate-500">Quản lý tài khoản thành viên, thông tin liên lạc và mật khẩu người tiêu dùng đăng ký từ Frontend</p>
+        </div>
+    </div>
+
+    @* 🔔 KHỐI HIỂN THỊ THÔNG BÁO LỖI: Nhận thông báo chặn Editor hoặc lỗi dính Đơn hàng từ Controller *@
+    @if (TempData["DeleteError"] != null)
+    {
+        <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm font-bold text-rose-700 flex items-start shadow-sm transition-all duration-200">
+            <i class="bi bi-exclamation-octagon-fill mr-2.5 text-lg text-rose-500"></i>
+            <div>
+                <span class="block font-extrabold text-rose-800 mb-0.5">Không thể xóa tài khoản!</span>
+                <span class="font-medium text-rose-600">@TempData["DeleteError"]</span>
+            </div>
+        </div>
+    }
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-24">Mã số</th>
+                    <th class="p-4">Họ và tên</th>
+                    <th class="p-4">Email liên hệ</th>
+                    <th class="p-4 w-36">Số điện thoại</th>
+                    <th class="p-4">Địa chỉ</th>
+                    <th class="p-4 w-36">Mật khẩu</th>
+                    <th class="p-4 text-center w-36">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="group hover:bg-slate-50/60 transition-all duration-200">
+                            <td class="p-4 text-center">
+                                <span class="inline-block rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 font-mono text-xs font-bold text-slate-600">
+                                    #@item.Id
+                                </span>
+                            </td>
+
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900 text-sm group-hover:text-sky-600 transition-colors">
+                                    @item.FullName
+                                </div>
+                            </td>
+
+                            <td class="p-4 text-sm font-medium text-slate-600">
+                                @item.Email
+                            </td>
+
+                            <td class="p-4 text-sm text-slate-700 font-mono">
+                                @(string.IsNullOrEmpty(item.Phone) ? "---" : item.Phone)
+                            </td>
+
+                            <td class="p-4 text-sm text-slate-500 max-w-xs truncate" title="@item.Address">
+                                @(string.IsNullOrEmpty(item.Address) ? "Chưa cập nhật" : item.Address)
+                            </td>
+
+                            <td class="p-4 text-sm text-slate-400 font-mono">
+                                @item.Password
+                            </td>
+
+                            <td class="p-4 text-center">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-sky-600 transition-colors" title="Chỉnh sửa thông tin">
+                                        <i class="bi bi-pencil-square mr-1 text-sky-500"></i> Sửa
+                                    </a>
+
+                                    @* 🔓 ĐỂ NGUYÊN NÚT XÓA: Mở tự do cho Admin và Editor bấm thoải mái *@
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       onclick="return confirm('Khoa có chắc chắn muốn xóa tài khoản khách hàng này không?')"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa khách hàng">
+                                        <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-slate-400 shadow-inner">
+                                    <i class="bi bi-people text-2xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-base font-bold text-slate-900">Danh sách trống!</h3>
+                                <p class="mt-1 text-sm text-slate-500 text-center">Hiện tại chưa có người dùng nào đăng ký tài khoản thành viên từ trang Frontend.</p>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
