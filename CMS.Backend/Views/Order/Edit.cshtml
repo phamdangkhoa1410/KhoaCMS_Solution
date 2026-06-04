@@ -1,0 +1,55 @@
+﻿@model CMS.Data.Entities.Order
+
+@{
+    ViewData["Title"] = "Duyệt đơn hàng";
+}
+
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="border-b border-slate-200 pb-4">
+        <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight">XỬ LÝ ĐƠN HÀNG #@Model.Id</h2>
+        <p class="mt-1 text-sm text-slate-500">Kiểm tra thông tin người mua và cập nhật tiến độ giao nhận sản phẩm</p>
+    </div>
+
+    <form asp-action="Edit" method="post" class="space-y-5 bg-white border border-slate-200 p-6 rounded-2xl shadow-xs">
+        <input type="hidden" asp-for="Id" />
+
+        <div>
+            <label class="block text-sm font-bold text-slate-400 mb-1">Khách hàng sở hữu đơn</label>
+            <div class="w-full rounded-xl bg-slate-50 border border-slate-200 px-3 py-2.5 text-sm font-extrabold text-slate-800">
+                @(Model.Customer?.FullName ?? "Khách vãng lai")
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-bold text-slate-400 mb-1">Thời gian đặt mua</label>
+            <div class="w-full rounded-xl bg-slate-50 border border-slate-200 px-3 py-2.5 text-sm font-medium text-slate-600 font-mono">
+                @Model.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")
+            </div>
+        </div>
+
+        <div>
+            <label asp-for="Status" class="block text-sm font-bold text-slate-700 mb-2">Cập nhật tiến trình đơn</label>
+            <select asp-for="Status" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none">
+                <option value="0">Chờ duyệt hệ thống</option>
+                <option value="1">Đang giao vận chuyển</option>
+                <option value="2">Đã hoàn thành xong</option>
+            </select>
+            <span asp-validation-for="Status" class="text-xs text-rose-600 mt-1 block font-semibold"></span>
+        </div>
+
+        <div>
+            <label asp-for="Notes" class="block text-sm font-bold text-slate-700 mb-2">Ghi chú điều phối đơn hàng</label>
+            <textarea asp-for="Notes" rows="4" class="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none"></textarea>
+            <span asp-validation-for="Notes" class="text-xs text-rose-600 mt-1 block font-semibold"></span>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+            <a asp-action="Index" class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 no-underline shadow-sm hover:bg-slate-50 transition-colors">
+                QUAY LẠI
+            </a>
+            <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-indigo-700 transition-colors">
+                CẬP NHẬT ĐƠN
+            </button>
+        </div>
+    </form>
+</div>

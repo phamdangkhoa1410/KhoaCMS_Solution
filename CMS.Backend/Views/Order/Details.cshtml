@@ -1,0 +1,123 @@
+﻿@model CMS.Data.Entities.Order
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    var orderDetails = ViewBag.OrderDetails as List<CMS.Data.Entities.OrderDetail>;
+    decimal totalOrderMoney = 0;
+}
+
+<div class="max-w-4xl mx-auto space-y-6">
+    @* TIÊU ĐỀ TRANG VÀ QUY TRÌNH QUAY LẠI *@
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
+        <div>
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight">THÔNG TIN ĐƠN HÀNG #@Model.Id</h2>
+            <p class="mt-1 text-sm text-slate-500">Xem danh sách sản phẩm, số lượng và tổng tiền khách hàng đặt mua</p>
+        </div>
+        <div>
+            <a asp-action="Index" class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 no-underline shadow-sm hover:bg-slate-50 transition-colors">
+                <i class="bi bi-arrow-left mr-1.5"></i> QUAY LẠI SỔ ĐƠN
+            </a>
+        </div>
+    </div>
+
+    @* KHỐI TỔNG QUAN ĐƠN HÀNG (THÔNG TIN KHÁCH HÀNG) *@
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 border border-slate-200 p-5 rounded-2xl">
+        <div class="space-y-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Thông tin người mua</div>
+            <div class="text-sm"><span class="font-semibold text-slate-500">Khách hàng:</span> <strong class="text-slate-900">@(Model.Customer?.FullName ?? "Khách vãng lai")</strong></div>
+            <div class="text-sm"><span class="font-semibold text-slate-500">Ngày đặt hàng:</span> <span class="font-mono text-slate-700">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm:ss")</span></div>
+        </div>
+        <div class="space-y-2">
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Trạng thái & Ghi chú</div>
+            <div class="text-sm">
+                <span class="font-semibold text-slate-500">Trạng thái vận đơn:</span>
+                @if (Model.Status == 0)
+                {
+                    <span class="inline-flex items-center rounded bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-800 ring-1 ring-inset ring-amber-600/20">Chờ duyệt</span>
+                }
+                else if (Model.Status == 1)
+                {
+                    <span class="inline-flex items-center rounded bg-sky-50 px-2 py-0.5 text-xs font-bold text-sky-700 ring-1 ring-inset ring-sky-700/10">Đang giao</span>
+                }
+                else if (Model.Status == 2)
+                {
+                    <span class="inline-flex items-center rounded bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">Đã xong</span>
+                }
+            </div>
+            <div class="text-sm"><span class="font-semibold text-slate-500">Ghi chú giao dịch:</span> <span class="text-slate-600 italic">@(string.IsNullOrEmpty(Model.Notes) ? "Không có ghi chú kèm theo đơn hàng." : Model.Notes)</span></div>
+        </div>
+    </div>
+
+    @* BẢNG DANH SÁCH MÓN HÀNG ĐÃ ĐẶT (ORDER DETAILS) *@
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-20">STT</th>
+                    <th class="p-4 w-32">Hình ảnh</th>
+                    <th class="p-4">Tên sản phẩm</th>
+                    <th class="p-4 text-right w-36">Giá mua (lúc đặt)</th>
+                    <th class="p-4 text-center w-28">Số lượng</th>
+                    <th class="p-4 text-right w-40">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @if (orderDetails != null && orderDetails.Any())
+                {
+                    int stt = 1;
+                    @foreach (var detail in orderDetails)
+                    {
+                        decimal itemTotal = detail.Quantity * detail.UnitPrice;
+                        totalOrderMoney += itemTotal;
+
+                        <tr>
+                            <td class="p-4 text-center font-mono text-xs text-slate-500">
+                                @stt
+                            </td>
+                            <td class="p-4">
+                                @if (detail.Product != null && !string.IsNullOrEmpty(detail.Product.ImageUrl))
+                                {
+                                    <img src="@detail.Product.ImageUrl" class="h-12 w-16 rounded-lg border border-slate-200 object-cover" />
+                                }
+                                else
+                                {
+                                    <div class="flex h-12 w-16 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-400">
+                                        <i class="bi bi-box-seam"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900 text-sm">@(detail.Product?.Name ?? "Sản phẩm đã bị xóa khỏi hệ thống")</div>
+                            </td>
+                            <td class="p-4 text-right text-sm font-medium text-slate-600">
+                                @detail.UnitPrice.ToString("#,##0") <span class="text-[10px]">VND</span>
+                            </td>
+                            <td class="p-4 text-center text-sm font-bold text-slate-800">
+                                x@detail.Quantity
+                            </td>
+                            <td class="p-4 text-right text-sm font-extrabold text-indigo-600">
+                                @itemTotal.ToString("#,##0") <span class="text-[10px] font-bold text-slate-500">VND</span>
+                            </td>
+                        </tr>
+                        stt++;
+                    }
+                    @* DÒNG CHỐT TỔNG TIỀN HÓA ĐƠN *@
+                    <tr class="bg-slate-50/50 font-bold text-slate-900">
+                        <td colspan="5" class="p-4 text-right text-base font-extrabold">Tổng giá trị đơn hàng phải thanh toán:</td>
+                        <td class="p-4 text-right text-lg font-black text-rose-600">
+                            @totalOrderMoney.ToString("#,##0") <span class="text-xs">VND</span>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="p-12 text-center text-sm text-slate-400 font-medium">
+                            <i class="bi bi-exclamation-triangle mr-1"></i> Không tìm thấy dữ liệu hàng hóa chi tiết cho hóa đơn này!
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

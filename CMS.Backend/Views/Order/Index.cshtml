@@ -1,0 +1,131 @@
+﻿@model IEnumerable<CMS.Data.Entities.Order>
+
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+
+<div class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
+        <div>
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
+                <i class="bi bi-clipboard2-heart-fill text-indigo-500 mr-2.5"></i>SỔ ĐƠN HÀNG HỆ THỐNG
+            </h2>
+            <p class="mt-1 text-sm text-slate-500">Theo dõi quy trình vận chuyển, tổng hợp hóa đơn và trạng thái xử lý đơn hàng</p>
+        </div>
+    </div>
+
+    @* 🔔 KHỐI HIỂN THỊ THÔNG BÁO LỖI: Nhận thông báo chặn Editor hoặc lỗi dính OrderDetail từ Controller *@
+    @if (TempData["DeleteError"] != null)
+    {
+        <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm font-bold text-rose-700 flex items-start shadow-sm transition-all duration-200">
+            <i class="bi bi-exclamation-octagon-fill mr-2.5 text-lg text-rose-500"></i>
+            <div>
+                <span class="block font-extrabold text-rose-800 mb-0.5">Không thể xóa đơn hàng!</span>
+                <span class="font-medium text-rose-600">@TempData["DeleteError"]</span>
+            </div>
+        </div>
+    }
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-24">Mã số</th>
+                    <th class="p-4 w-48">Ngày lên đơn</th>
+                    <th class="p-4">Tên khách hàng</th>
+                    <th class="p-4 w-40">Trạng thái</th>
+                    <th class="p-4">Ghi chú kèm theo</th>
+                    <th class="p-4 text-center w-44">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="group hover:bg-slate-50/60 transition-all duration-200">
+                            <td class="p-4 text-center">
+                                @* Thao tác nhanh: Bấm thẳng vào mã đơn hàng để xem chi tiết danh sách sản phẩm bên trong *@
+                                <a asp-action="Details" asp-route-id="@item.Id" class="inline-block rounded-lg border border-indigo-200 bg-indigo-50/50 px-2.5 py-1 font-mono text-xs font-bold text-indigo-600 no-underline hover:bg-indigo-600 hover:text-white transition-colors">
+                                    #@item.Id
+                                </a>
+                            </td>
+
+                            <td class="p-4 text-sm font-medium text-slate-600">
+                                @item.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900 text-sm">
+                                    @(item.Customer?.FullName ?? "Khách vãng lai")
+                                </div>
+                            </td>
+
+                            <td class="p-4">
+                                @if (item.Status == 0)
+                                {
+                                    <span class="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-bold text-amber-800 ring-1 ring-inset ring-amber-600/20">
+                                        <i class="bi bi-clock-history mr-1"></i> Chờ duyệt
+                                    </span>
+                                }
+                                else if (item.Status == 1)
+                                {
+                                    <span class="inline-flex items-center rounded-md bg-sky-50 px-2 py-1 text-xs font-bold text-sky-700 ring-1 ring-inset ring-sky-700/10">
+                                        <i class="bi bi-truck mr-1"></i> Đang giao
+                                    </span>
+                                }
+                                else if (item.Status == 2)
+                                {
+                                    <span class="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                                        <i class="bi bi-check-circle-fill mr-1"></i> Đã xong
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="p-4 text-sm text-slate-500 max-w-xs truncate" title="@item.Notes">
+                                @(string.IsNullOrEmpty(item.Notes) ? "Không có ghi chú" : item.Notes)
+                            </td>
+
+                            <td class="p-4 text-center">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                                    @* CHỨC NĂNG 1: Xem chi tiết danh sách sản phẩm mua hàng (OrderDetail) *@
+                                    <a asp-action="Details" asp-route-id="@item.Id"
+                                       class="inline-flex items-center px-2.5 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-sky-600 transition-colors" title="Xem chi tiết đơn hàng">
+                                        <i class="bi bi-eye mr-1 text-sky-500"></i> Xem
+                                    </a>
+
+                                    @* CHỨC NĂNG 2: Duyệt/Sửa đổi tiến độ đơn vận *@
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="inline-flex items-center px-2.5 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-indigo-600 transition-colors" title="Sửa trạng thái">
+                                        <i class="bi bi-pencil-square mr-1 text-indigo-500"></i> Duyệt
+                                    </a>
+
+                                    @* CHỨC NĂNG 3: Xóa bỏ khỏi hệ thống (Sẽ bị chặn nếu là Editor hoặc đơn hàng chứa sản phẩm) *@
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       onclick="return confirm('Khoa có chắc chắn muốn xóa đơn hàng này khỏi hệ thống không?')"
+                                       class="inline-flex items-center px-2.5 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa đơn hàng">
+                                        <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="p-12 text-center">
+                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-indigo-50 text-indigo-500 shadow-inner">
+                                    <i class="bi bi-receipt text-2xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-base font-bold text-slate-900">Sổ đơn hàng trống!</h3>
+                                <p class="mt-1 text-sm text-slate-500 text-center">Hệ thống chưa ghi nhận đơn hàng nào từ trang bán hàng đổ về thư mục database.</p>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
