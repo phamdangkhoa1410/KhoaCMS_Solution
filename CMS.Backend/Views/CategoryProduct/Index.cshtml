@@ -8,7 +8,7 @@
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
         <div>
             <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
-                <i class="bi bi-box-seam-fill text-indigo-500 mr-2.5"></i>DANH MỤC SẢN PHẨM
+                <i class="bi bi-box-seam-fill text-indigo-500 mr-2.5"></i>DANH SÁCH DANH MỤC SẢN PHẨM
             </h2>
             <p class="mt-1 text-sm text-slate-500">Quản lý các nhóm phân loại sản phẩm kinh doanh của cửa hàng thương mại</p>
         </div>
@@ -18,6 +18,18 @@
             </a>
         </div>
     </div>
+
+    @* 🔔 KHỐI HIỂN THỊ THÔNG BÁO LỖI: Đã mở khóa hoạt động thực tế để hiển thị lỗi Editor hoặc lỗi dính Sản phẩm *@
+    @if (TempData["DeleteError"] != null)
+    {
+        <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm font-bold text-rose-700 flex items-start shadow-sm transition-all duration-200">
+            <i class="bi bi-exclamation-octagon-fill mr-2.5 text-lg text-rose-500"></i>
+            <div>
+                <span class="block font-extrabold text-rose-800 mb-0.5">Không thể xóa danh mục sản phẩm!</span>
+                <span class="font-medium text-rose-600">@TempData["DeleteError"]</span>
+            </div>
+        </div>
+    }
 
     <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
         <table class="w-full text-left border-collapse m-0">
@@ -59,6 +71,8 @@
                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-indigo-600 transition-colors" title="Chỉnh sửa">
                                         <i class="bi bi-pencil-square mr-1 text-indigo-500"></i> Sửa
                                     </a>
+
+                                    @* 🔓 ĐỂ NGUYÊN NÚT XÓA: Giao diện mở cho cả Quản trị viên và Editor thao tác click tự do *@
                                     <a asp-action="Delete" asp-route-id="@item.Id"
                                        onclick="return confirm('Khoa có chắc muốn xóa danh mục sản phẩm này không?')"
                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa bỏ">

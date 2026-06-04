@@ -2,12 +2,13 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * Version 3.0 - Bộ điều hướng CRUD Sản phẩm kết hợp xử lý Upload/Xóa file ảnh vật lý
+ * Version 8.1 - Bộ điều hướng CRUD Sản phẩm đồng bộ chuỗi phân quyền chuẩn theo Database thực tế
  */
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization; // BƯỚC KHAI BÁO: Nhúng thư viện bảo mật hệ thống
 using CMS.Data;
 using CMS.Data.Entities;
 using System.IO;
@@ -16,6 +17,8 @@ using System.Linq;
 
 namespace CMS.Backend.Controllers
 {
+    // Ổ KHÓA TỔNG: Cả tài khoản "Quản trị viên" và "Editor" đều được quyền truy cập vào phân hệ này
+    [Authorize(Roles = "Quản trị viên,Editor")]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -137,9 +140,12 @@ namespace CMS.Backend.Controllers
             }
         }
 
-        // ===================================================
-        // 4. CHỨC NĂNG: XÓA SẢN PHẨM (DELETE)
-        // ===================================================
+        // ====================================================================================
+        // 4. CHỨC NĂNG: XÓA SẢN PHẨM (DELETE) - PHÂN QUYỀN CHẶN CỨNG EDITOR
+        // ====================================================================================
+        // Ổ KHÓA RIÊNG BIỆT: Đè lên ổ khóa tổng, chỉ duy nhất tài khoản có quyền "Quản trị viên" mới được chạy hàm này.
+        // Tài khoản "Editor" nếu cố tình gọi URL /Product/Delete sẽ lập tức bị hệ thống chặn lại và trả về AccessDenied!
+        [Authorize(Roles = "Quản trị viên")]
         public IActionResult Delete(int id)
         {
             var product = _context.Products.Find(id);

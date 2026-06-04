@@ -19,6 +19,18 @@
         </div>
     </div>
 
+    @* 🔔 KHỐI THÔNG BÁO LỖI: Khi bấm xóa bị lỗi ràng buộc dữ liệu sẽ hiện ở đây *@
+    @if (TempData["DeleteError"] != null)
+    {
+        <div class="rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm font-bold text-rose-700 flex items-start shadow-sm transition-all duration-200">
+            <i class="bi bi-exclamation-octagon-fill mr-2.5 text-lg text-rose-500"></i>
+            <div>
+                <span class="block font-extrabold text-rose-800 mb-0.5">Không thể xóa sản phẩm!</span>
+                <span class="font-medium text-rose-600">@TempData["DeleteError"]</span>
+            </div>
+        </div>
+    }
+
     <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
         <table class="w-full text-left border-collapse m-0">
             <thead>
@@ -82,6 +94,8 @@
                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-indigo-600 transition-colors" title="Sửa sản phẩm">
                                         <i class="bi bi-pencil-square mr-1 text-indigo-500"></i> Sửa
                                     </a>
+
+                                    @* ĐỂ NGUYÊN NÚT XÓA: Ai cũng nhìn thấy và bấm được *@
                                     <a asp-action="Delete" asp-route-id="@item.Id"
                                        onclick="return confirm('Khoa có chắc chắn muốn xóa sản phẩm này không?')"
                                        class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors" title="Xóa sản phẩm">
