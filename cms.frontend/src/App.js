@@ -2,66 +2,65 @@
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
- * BUỔI 8: HOÀN THÀNH XỬ LÝ VÒNG ĐỜI USEEFFECT & TÍCH HỢP FULL NÂNG CAO PHÂN HỆ TIN TỨC
+ * Version 12.3 - Đồng bộ cấu trúc Auto-index cho cả trang Chi tiết sản phẩm và Chi tiết bài viết
  */
 
 import React from 'react';
-import CategoryProductList from './components/CategoryProductList'; // Danh mục sản phẩm (Từ Buổi 7)
-import PostList from './components/PostList';                     // Danh sách bài viết tin tức (Thực hành chung Buổi 8)
-import BlogCategoryList from './components/BlogCategoryList';     // BÀI TẬP TỰ LÀM: Chuyên mục tin tức Blog (Bài tập tự làm Buổi 8)
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// 1. Nhập các thành phần giao diện bố cục toàn cục (Header, Footer)
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+
+// 2. Nhập các trang tính năng chính theo cơ chế định tuyến phẳng ngắn gọn
+import Home from './pages/home';
+import Shop from './pages/shop';
+import Blog from './pages/blog';
+import ProductDetail from './pages/product-detail';
+
+// 🔔 ĐÃ THÊM: Dự phòng sẵn import trang Chi tiết bài viết (Dành cho tính năng đọc nội dung tin tức)
+// Khoa chỉ cần tạo folder 'blog-detail' và file 'index.jsx' bên trong là tự động khớp nối
+import BlogDetail from './pages/blog-detail';
+
 import './App.css';
 
 function App() {
     return (
-        <div className="container mt-5">
-            {/* ========================================================== */}
-            {/* PHẦN HEADER TỔNG CỦA WEBSITE ĐỒ ÁN                         */}
-            {/* ========================================================== */}
-            <header className="pb-3 mb-4 border-bottom d-flex justify-content-between align-items-center">
-                <span className="font-weight-bold text-dark text-uppercase" style={{ fontSize: '1.4rem' }}>
-                    👗 Fashion Boutique - Hệ Thống Quản Trị Nội Dung & Bán Hàng
-                </span>
-                <span className="badge badge-success px-3 py-2 font-weight-bold" style={{ fontSize: '0.85rem' }}>
-                    Học Phần Chuyên Đề ASP.NET + ReactJS
-                </span>
-            </header>
+        <Router>
+            {/* Khung cấu trúc Flexbox giúp giữ chân cố định Footer luôn nằm ở đáy màn hình */}
+            <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
 
-            {/* ========================================================== */}
-            {/* PHẦN THÂN TRANG CHỦ - CẤU TRÚC PHÂN LUỒNG SONG SONG        */}
-            {/* ========================================================== */}
-            <div className="row">
+                {/* Thanh điều hướng Header dùng chung cho toàn bộ website */}
+                <Header />
 
-                {/* -------------------------------------------------------- */}
-                {/* CỘT TRÁI (BỀ RỘNG 4): SIDEBAR CHỨA BỘ ĐÔI BỘ LỌC DỮ LIỆU */}
-                {/* -------------------------------------------------------- */}
-                <div className="col-md-4">
-                    {/* Phân loại 1: Bộ lọc phục vụ thương mại điện tử mua sắm sản phẩm (CategoryProduct) */}
-                    <CategoryProductList />
+                {/* Phần ruột hiển thị nội dung thay đổi linh hoạt dựa theo URL trên thanh địa chỉ */}
+                <main className="py-4 flex-grow-1">
+                    <div className="container mt-2">
+                        <Routes>
+                            {/* Tuyến đường mặc định - Trang Chủ (/) */}
+                            <Route path="/" element={<Home />} />
 
-                    {/* Phân loại 2 [BÀI TẬP TỰ LÀM BUỔI 8]: Chuyên mục nội dung tin tức blog (Category) */}
-                    <BlogCategoryList />
-                </div>
+                            {/* Tuyến đường phân hệ Cửa Hàng - Danh sách sản phẩm (/products) */}
+                            <Route path="/products" element={<Shop />} />
 
-                {/* -------------------------------------------------------- */}
-                {/* CỘT PHẢI (BỀ RỘNG 8): KHU VỰC HIỂN THỊ TIN TỨC CHÍNH     */}
-                {/* -------------------------------------------------------- */}
-                <div className="col-md-8">
-                    {/* Nội dung tin tức lấy Real-time từ Database bằng Hook useEffect */}
-                    <PostList />
-                </div>
+                            {/* Tuyến đường xem chi tiết một sản phẩm cụ thể dựa trên ID động (:id) */}
+                            <Route path="/product/:id" element={<ProductDetail />} />
+
+                            {/* Tuyến đường phân hệ Tin Tức - Danh sách bài viết bài đăng (/blogs) */}
+                            <Route path="/blogs" element={<Blog />} />
+
+                            {/* 🔔 ĐÃ THÊM: Tuyến đường xem chi tiết nội dung 1 bài viết dựa trên ID động (:id) */}
+                            {/* Ví dụ: Khi URL là /blog/3, React Router sẽ gọi component BlogDetail để hiển thị nội dung */}
+                            <Route path="/blog/:id" element={<BlogDetail />} />
+                        </Routes>
+                    </div>
+                </main>
+
+                {/* Thanh thông tin chân trang Footer dùng chung */}
+                <Footer />
 
             </div>
-
-            {/* ========================================================== */}
-            {/* PHẦN FOOTER ĐỒ ÁN - MINH CHỨNG THÔNG TIN SINH VIÊN        */}
-            {/* ========================================================== */}
-            <footer className="pt-3 mt-5 text-muted border-top text-center small">
-                <p>© 2026 - Đồ án thực hành phân tầng ASP.NET Core Web API kết hợp ReactJS Client-side</p>
-                <p className="font-weight-bold text-secondary" style={{ fontSize: '11px', letterSpacing: '0.3px' }}>
-                    Sinh viên: Phạm Đăng Khoa | MSV: 2123110058 | Lớp: CCQ2311B - Trường Cao đẳng Công Thương TP.HCM
-                </p>
-            </footer>
-        </div>
+        </Router>
     );
 }
 
