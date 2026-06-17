@@ -1,21 +1,36 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
  * Chức năng: Component Cha điều phối bộ lọc nâng cao (Danh mục, Tìm kiếm, Nhập giá trần & Kéo lọc giá)
+ *            [CẬP NHẬT] Nhận selectedCategoryId từ trang chủ qua useLocation().state để lọc ngay lập tức
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import ShopSidebar from './ShopSidebar';
 import ProductList from './ProductList';
 
 const Shop = () => {
-    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const location = useLocation();
+
+    // Khởi tạo selectedCategoryId từ state điều hướng (trang chủ truyền vào)
+    // Nếu không có state → mặc định null (Tất cả sản phẩm)
+    const [selectedCategoryId, setSelectedCategoryId] = useState(
+        location.state?.selectedCategoryId ?? null
+    );
     const [searchTerm, setSearchTerm] = useState('');
 
     // 🎯 Bộ đôi lọc giá: Mặc định kho máy tối đa 50 triệu VNĐ
     const [priceInput, setPriceInput] = useState(50000000);
     const [priceRange, setPriceRange] = useState(50000000);
+
+    // Cập nhật lại filter khi navigate từ trang chủ bấm danh mục khác nhau
+    useEffect(() => {
+        if (location.state?.selectedCategoryId !== undefined) {
+            setSelectedCategoryId(location.state.selectedCategoryId);
+        }
+    }, [location.state]);
 
     return (
         <div className="container-fluid p-0">
@@ -40,7 +55,7 @@ const Shop = () => {
                     <ProductList
                         selectedCategoryId={selectedCategoryId}
                         searchTerm={searchTerm}
-                        priceRange={priceRange} // Lưới sản phẩm sẽ lọc theo giá trị thanh kéo cuối cùng
+                        priceRange={priceRange}
                     />
                 </div>
 

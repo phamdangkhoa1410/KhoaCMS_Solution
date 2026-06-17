@@ -1,0 +1,198 @@
+@*
+ * Sinh viên: Phạm Đăng Khoa
+ * Mã Sinh Viên : 2123110058
+ * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
+ * Vị trí file: CMS.Backend/Views/Banner/Index.cshtml
+ * Chức năng: Trang danh sách Banner Slider — Hiển thị bảng toàn bộ banner kèm ảnh preview nhỏ
+ *@
+
+@model IEnumerable<CMS.Data.Entities.Banner>
+
+@{
+    ViewData["Title"] = "Quản lý Banner Slider";
+}
+
+<div class="space-y-6">
+
+    @* TIÊU ĐỀ TRANG + NÚT THÊM MỚI *@
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-5">
+        <div>
+            <h2 class="text-2xl font-extrabold text-slate-950 tracking-tight flex items-center">
+                <i class="bi bi-images text-violet-500 mr-2.5"></i>QUẢN LÝ BANNER SLIDER
+            </h2>
+            <p class="mt-1 text-sm text-slate-500">
+                Thêm, sửa, xóa banner hiển thị trên Slider trang chủ — Tổng:
+                <strong class="text-slate-700">@Model.Count()</strong> banner
+            </p>
+        </div>
+        <div>
+            <a asp-action="Create"
+               class="inline-flex items-center justify-center rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white no-underline shadow-sm transition-all duration-200 hover:bg-violet-700 hover:shadow-md">
+                <i class="bi bi-plus-lg mr-1.5 font-bold"></i> THÊM BANNER MỚI
+            </a>
+        </div>
+    </div>
+
+    @* THÔNG BÁO THÀNH CÔNG *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-sm font-bold text-emerald-700 flex items-center shadow-sm">
+            <i class="bi bi-check-circle-fill mr-2.5 text-lg text-emerald-500"></i>
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @* BẢNG DANH SÁCH BANNER *@
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs">
+        <table class="w-full text-left border-collapse m-0">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50/70 text-xs font-bold uppercase tracking-wider text-slate-500">
+                    <th class="p-4 text-center w-20">Mã số</th>
+                    <th class="p-4 w-36">Ảnh Preview</th>
+                    <th class="p-4">Tiêu đề</th>
+                    <th class="p-4">Mô tả</th>
+                    <th class="p-4 w-48">Link điều hướng</th>
+                    <th class="p-4 text-center w-24">Vị trí</th>
+                    <th class="p-4 text-center w-32">Trạng thái</th>
+                    <th class="p-4 text-center w-36">Hành động</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="group hover:bg-slate-50/60 transition-all duration-200">
+
+                            @* ID *@
+                            <td class="p-4 text-center">
+                                <span class="inline-block rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 font-mono text-xs font-bold text-slate-600">
+                                    #@item.Id
+                                </span>
+                            </td>
+
+                            @* ẢNH PREVIEW *@
+                            <td class="p-4">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl"
+                                         class="h-14 w-24 rounded-lg border border-slate-200 object-cover shadow-xs group-hover:scale-[1.03] transition-transform duration-200"
+                                         onerror="this.style.display='none'" />
+                                }
+                                else
+                                {
+                                    <div class="flex h-14 w-24 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-slate-400">
+                                        <i class="bi bi-image text-lg"></i>
+                                    </div>
+                                }
+                            </td>
+
+                            @* TIÊU ĐỀ *@
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900 group-hover:text-violet-600 transition-colors text-sm">
+                                    @(item.Title ?? "(Chưa có tiêu đề)")
+                                </div>
+                                <p class="m-0 mt-0.5 text-xs text-slate-400 truncate max-w-[180px]" title="@item.ImageUrl">
+                                    @item.ImageUrl
+                                </p>
+                            </td>
+
+                            @* MÔ TẢ *@
+                            <td class="p-4">
+                                <p class="m-0 text-xs text-slate-500 line-clamp-2 max-w-[200px]">
+                                    @(string.IsNullOrEmpty(item.Description) ? "—" : item.Description)
+                                </p>
+                            </td>
+
+                            @* LINK *@
+                            <td class="p-4">
+                                @if (!string.IsNullOrEmpty(item.Link))
+                                {
+                                    <a href="@item.Link" target="_blank"
+                                       class="inline-flex items-center text-xs font-semibold text-violet-600 no-underline hover:text-violet-800 truncate max-w-[160px] block">
+                                        <i class="bi bi-box-arrow-up-right mr-1 flex-shrink-0"></i>
+                                        @item.Link
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-xs text-slate-400">—</span>
+                                }
+                            </td>
+
+                            @* VỊ TRÍ *@
+                            <td class="p-4 text-center">
+                                <span class="inline-flex items-center justify-center rounded-full w-8 h-8 border border-slate-300 bg-slate-100 font-mono text-xs font-bold text-slate-700">
+                                    @item.Position
+                                </span>
+                            </td>
+
+                            @* TRẠNG THÁI *@
+                            <td class="p-4 text-center">
+                                @if (item.Status)
+                                {
+                                    <span class="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+                                        <i class="bi bi-eye-fill mr-1"></i>Hiển thị
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-500 ring-1 ring-inset ring-slate-400/20">
+                                        <i class="bi bi-eye-slash-fill mr-1"></i>Đã ẩn
+                                    </span>
+                                }
+                            </td>
+
+                            @* HÀNH ĐỘNG *@
+                            <td class="p-4 text-center">
+                                <div class="inline-flex rounded-lg border border-slate-200 bg-white shadow-xs overflow-hidden">
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white border-r border-slate-200 hover:bg-slate-50 hover:text-violet-600 transition-colors"
+                                       title="Sửa banner">
+                                        <i class="bi bi-pencil-square mr-1 text-violet-500"></i> Sửa
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       onclick="return confirm('Bạn có chắc muốn XÓA VĨNH VIỄN banner này không?\n\nTiêu đề: @Html.Raw(item.Title ?? $"ID={item.Id}")')"
+                                       class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 no-underline bg-white hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                                       title="Xóa banner">
+                                        <i class="bi bi-trash mr-1 text-rose-500"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="p-16 text-center">
+                            <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-violet-50 text-violet-400 shadow-inner">
+                                    <i class="bi bi-images text-2xl"></i>
+                                </div>
+                                <h3 class="mt-4 text-base font-bold text-slate-900">Chưa có banner nào!</h3>
+                                <p class="mt-1 text-sm text-slate-500 text-center">
+                                    Hệ thống chưa có banner slider nào. Bấm nút bên dưới để thêm banner đầu tiên.
+                                </p>
+                                <a asp-action="Create"
+                                   class="mt-4 inline-flex items-center rounded-xl bg-violet-600 px-4 py-2 text-xs font-bold text-white no-underline shadow-xs hover:bg-violet-700 transition-colors">
+                                    <i class="bi bi-plus-lg mr-1.5"></i>Thêm banner đầu tiên
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* HƯỚNG DẪN NHANH *@
+    <div class="rounded-xl border border-violet-100 bg-violet-50/50 p-4 text-xs text-slate-500">
+        <i class="bi bi-info-circle-fill text-violet-400 mr-1.5"></i>
+        <strong class="text-violet-700">Gợi ý:</strong>
+        Cột <strong>Vị trí</strong> xác định thứ tự slider (số nhỏ hiển thị trước).
+        Banner có <strong>Trạng thái = Đã ẩn</strong> sẽ không xuất hiện trên trang chủ React.
+        Chỉ tài khoản <strong>Quản trị viên</strong> mới được xóa banner.
+    </div>
+
+</div>

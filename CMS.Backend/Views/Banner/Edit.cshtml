@@ -1,0 +1,272 @@
+@*
+ * Sinh viên: Phạm Đăng Khoa
+ * Mã Sinh Viên : 2123110058
+ * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
+ * Vị trí file: CMS.Backend/Views/Banner/Edit.cshtml
+ * Chức năng: Form chỉnh sửa Banner — UPLOAD FILE ẢNH MỚI hoặc giữ nguyên ảnh cũ
+ *            Hiển thị ảnh hiện tại, cho phép thay bằng file mới từ máy tính
+ *            Nếu không chọn file mới → tự động giữ lại ảnh cũ (không xóa)
+ *@
+
+@model CMS.Data.Entities.Banner
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Banner";
+}
+
+<div class="mx-auto max-w-4xl">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+
+        @* ─── HEADER ──────────────────────────────────────────────────────────── *@
+        <div class="bg-indigo-600 px-6 py-4 flex items-center justify-between">
+            <h4 class="m-0 text-base font-bold text-white flex items-center tracking-wide">
+                <i class="bi bi-pencil-square mr-2 text-lg"></i> CẬP NHẬT THÔNG TIN BANNER
+            </h4>
+            <span class="rounded-lg bg-white/20 px-3 py-1 font-mono text-xs font-bold text-white">
+                ID: #@Model.Id
+            </span>
+        </div>
+
+        @* ─── THÔNG BÁO LỖI VALIDATION ──────────────────────────────────────── *@
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="mx-6 mt-5 rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm text-rose-700">
+                <i class="bi bi-exclamation-triangle-fill mr-2 text-rose-500"></i>
+                <strong>Vui lòng kiểm tra lại:</strong>
+                <ul class="mt-2 mb-0 pl-5 space-y-0.5">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li class="font-medium">@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <div class="p-6 sm:p-8">
+            @* enctype="multipart/form-data" BẮT BUỘC để gửi file ảnh *@
+            <form asp-action="Edit" method="post" enctype="multipart/form-data" class="m-0">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+
+                <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+
+                    @* ═══ CỘT TRÁI (2/3): ẢNH + CÁC TRƯỜNG CHÍNH ═══ *@
+                    <div class="lg:col-span-2 space-y-5 lg:border-r lg:border-slate-100 lg:pr-8">
+
+                        @* ── ẢNH HIỆN TẠI ──────────────────────────────────────── *@
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">
+                                <i class="bi bi-image-fill text-indigo-500 mr-1.5"></i>Ảnh Banner
+                            </label>
+
+                            @* Hiển thị ảnh hiện tại từ DB (đường dẫn /uploads/banners/...) *@
+                            <div class="overflow-hidden rounded-xl border border-indigo-100 bg-slate-100 relative group" style="height: 180px;">
+                                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                {
+                                    <img id="imgCurrentPreview"
+                                         src="@Model.ImageUrl"
+                                         alt="Ảnh banner hiện tại"
+                                         class="w-full h-full object-cover"
+                                         onerror="this.parentElement.innerHTML='<div class=\'flex h-full items-center justify-center text-slate-400 text-xs text-center p-4\'><i class=\'bi bi-image text-2xl d-block mb-1\'></i>Không tải được ảnh từ server</div>'" />
+                                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-3 py-2">
+                                        <p class="text-white text-xs font-semibold m-0 truncate">
+                                            <i class="bi bi-link-45deg mr-1"></i>@Model.ImageUrl
+                                        </p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="flex h-full items-center justify-center text-slate-400 text-xs text-center">
+                                        <div>
+                                            <i class="bi bi-image d-block text-2xl mb-1"></i>
+                                            Chưa có ảnh banner
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        @* ── VÙNG UPLOAD ẢNH MỚI ──────────────────────────────── *@
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">
+                                Thay bằng ảnh mới
+                                <span class="ml-2 font-normal text-slate-400 text-xs">(Bỏ trống = giữ nguyên ảnh cũ)</span>
+                            </label>
+
+                            <div id="dropZone"
+                                 class="relative flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 transition-all duration-200 cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/30"
+                                 style="min-height: 130px;"
+                                 onclick="document.getElementById('imageFile').click()"
+                                 ondragover="event.preventDefault(); this.classList.add('border-indigo-500','bg-indigo-50')"
+                                 ondragleave="this.classList.remove('border-indigo-500','bg-indigo-50')"
+                                 ondrop="handleDrop(event)">
+
+                                <div id="dropZoneDefault" class="text-center py-6 px-4">
+                                    <i class="bi bi-arrow-repeat text-slate-300 d-block" style="font-size: 2rem;"></i>
+                                    <p class="mt-2 text-sm font-semibold text-slate-500">
+                                        Kéo thả ảnh mới hoặc <span class="text-indigo-600 underline">bấm để chọn file</span>
+                                    </p>
+                                    <p class="mt-0.5 text-xs text-slate-400">PNG, JPG, JPEG, WEBP · Tối đa 10MB</p>
+                                </div>
+
+                                <div id="previewContainer" class="hidden w-full" style="min-height: 130px;">
+                                    <img id="imgNewPreview"
+                                         src=""
+                                         alt="Ảnh banner mới"
+                                         class="w-full rounded-xl object-cover"
+                                         style="max-height: 180px;" />
+                                    <div class="absolute bottom-2 right-2">
+                                        <span id="fileNameBadge" class="inline-block rounded-lg bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="file"
+                                   id="imageFile"
+                                   name="imageFile"
+                                   accept="image/*"
+                                   class="hidden"
+                                   onchange="handleFileSelect(this)" />
+                        </div>
+
+                        @* ── TIÊU ĐỀ ── *@
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Tiêu đề Banner</label>
+                            <input asp-for="Title"
+                                   class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
+                                   placeholder="Nhập tiêu đề chữ chạy trên banner..." />
+                        </div>
+
+                        @* ── MÔ TẢ ── *@
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Mô tả ngắn</label>
+                            <textarea asp-for="Description"
+                                      rows="3"
+                                      class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 resize-y"
+                                      placeholder="Mô tả ngắn hiển thị dưới tiêu đề..."></textarea>
+                        </div>
+
+                        @* ── LINK ĐIỀU HƯỚNG ── *@
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Link điều hướng khi click</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-3 flex items-center text-slate-400">
+                                    <i class="bi bi-link-45deg text-base"></i>
+                                </span>
+                                <input asp-for="Link"
+                                       class="block w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-9 pr-4 text-sm font-medium text-slate-900 outline-hidden transition-all placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10"
+                                       placeholder="/products hoặc https://..." />
+                            </div>
+                        </div>
+                    </div>
+
+                    @* ═══ CỘT PHẢI (1/3): VỊ TRÍ, TRẠNG THÁI, NÚT LƯU ═══ *@
+                    <div class="space-y-5">
+
+                        @* ── VỊ TRÍ ── *@
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">
+                                <i class="bi bi-sort-numeric-up text-slate-400 mr-1"></i>Thứ tự vị trí Slider
+                            </label>
+                            <input asp-for="Position"
+                                   type="number"
+                                   min="0"
+                                   class="block w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-hidden transition-all focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10" />
+                            <p class="text-xs text-slate-400">Số nhỏ = hiển thị trước trong slider.</p>
+                        </div>
+
+                        @* ── TRẠNG THÁI ── *@
+                        <div class="space-y-2">
+                            <label class="block text-sm font-bold text-slate-700">Trạng thái hiển thị</label>
+                            <label class="relative inline-flex items-center cursor-pointer group">
+                                <input asp-for="Status" type="checkbox" class="sr-only peer" />
+                                <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                <span class="ml-3 text-sm font-semibold text-slate-700 group-hover:text-indigo-700">
+                                    @(Model.Status ? "Đang hiển thị" : "Đang ẩn")
+                                </span>
+                            </label>
+                        </div>
+
+                        @* ── TÓM TẮT THÔNG TIN BANNER ── *@
+                        <div class="rounded-xl border border-slate-100 bg-slate-50 p-3 text-xs space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-400">Mã banner:</span>
+                                <span class="font-mono font-bold text-slate-700">#@Model.Id</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-slate-400">Trạng thái:</span>
+                                @if (Model.Status)
+                                {
+                                    <span class="rounded-full bg-emerald-100 px-2 py-0.5 font-bold text-emerald-700">Hiển thị</span>
+                                }
+                                else
+                                {
+                                    <span class="rounded-full bg-slate-200 px-2 py-0.5 font-bold text-slate-600">Đang ẩn</span>
+                                }
+                            </div>
+                            <div class="pt-1 border-t border-slate-200 text-slate-400">
+                                <i class="bi bi-info-circle mr-1"></i>
+                                Nếu không chọn file mới, ảnh cũ sẽ được <strong class="text-slate-600">giữ nguyên</strong>.
+                            </div>
+                        </div>
+
+                        @* ── NÚT HÀNH ĐỘNG ── *@
+                        <div class="border-t border-slate-100 pt-5 space-y-2.5">
+                            <button type="submit"
+                                    class="flex w-full items-center justify-center rounded-xl bg-indigo-600 py-3 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-indigo-700 hover:shadow-md cursor-pointer">
+                                <i class="bi bi-save mr-2"></i> LƯU THAY ĐỔI
+                            </button>
+                            <a asp-action="Index"
+                               class="flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white py-3 text-sm font-bold text-slate-700 no-underline shadow-xs transition-all duration-200 hover:bg-slate-50 hover:text-slate-900">
+                                <i class="bi bi-arrow-left mr-2"></i> QUAY LẠI DANH SÁCH
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                showNewPreview(input.files[0]);
+            }
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            document.getElementById('dropZone').classList.remove('border-indigo-500', 'bg-indigo-50');
+            var files = event.dataTransfer.files;
+            if (files && files[0]) {
+                document.getElementById('imageFile').files = files;
+                showNewPreview(files[0]);
+            }
+        }
+
+        function showNewPreview(file) {
+            var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/bmp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('⚠️ Chỉ chấp nhận file ảnh: JPG, PNG, GIF, WEBP, BMP');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                alert('⚠️ Kích thước file không được vượt quá 10MB.');
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('imgNewPreview').src = e.target.result;
+                document.getElementById('fileNameBadge').textContent =
+                    '✅ ' + file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
+                document.getElementById('dropZoneDefault').classList.add('hidden');
+                document.getElementById('previewContainer').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+}

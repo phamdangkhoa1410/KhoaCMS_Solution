@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * MSSV: 2123110058
  * Version 1.0 - Cấu hình ApplicationDbContext
@@ -26,5 +26,8 @@ namespace CMS.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
+        // [NHIỆM VỤ 1 - BANNER]: Bảng lưu trữ dữ liệu Banner Slider trang chủ
+        public DbSet<Banner> Banners { get; set; }
     }
 }
