@@ -1,8 +1,14 @@
-﻿import axios from 'axios';
+/*
+ * Sinh viên: Phạm Đăng Khoa
+ * Mã Sinh Viên : 2123110058
+ * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
+ */
+
+import axios from 'axios';
 
 // Khởi tạo thực thể kết nối thẳng đến cổng API 7243 của Backend
 const axiosClient = axios.create({
-    baseURL: 'https://localhost:7243/api',
+    baseURL: process.env.REACT_APP_API_URL || 'https://localhost:7243/api',
     headers: {
         'Content-Type': 'application/json',
     },

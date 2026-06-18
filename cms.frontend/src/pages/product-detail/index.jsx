@@ -15,6 +15,7 @@ const ProductDetail = () => {
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [quantity, setQuantity] = useState(1);
 
     // 2. useEffect tự động kích hoạt gọi API ngay khi nạp trang
     useEffect(() => {
@@ -53,8 +54,14 @@ const ProductDetail = () => {
         );
     }
 
-    const handleAddToCart = async () => {
+        const handleAddToCart = async () => {
         try {
+            const stock = product.stockQuantity ?? product.StockQuantity ?? 0;
+            if (quantity > stock) {
+                alert(`Số lượng sản phẩm trong kho không đủ! (Chỉ còn ${stock})`);
+                return;
+            }
+
             const userStr = localStorage.getItem('user');
             if (!userStr) {
                 alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
@@ -66,10 +73,10 @@ const ProductDetail = () => {
             const productId = product.Id || product.id;
             const customerId = user.id || user.Id;
 
-            const response = await fetch('https://localhost:7243/api/Cart/Add', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Cart/Add`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ CustomerId: customerId, ProductId: productId, Quantity: 1 })
+                body: JSON.stringify({ CustomerId: customerId, ProductId: productId, Quantity: quantity })
             });
 
             if (response.ok) {
@@ -143,6 +150,17 @@ const ProductDetail = () => {
                             <span className="text-muted small font-weight-bold mr-4">
                                 Trạng thái kho: <span className="badge badge-dark ml-1">Còn {product.stockQuantity ?? product.StockQuantity ?? 0} cái</span>
                             </span>
+                            
+                            <div className="input-group mr-3" style={{ width: '120px' }}>
+                                <div className="input-group-prepend">
+                                    <button className="btn btn-outline-secondary" type="button" onClick={() => setQuantity(q => Math.max(1, q - 1))}>-</button>
+                                </div>
+                                <input type="number" className="form-control text-center" value={quantity} onChange={e => setQuantity(Math.max(1, parseInt(e.target.value) || 1))} min="1" />
+                                <div className="input-group-append">
+                                    <button className="btn btn-outline-secondary" type="button" onClick={() => setQuantity(q => q + 1)}>+</button>
+                                </div>
+                            </div>
+
                             <button className="btn btn-danger btn-lg font-weight-bold px-4 shadow" type="button" onClick={handleAddToCart}>
                                 <i className="bi bi-cart-plus-fill mr-2"></i> Thêm vào giỏ hàng
                             </button>

@@ -56,7 +56,7 @@ const Header = () => {
                 const user = JSON.parse(userStr);
                 const customerId = user.id || user.Id;
                 
-                const response = await fetch(`https://localhost:7243/api/Cart/${customerId}`);
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/Cart/${customerId}`);
                 if (response.ok) {
                     const cart = await response.json();
                     const total = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -114,6 +114,14 @@ const Header = () => {
         }
     };
 
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim() !== '') {
+            setIsSearchOpen(false);
+            navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
+
     // Hàm format tiền
     const formatPrice = (product) => {
         const price = product.Price || product.price;
@@ -151,7 +159,7 @@ const Header = () => {
 
                 {/* ---------- CHÍNH GIỮA: THANH TÌM KIẾM LIVE SEARCH ---------- */}
                 <div className="search-center-wrapper d-none d-md-block" ref={searchRef}>
-                    <form className="glass-search-input-group" onSubmit={(e) => e.preventDefault()}>
+                    <form className="glass-search-input-group" onSubmit={handleSearchSubmit}>
                         <input 
                             className="form-control glass-search-input" 
                             type="search" 
@@ -160,7 +168,7 @@ const Header = () => {
                             onChange={handleSearchChange}
                             onFocus={() => searchQuery.trim() && setIsSearchOpen(true)}
                         />
-                        <button className="glass-search-btn" type="button">
+                        <button className="glass-search-btn" type="submit">
                             <i className="bi bi-search" style={{ fontSize: '1.2rem' }}></i>
                         </button>
                     </form>

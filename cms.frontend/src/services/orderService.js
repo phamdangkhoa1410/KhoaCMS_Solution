@@ -4,7 +4,7 @@
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
  */
 
-const API_URL = 'https://localhost:7243/api/order';
+const API_URL = `${process.env.REACT_APP_API_URL}/order`;
 
 export const getMyOrders = async (token) => {
     const response = await fetch(`${API_URL}/my-orders`, {

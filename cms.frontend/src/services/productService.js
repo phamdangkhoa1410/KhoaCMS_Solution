@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
@@ -20,6 +20,12 @@ const productService = {
         // 🔔 ĐÃ SỬA: Đồng bộ sang dạng số nhiều '/products/{id}'
         const url = `/products/${id}`;
         return axiosClient.get(url);
+    },
+
+    // 3. Hàm gọi API tìm kiếm, lọc và phân trang tổng hợp
+    advancedSearch: (params) => {
+        const url = '/products/advanced-search';
+        return axiosClient.get(url, { params });
     }
 };
 

@@ -23,7 +23,7 @@ const Cart = () => {
             }
             const user = JSON.parse(userStr);
             const customerId = user.id || user.Id;
-            const res = await fetch(`https://localhost:7243/api/Cart/${customerId}`);
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/Cart/${customerId}`);
             if (res.ok) {
                 const data = await res.json();
                 setCartItems(data);
@@ -59,7 +59,7 @@ const Cart = () => {
         if (newQuantity < 1) return;
         const user = JSON.parse(localStorage.getItem('user'));
         const customerId = user.id || user.Id;
-        await fetch('https://localhost:7243/api/Cart/UpdateQuantity', {
+        await fetch(`${process.env.REACT_APP_API_URL}/Cart/UpdateQuantity`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ CustomerId: customerId, ProductId: id, Quantity: newQuantity })
@@ -71,7 +71,7 @@ const Cart = () => {
     const handleRemoveItem = async (id) => {
         const user = JSON.parse(localStorage.getItem('user'));
         const customerId = user.id || user.Id;
-        await fetch(`https://localhost:7243/api/Cart/Remove/${customerId}/${id}`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/Cart/Remove/${customerId}/${id}`, {
             method: 'DELETE'
         });
         loadCart();

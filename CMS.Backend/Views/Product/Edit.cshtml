@@ -1,4 +1,4 @@
-﻿@model CMS.Data.Entities.Product
+@model CMS.Data.Entities.Product
 
 @{
     ViewData["Title"] = "Chỉnh sửa sản phẩm";
@@ -83,3 +83,9 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('Description', {
+        filebrowserUploadUrl: '/api/upload'
+    });
+</script>

@@ -1,4 +1,4 @@
-﻿@model CMS.Data.Entities.Post
+@model CMS.Data.Entities.Post
 
 @{
     ViewData["Title"] = "Tạo bài viết mới";
@@ -84,4 +84,10 @@
             document.getElementById('imagePreviewContainer').classList.remove('hidden');
         }
     }
+</script>
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('Content', {
+        filebrowserUploadUrl: '/api/upload'
+    });
 </script>

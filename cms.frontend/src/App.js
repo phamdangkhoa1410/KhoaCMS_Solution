@@ -27,6 +27,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ForgotPassword from './pages/auth/ForgotPassword';
 import Profile from './pages/customer/Profile';
 import Orders from './pages/customer/Orders';
 import Cart from './pages/cart/Cart';
@@ -66,6 +67,7 @@ function App() {
                                 {/* === CÁC TUYẾN ĐƯỜNG XÁC THỰC === */}
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/register" element={<Register />} />
+                                <Route path="/forgot-password" element={<ForgotPassword />} />
 
                                 {/* === CÁC TUYẾN ĐƯỜNG BẢO VỆ (CẦN ĐĂNG NHẬP) === */}
                                 <Route element={<ProtectedRoute />}>

@@ -4,7 +4,7 @@
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
  */
 
-const API_URL = 'https://localhost:7243/api/customer';
+const API_URL = `${process.env.REACT_APP_API_URL}/customer`;
 
 export const getProfile = async (token) => {
     const response = await fetch(`${API_URL}/profile`, {

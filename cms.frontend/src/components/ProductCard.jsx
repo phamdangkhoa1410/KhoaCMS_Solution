@@ -37,7 +37,7 @@ const ProductCard = ({ product }) => {
             const productId = product.Id || product.id;
             const customerId = user.id || user.Id;
 
-            const response = await fetch('https://localhost:7243/api/Cart/Add', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Cart/Add`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ CustomerId: customerId, ProductId: productId, Quantity: 1 })

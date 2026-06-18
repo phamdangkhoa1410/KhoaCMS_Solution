@@ -1,4 +1,4 @@
-﻿@model CMS.Data.Entities.Post
+@model CMS.Data.Entities.Post
 
 @{
     ViewData["Title"] = "Chỉnh sửa bài viết";
@@ -107,4 +107,10 @@
             }
         }
     }
+</script>
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('Content', {
+        filebrowserUploadUrl: '/api/upload'
+    });
 </script>

@@ -4,7 +4,7 @@
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
  */
 
-const API_URL = 'https://localhost:7243/api/auth'; // Đã đồng bộ port 7243
+const API_URL = `${process.env.REACT_APP_API_URL}/auth`; // Đã đồng bộ port 7243
 
 export const login = async (email, password) => {
     const response = await fetch(`${API_URL}/login`, {

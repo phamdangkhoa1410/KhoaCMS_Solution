@@ -117,11 +117,27 @@ namespace CMS.Backend.Controllers.Api
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync(); // Lưu để lấy ID Đơn hàng
 
-                // Thêm chi tiết đơn hàng
+                // Thêm chi tiết đơn hàng và xử lý trừ kho
                 if (input.OrderDetails != null && input.OrderDetails.Any())
                 {
                     foreach (var item in input.OrderDetails)
                     {
+                        // Kiểm tra tồn kho
+                        var product = await _context.Products.FindAsync(item.ProductId);
+                        if (product == null)
+                        {
+                            return BadRequest(new { message = $"Sản phẩm ID {item.ProductId} không tồn tại!" });
+                        }
+
+                        if (product.StockQuantity < item.Quantity)
+                        {
+                            return BadRequest(new { message = $"Số lượng sản phẩm '{product.Name}' trong kho không đủ (Chỉ còn {product.StockQuantity})!" });
+                        }
+
+                        // Trừ tồn kho
+                        product.StockQuantity -= item.Quantity;
+                        _context.Products.Update(product);
+
                         var detail = new OrderDetail
                         {
                             OrderId = order.Id,

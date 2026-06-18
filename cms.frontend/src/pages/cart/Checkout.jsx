@@ -36,7 +36,7 @@ const Checkout = () => {
                 const userData = JSON.parse(userStr);
                 const customerId = userData.id || userData.Id;
                 
-                const res = await fetch(`https://localhost:7243/api/Cart/${customerId}`);
+                const res = await fetch(`${process.env.REACT_APP_API_URL}/Cart/${customerId}`);
                 if (res.ok) {
                     const data = await res.json();
                     if (data.length === 0) {
@@ -109,7 +109,9 @@ const Checkout = () => {
             };
             if (token) headers['Authorization'] = `Bearer ${token}`;
 
-            const response = await fetch('http://localhost:7243/api/Order', {
+            // Thay vì trả về object Entity bự chảng bị dính tham chiếu vòng (Object Cycle), 
+            // API giờ đây chỉ trả về { success: true, message: "...", orderId: 1 } rất gọn nhẹ và phẳng.
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/Order`, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify(payload)
@@ -118,7 +120,7 @@ const Checkout = () => {
             if (response.ok || response.status === 201) {
                 // Thành công: Xóa giỏ hàng dưới DB, thông báo Header cập nhật, chuyển về My Orders
                 const customerId = user.id || user.Id;
-                await fetch(`https://localhost:7243/api/Cart/Clear/${customerId}`, { method: 'DELETE' });
+                await fetch(`${process.env.REACT_APP_API_URL}/Cart/Clear/${customerId}`, { method: 'DELETE' });
                 window.dispatchEvent(new Event('cartUpdate'));
                 alert("🎉 Chúc mừng bạn đã đặt hàng thành công!");
                 navigate('/my-orders');

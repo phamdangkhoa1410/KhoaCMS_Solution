@@ -116,7 +116,7 @@
                         <div class="text-sm font-medium text-slate-600 flex items-center bg-slate-50 border border-slate-200 rounded-xl px-4 py-1.5">
                             <i class="bi bi-person-circle text-indigo-500 mr-2 text-base"></i>
                             <span>
-                                Chào, <strong class="text-slate-900 font-bold">@User.FindFirst("FullName")?.Value</strong>
+                                Chào, <strong class="text-slate-900 font-bold">@User.Identity.Name</strong>
                                 <span class="mx-1 text-slate-300">|</span>
                                 <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-bold text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
                                     @User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value

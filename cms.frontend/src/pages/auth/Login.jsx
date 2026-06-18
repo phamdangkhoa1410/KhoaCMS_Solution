@@ -95,6 +95,12 @@ const Login = () => {
                             </div>
                         </div>
 
+                        <div className="d-flex justify-content-end mb-4">
+                            <Link to="/forgot-password" className="small text-decoration-none font-weight-bold" style={{ color: '#00f0ff' }}>
+                                Quên mật khẩu?
+                            </Link>
+                        </div>
+
                         <button
                             type="submit"
                             className="btn btn-primary btn-block py-2 font-weight-bold shadow-sm"

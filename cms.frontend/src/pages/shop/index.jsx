@@ -19,7 +19,14 @@ const Shop = () => {
     const [selectedCategoryId, setSelectedCategoryId] = useState(
         location.state?.selectedCategoryId ?? null
     );
-    const [searchTerm, setSearchTerm] = useState('');
+    // Cập nhật: Lấy keyword từ URL query params nếu có (do Header bắn sang)
+    const queryParams = new URLSearchParams(location.search);
+    const initialSearch = queryParams.get('search') || '';
+
+    const [searchTerm, setSearchTerm] = useState(initialSearch);
+
+    // Xử lý chuyển trang
+    const [page, setPage] = useState(1);
 
     // 🎯 Bộ đôi lọc giá: Mặc định kho máy tối đa 50 triệu VNĐ
     const [priceInput, setPriceInput] = useState(50000000);
@@ -56,6 +63,8 @@ const Shop = () => {
                         selectedCategoryId={selectedCategoryId}
                         searchTerm={searchTerm}
                         priceRange={priceRange}
+                        page={page}
+                        setPage={setPage}
                     />
                 </div>
 
