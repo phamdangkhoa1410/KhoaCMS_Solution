@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
@@ -22,44 +22,65 @@ import ProductDetail from './pages/product-detail';
 // Khoa chỉ cần tạo folder 'blog-detail' và file 'index.jsx' bên trong là tự động khớp nối
 import BlogDetail from './pages/blog-detail';
 
+// --- Thêm các trang Auth và Customer ---
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/layout/ProtectedRoute';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+import Profile from './pages/customer/Profile';
+import Orders from './pages/customer/Orders';
+import Cart from './pages/cart/Cart';
+
 import './App.css';
 
 function App() {
     return (
         <Router>
-            {/* Khung cấu trúc Flexbox giúp giữ chân cố định Footer luôn nằm ở đáy màn hình */}
-            <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
+            <AuthProvider>
+                {/* Khung cấu trúc Flexbox giúp giữ chân cố định Footer luôn nằm ở đáy màn hình */}
+                <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
 
-                {/* Thanh điều hướng Header dùng chung cho toàn bộ website */}
-                <Header />
+                    {/* Thanh điều hướng Header dùng chung cho toàn bộ website */}
+                    <Header />
 
-                {/* Phần ruột hiển thị nội dung thay đổi linh hoạt dựa theo URL trên thanh địa chỉ */}
-                <main className="py-4 flex-grow-1">
-                    <div className="container mt-2">
-                        <Routes>
-                            {/* Tuyến đường mặc định - Trang Chủ (/) */}
-                            <Route path="/" element={<Home />} />
+                    {/* Phần ruột hiển thị nội dung thay đổi linh hoạt dựa theo URL trên thanh địa chỉ */}
+                    <main className="py-4 flex-grow-1">
+                        <div className="container mt-2">
+                            <Routes>
+                                {/* Tuyến đường mặc định - Trang Chủ (/) */}
+                                <Route path="/" element={<Home />} />
 
-                            {/* Tuyến đường phân hệ Cửa Hàng - Danh sách sản phẩm (/products) */}
-                            <Route path="/products" element={<Shop />} />
+                                {/* Tuyến đường phân hệ Cửa Hàng - Danh sách sản phẩm (/products) */}
+                                <Route path="/products" element={<Shop />} />
 
-                            {/* Tuyến đường xem chi tiết một sản phẩm cụ thể dựa trên ID động (:id) */}
-                            <Route path="/product/:id" element={<ProductDetail />} />
+                                {/* Tuyến đường xem chi tiết một sản phẩm cụ thể dựa trên ID động (:id) */}
+                                <Route path="/product/:id" element={<ProductDetail />} />
 
-                            {/* Tuyến đường phân hệ Tin Tức - Danh sách bài viết bài đăng (/blogs) */}
-                            <Route path="/blogs" element={<Blog />} />
+                                {/* Tuyến đường phân hệ Tin Tức - Danh sách bài viết bài đăng (/blogs) */}
+                                <Route path="/blogs" element={<Blog />} />
 
-                            {/* 🔔 ĐÃ THÊM: Tuyến đường xem chi tiết nội dung 1 bài viết dựa trên ID động (:id) */}
-                            {/* Ví dụ: Khi URL là /blog/3, React Router sẽ gọi component BlogDetail để hiển thị nội dung */}
-                            <Route path="/blog/:id" element={<BlogDetail />} />
-                        </Routes>
-                    </div>
-                </main>
+                                {/* Tuyến đường xem chi tiết nội dung 1 bài viết dựa trên ID động (:id) */}
+                                <Route path="/blog/:id" element={<BlogDetail />} />
 
-                {/* Thanh thông tin chân trang Footer dùng chung */}
-                <Footer />
+                                {/* === CÁC TUYẾN ĐƯỜNG XÁC THỰC === */}
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/register" element={<Register />} />
 
-            </div>
+                                {/* === CÁC TUYẾN ĐƯỜNG BẢO VỆ (CẦN ĐĂNG NHẬP) === */}
+                                <Route element={<ProtectedRoute />}>
+                                    <Route path="/profile" element={<Profile />} />
+                                    <Route path="/my-orders" element={<Orders />} />
+                                    <Route path="/cart" element={<Cart />} />
+                                </Route>
+                            </Routes>
+                        </div>
+                    </main>
+
+                    {/* Thanh thông tin chân trang Footer dùng chung */}
+                    <Footer />
+
+                </div>
+            </AuthProvider>
         </Router>
     );
 }

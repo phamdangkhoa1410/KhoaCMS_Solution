@@ -1,0 +1,213 @@
+/*
+ * Sinh viên: Phạm Đăng Khoa
+ * Mã Sinh Viên : 2123110058
+ * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
+ */
+
+/* ==========================================================================
+   AI PREMIUM HEADER STYLES
+   ========================================================================== */
+
+.premium-header {
+    background: rgba(18, 22, 30, 0.85); /* Tông màu tối, sang trọng */
+    backdrop-filter: blur(10px); /* Hiệu ứng Glassmorphism mờ mịn */
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Đổ bóng sâu */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* Nav Links */
+.premium-nav-link {
+    color: #96a1b0 !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border-radius: 12px;
+}
+
+.premium-nav-link:hover, .premium-nav-link.active-ai {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-1px);
+}
+
+/* Search Bar (Trung tâm) */
+.premium-search-wrapper {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.premium-search-wrapper:focus-within {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #71a4f0;
+    box-shadow: 0 0 10px rgba(113, 164, 240, 0.3);
+}
+
+.premium-search-input {
+    background: transparent !important;
+    border: none !important;
+    color: #fff !important;
+    font-size: 0.95rem;
+}
+
+.premium-search-input:focus {
+    box-shadow: none !important;
+}
+
+.premium-search-input::placeholder {
+    color: #6c757d;
+}
+
+.premium-search-btn {
+    background: transparent;
+    border: none;
+    color: #71a4f0;
+    transition: all 0.3s ease;
+}
+
+.premium-search-btn:hover {
+    color: #f593e4;
+    transform: scale(1.1);
+}
+
+/* Icons góc phải */
+.premium-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #96a1b0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.premium-icon-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Badge số lượng cho Giỏ hàng */
+.premium-cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff4757;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(255, 71, 87, 0.4);
+    border: 2px solid #12161e; /* Cùng màu nền header để tạo độ tách biệt */
+}
+
+/* Phần hiển thị tên user */
+.premium-greeting {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    font-weight: 500;
+}
+
+/* Dropdown Menu */
+.premium-dropdown {
+    position: absolute;
+    top: calc(100% + 15px);
+    right: 0;
+    min-width: 240px;
+    background: rgba(20, 25, 35, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    overflow: hidden;
+    animation: slideDownFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform-origin: top right;
+}
+
+.premium-dropdown-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    color: #cbd5e1;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+.premium-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    padding-left: 25px; /* Hiệu ứng thụt lề nhẹ khi hover */
+}
+
+.premium-dropdown-item i {
+    font-size: 1.1rem;
+    width: 24px;
+}
+
+.premium-dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 4px 0;
+}
+
+/* Nút Đăng nhập / Đăng ký */
+.premium-btn-outline {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.premium-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.premium-btn-gradient {
+    background: linear-gradient(135deg, #71a4f0, #f593e4);
+    color: #fff !important;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(113, 164, 240, 0.3);
+    transition: all 0.3s ease;
+}
+
+.premium-btn-gradient:hover {
+    box-shadow: 0 6px 20px rgba(113, 164, 240, 0.5);
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+}
+
+@keyframes slideDownFade {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

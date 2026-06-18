@@ -420,3 +420,21 @@
     transform: translateY(-4px) !important;
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1) !important;
 }
+
+/* ==========================================================================
+   AUTH PAGES STYLES - AI PREMIUM
+   ========================================================================== */
+.ai-auth-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.ai-auth-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+}
+.ai-input:focus {
+    box-shadow: none;
+    border-color: #f593e4;
+}
+.ai-input-group:focus-within .input-group-text {
+    border-color: #f593e4;
+}
