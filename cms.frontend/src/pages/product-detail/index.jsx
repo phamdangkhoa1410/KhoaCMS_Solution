@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
@@ -53,6 +53,36 @@ const ProductDetail = () => {
         );
     }
 
+    const handleAddToCart = async () => {
+        try {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
+                window.location.href = '/login';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            const productId = product.Id || product.id;
+            const customerId = user.id || user.Id;
+
+            const response = await fetch('https://localhost:7243/api/Cart/Add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ CustomerId: customerId, ProductId: productId, Quantity: 1 })
+            });
+
+            if (response.ok) {
+                window.dispatchEvent(new Event('cartUpdate'));
+                alert("🎉 Đã thêm thành công sản phẩm vào giỏ hàng!");
+            } else {
+                alert('Có lỗi xảy ra khi thêm vào giỏ hàng!');
+            }
+        } catch (error) {
+            console.error("Lỗi khi thêm vào giỏ hàng:", error);
+        }
+    };
+
     return (
         <div className="container-fluid p-0 my-3">
             {/* Nút quay lại trang cửa hàng nhanh */}
@@ -90,13 +120,13 @@ const ProductDetail = () => {
                             Mặt hàng chính hãng
                         </span>
 
-                        <h2 className="font-weight-bold text-dark mb-3" style={{ fontSize: '2rem' }}>{product.name}</h2>
+                        <h2 className="font-weight-bold text-dark mb-3" style={{ fontSize: '2rem' }}>{product.name || product.Name}</h2>
 
                         {/* Khu vực hiển thị giá tiền nổi bật */}
                         <div className="bg-light border-left border-danger p-3 my-3 rounded-right">
                             <span className="text-muted small d-block font-weight-bold">GIÁ BÁN THỰC TẾ:</span>
                             <span className="h3 font-weight-bold text-danger mb-0">
-                                {product.price ? product.price.toLocaleString('vi-VN') : '0'} VND
+                                {(product.price || product.Price) ? (product.price || product.Price).toLocaleString('vi-VN') : '0'} VND
                             </span>
                         </div>
 
@@ -104,16 +134,16 @@ const ProductDetail = () => {
                         <div className="my-4">
                             <h6 className="font-weight-bold text-dark border-bottom pb-2">📍 Mô tả sản phẩm:</h6>
                             <p className="text-secondary small mt-2" style={{ lineHeight: '1.6' }}>
-                                {product.description || 'Sản phẩm cao cấp thuộc phân hệ Fashion Boutique hiện chưa được cập nhật mô tả chi tiết từ hệ thống quản trị nội dung.'}
+                                {product.description || product.Description || 'Sản phẩm cao cấp thuộc phân hệ Fashion Boutique hiện chưa được cập nhật mô tả chi tiết từ hệ thống quản trị nội dung.'}
                             </p>
                         </div>
 
                         {/* Số lượng tồn kho và nút mua */}
                         <div className="d-flex align-items-center mt-4 border-top pt-3">
                             <span className="text-muted small font-weight-bold mr-4">
-                                Trạng thái kho: <span className="badge badge-dark ml-1">Còn {product.stockQuantity ?? 0} cái</span>
+                                Trạng thái kho: <span className="badge badge-dark ml-1">Còn {product.stockQuantity ?? product.StockQuantity ?? 0} cái</span>
                             </span>
-                            <button className="btn btn-danger btn-lg font-weight-bold px-4 shadow" type="button">
+                            <button className="btn btn-danger btn-lg font-weight-bold px-4 shadow" type="button" onClick={handleAddToCart}>
                                 <i className="bi bi-cart-plus-fill mr-2"></i> Thêm vào giỏ hàng
                             </button>
                         </div>

@@ -5,108 +5,194 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import './Cart.css';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
+    const navigate = useNavigate();
 
-    useEffect(() => {
+    // Tải dữ liệu giỏ hàng từ API
+    const loadCart = async () => {
         try {
-            const storedCart = JSON.parse(localStorage.getItem('khoaCart') || '[]');
-            setCartItems(storedCart);
-        } catch {
-            setCartItems([]);
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                navigate('/login');
+                return;
+            }
+            const user = JSON.parse(userStr);
+            const customerId = user.id || user.Id;
+            const res = await fetch(`https://localhost:7243/api/Cart/${customerId}`);
+            if (res.ok) {
+                const data = await res.json();
+                setCartItems(data);
+                window.dispatchEvent(new Event('cartUpdate'));
+            }
+        } catch (error) {
+            console.error("Lỗi fetch cart:", error);
         }
-    }, []);
-
-    const calculateTotal = () => {
-        return cartItems.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
     };
 
+    useEffect(() => {
+        loadCart();
+    }, []);
+
+    // Format tiền VNĐ
+    const formatPrice = (price) => {
+        if (!price) return '0 Đ';
+        return price.toLocaleString('vi-VN') + ' Đ';
+    };
+
+    // Hàm lấy giá an toàn
+    const getProductPrice = (item) => item.Price || item.price || 0;
+    const getProductName = (item) => item.Name || item.name || 'Sản phẩm không xác định';
+    const getProductId = (item) => item.Id || item.id;
+    const getProductImage = (item) => {
+        const img = item.ImageUrl || item.imageUrl;
+        if (!img) return 'https://via.placeholder.com/60';
+        return img.startsWith('http') ? img : `https://localhost:7243${img}`;
+    };
+
+    // Cập nhật số lượng
+    const handleUpdateQuantity = async (id, newQuantity) => {
+        if (newQuantity < 1) return;
+        const user = JSON.parse(localStorage.getItem('user'));
+        const customerId = user.id || user.Id;
+        await fetch('https://localhost:7243/api/Cart/UpdateQuantity', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ CustomerId: customerId, ProductId: id, Quantity: newQuantity })
+        });
+        loadCart();
+    };
+
+    // Xóa sản phẩm
+    const handleRemoveItem = async (id) => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const customerId = user.id || user.Id;
+        await fetch(`https://localhost:7243/api/Cart/Remove/${customerId}/${id}`, {
+            method: 'DELETE'
+        });
+        loadCart();
+    };
+
+    // Tính tổng tiền động
+    const totalAmount = cartItems.reduce((total, item) => {
+        return total + (getProductPrice(item) * (item.quantity || 1));
+    }, 0);
+
     return (
-        <div className="container py-5">
-            <h2 className="font-weight-bold mb-4" style={{ color: '#2d3748' }}>Giỏ hàng của bạn</h2>
-            
-            {cartItems.length === 0 ? (
-                <div className="alert alert-info shadow-sm" style={{ borderRadius: '8px' }}>
-                    Giỏ hàng của bạn đang trống. <Link to="/products" className="font-weight-bold text-primary">Tiếp tục mua sắm</Link>
-                </div>
-            ) : (
-                <div className="row">
-                    <div className="col-lg-8 mb-4">
-                        <div className="card shadow-sm border-0" style={{ borderRadius: '12px' }}>
-                            <div className="card-body">
-                                <div className="table-responsive">
-                                    <table className="table table-hover align-middle">
-                                        <thead className="bg-light">
-                                            <tr>
-                                                <th>Sản phẩm</th>
-                                                <th className="text-center">Đơn giá</th>
-                                                <th className="text-center">Số lượng</th>
-                                                <th className="text-right">Thành tiền</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {cartItems.map((item, index) => (
-                                                <tr key={index}>
+        <div className="container mt-5 mb-5">
+            <div className="dark-glass-container">
+                <h2 className="dark-title"><i className="bi bi-cart-check mr-2"></i> Giỏ Hàng Của Bạn</h2>
+
+                {cartItems.length === 0 ? (
+                    <div className="text-center py-5">
+                        <i className="bi bi-cart-x text-muted" style={{ fontSize: '4rem' }}></i>
+                        <h4 className="mt-3 text-muted">Giỏ hàng đang trống</h4>
+                        <Link to="/products" className="btn btn-outline-info mt-3" style={{ borderRadius: '8px' }}>
+                            <i className="bi bi-arrow-left"></i> Tiếp tục mua sắm
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="row">
+                        {/* Cột hiển thị bảng sản phẩm */}
+                        <div className="col-lg-8">
+                            <div className="table-responsive">
+                                <table className="dark-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sản Phẩm</th>
+                                            <th className="text-center">Đơn Giá</th>
+                                            <th className="text-center">Số Lượng</th>
+                                            <th className="text-right">Tạm Tính</th>
+                                            <th className="text-center">Xóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {cartItems.map((item, index) => {
+                                            const id = getProductId(item);
+                                            const price = getProductPrice(item);
+                                            const qty = item.quantity || 1;
+                                            return (
+                                                <tr key={`${id}-${index}`}>
                                                     <td>
                                                         <div className="d-flex align-items-center">
-                                                            {item.imageUrl && (
-                                                                <img src={item.imageUrl} alt={item.name} className="img-thumbnail mr-3" style={{ width: '60px', height: '60px', objectFit: 'cover' }} />
-                                                            )}
-                                                            <span className="font-weight-bold">{item.name}</span>
+                                                            <img 
+                                                                src={getProductImage(item)} 
+                                                                alt={getProductName(item)} 
+                                                                style={{ width: '60px', height: '60px', objectFit: 'contain', background: '#fff', borderRadius: '8px', padding: '5px' }}
+                                                            />
+                                                            <span className="ml-3 font-weight-bold">{getProductName(item)}</span>
                                                         </div>
                                                     </td>
-                                                    <td className="text-center text-danger font-weight-bold">{item.price.toLocaleString('vi-VN')} đ</td>
-                                                    <td className="text-center">
-                                                        <span className="badge badge-secondary px-3 py-2">{item.quantity || 1}</span>
-                                                    </td>
-                                                    <td className="text-right text-danger font-weight-bold">
-                                                        {(item.price * (item.quantity || 1)).toLocaleString('vi-VN')} đ
+                                                    <td className="text-center text-info font-weight-bold">
+                                                        {formatPrice(price)}
                                                     </td>
                                                     <td className="text-center">
-                                                        <button className="btn btn-sm btn-outline-danger" title="Xóa">
+                                                        <div className="qty-btn-group">
+                                                            <button className="qty-btn" onClick={() => handleUpdateQuantity(id, qty - 1)}>
+                                                                <i className="bi bi-dash"></i>
+                                                            </button>
+                                                            <input type="text" className="qty-input" value={qty} readOnly />
+                                                            <button className="qty-btn" onClick={() => handleUpdateQuantity(id, qty + 1)}>
+                                                                <i className="bi bi-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td className="text-right font-weight-bold" style={{ color: '#00f0ff' }}>
+                                                        {formatPrice(price * qty)}
+                                                    </td>
+                                                    <td className="text-center">
+                                                        <button className="btn-delete-cart" onClick={() => handleRemoveItem(id)} title="Xóa khỏi giỏ hàng">
                                                             <i className="bi bi-trash"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-lg-4">
-                        <div className="card shadow-sm border-0 bg-light" style={{ borderRadius: '12px' }}>
-                            <div className="card-body p-4">
-                                <h5 className="font-weight-bold mb-4 border-bottom pb-3">Tổng đơn hàng</h5>
-                                <div className="d-flex justify-content-between mb-3">
-                                    <span className="text-muted">Tạm tính:</span>
-                                    <span className="font-weight-bold">{calculateTotal().toLocaleString('vi-VN')} đ</span>
+
+                        {/* Cột tóm tắt và thanh toán */}
+                        <div className="col-lg-4 mt-4 mt-lg-0">
+                            <div className="summary-box">
+                                <h5 className="mb-4 text-white font-weight-bold border-bottom border-secondary pb-3">
+                                    <i className="bi bi-receipt"></i> Tóm Tắt Đơn Hàng
+                                </h5>
+                                
+                                <div className="summary-row">
+                                    <span className="text-muted">Tổng sản phẩm:</span>
+                                    <span className="font-weight-bold">{cartItems.length} Món</span>
                                 </div>
-                                <div className="d-flex justify-content-between mb-4 border-bottom pb-3">
+                                <div className="summary-row">
                                     <span className="text-muted">Phí vận chuyển:</span>
                                     <span className="text-success font-weight-bold">Miễn phí</span>
                                 </div>
-                                <div className="d-flex justify-content-between mb-4">
-                                    <span className="font-weight-bold h5 mb-0">Thành tiền:</span>
-                                    <span className="h5 font-weight-bold text-danger mb-0">{calculateTotal().toLocaleString('vi-VN')} đ</span>
+                                
+                                <div className="summary-total">
+                                    <span>TỔNG TIỀN</span>
+                                    <span>{formatPrice(totalAmount)}</span>
                                 </div>
-                                <button className="btn btn-danger btn-block py-3 font-weight-bold shadow-sm" style={{ borderRadius: '8px' }}>
-                                    Tiến hành thanh toán
+
+                                <button 
+                                    className="btn-checkout-premium mt-4"
+                                    onClick={() => navigate('/checkout')}
+                                >
+                                    Tiến Hành Thanh Toán <i className="bi bi-arrow-right-circle ml-2"></i>
                                 </button>
-                                <div className="text-center mt-3">
-                                    <Link to="/products" className="small text-muted text-decoration-none">
-                                        <i className="bi bi-arrow-left mr-1"></i> Tiếp tục mua sắm
-                                    </Link>
-                                </div>
+
+                                <Link to="/products" className="btn btn-outline-light btn-block mt-3" style={{ borderRadius: '12px' }}>
+                                    <i className="bi bi-cart-plus"></i> Mua thêm sản phẩm
+                                </Link>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

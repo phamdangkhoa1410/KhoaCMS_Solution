@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
@@ -22,6 +22,37 @@ const ProductCard = ({ product }) => {
     const description = product.description ?? product.Description ?? 'Không có thông tin mô tả chi tiết từ hệ thống...';
     const stockQuantity = product.stockQuantity ?? product.StockQuantity ?? 0;
     const categoryName = product.categoryProductName ?? product.CategoryProductName ?? "Laptop Gaming";
+
+    const handleAddToCart = async (e) => {
+        e.preventDefault();
+        try {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                alert('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!');
+                window.location.href = '/login';
+                return;
+            }
+
+            const user = JSON.parse(userStr);
+            const productId = product.Id || product.id;
+            const customerId = user.id || user.Id;
+
+            const response = await fetch('https://localhost:7243/api/Cart/Add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ CustomerId: customerId, ProductId: productId, Quantity: 1 })
+            });
+
+            if (response.ok) {
+                window.dispatchEvent(new Event('cartUpdate'));
+                alert("🎉 Đã thêm thành công sản phẩm vào giỏ hàng!");
+            } else {
+                alert('Có lỗi xảy ra khi thêm vào giỏ hàng!');
+            }
+        } catch (error) {
+            console.error("Lỗi khi thêm vào giỏ hàng:", error);
+        }
+    };
 
     return (
         <div
@@ -132,6 +163,7 @@ const ProductCard = ({ product }) => {
 
                             <button
                                 type="button"
+                                onClick={handleAddToCart}
                                 className="btn btn-sm btn-light p-0 d-flex align-items-center justify-content-center border"
                                 style={{ borderRadius: '6px', width: '32px', height: '32px', backgroundColor: '#f8f9fa' }}
                                 title="Thêm vào giỏ hàng"

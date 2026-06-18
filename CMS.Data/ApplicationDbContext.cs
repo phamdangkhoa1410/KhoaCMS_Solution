@@ -26,6 +26,8 @@ namespace CMS.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartDetail> CartDetails { get; set; }
 
         // [NHIỆM VỤ 1 - BANNER]: Bảng lưu trữ dữ liệu Banner Slider trang chủ
         public DbSet<Banner> Banners { get; set; }

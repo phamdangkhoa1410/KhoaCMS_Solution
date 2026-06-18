@@ -14,6 +14,21 @@ using System.Text;
 
 namespace CMS.Backend.Controllers.Api
 {
+    // Tạo sẵn các class nhận dữ liệu ngay tại đây
+    public class OrderDetailInput
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
+    }
+
+    public class OrderInput
+    {
+        public int CustomerId { get; set; }
+        public string Notes { get; set; } = string.Empty;
+        public System.Collections.Generic.List<OrderDetailInput> OrderDetails { get; set; } = new();
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -81,6 +96,52 @@ namespace CMS.Backend.Controllers.Api
                 .ToList();
 
             return Ok(orders);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder([FromBody] OrderInput input)
+        {
+            if (input == null) return BadRequest("Dữ liệu gửi lên trống!");
+
+            try
+            {
+                // Tạo mới đơn hàng
+                var order = new Order
+                {
+                    CustomerId = input.CustomerId,
+                    Status = 0,
+                    Notes = input.Notes,
+                    OrderDate = DateTime.Now // Lưu ý: Thuộc tính trong DB là OrderDate, không phải CreatedAt
+                };
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync(); // Lưu để lấy ID Đơn hàng
+
+                // Thêm chi tiết đơn hàng
+                if (input.OrderDetails != null && input.OrderDetails.Any())
+                {
+                    foreach (var item in input.OrderDetails)
+                    {
+                        var detail = new OrderDetail
+                        {
+                            OrderId = order.Id,
+                            ProductId = item.ProductId,
+                            Quantity = item.Quantity,
+                            UnitPrice = item.UnitPrice
+                        };
+                        _context.OrderDetails.Add(detail);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
+                // Trả về Object ẩn danh phẳng để CHỐNG LỖI VÒNG LẶP JSON VÀ LỖI ERR_EMPTY_RESPONSE
+                return Ok(new { success = true, message = "Đặt hàng thành công!", orderId = order.Id });
+            }
+            catch (Exception ex)
+            {
+                // Trả về thông báo lỗi thay vì sập server
+                return StatusCode(500, new { error = ex.Message, inner = ex.InnerException?.Message });
+            }
         }
     }
 }

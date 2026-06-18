@@ -30,6 +30,7 @@ import Register from './pages/auth/Register';
 import Profile from './pages/customer/Profile';
 import Orders from './pages/customer/Orders';
 import Cart from './pages/cart/Cart';
+import Checkout from './pages/cart/Checkout';
 
 import './App.css';
 
@@ -71,6 +72,7 @@ function App() {
                                     <Route path="/profile" element={<Profile />} />
                                     <Route path="/my-orders" element={<Orders />} />
                                     <Route path="/cart" element={<Cart />} />
+                                    <Route path="/checkout" element={<Checkout />} />
                                 </Route>
                             </Routes>
                         </div>
