@@ -15,6 +15,7 @@ const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -84,19 +85,32 @@ const Login = () => {
                                     </span>
                                 </div>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     name="password"
-                                    className="form-control border-left-0 ai-input"
+                                    className="form-control border-left-0 border-right-0 ai-input"
                                     placeholder="Nhập mật khẩu..."
                                     value={formData.password}
                                     onChange={handleChange}
-                                    style={{ borderTopRightRadius: '8px', borderBottomRightRadius: '8px' }}
                                 />
+                                <div className="input-group-append">
+                                    <span 
+                                        className="input-group-text bg-white border-left-0 cursor-pointer" 
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        style={{ borderTopRightRadius: '8px', borderBottomRightRadius: '8px', cursor: 'pointer' }}
+                                    >
+                                        <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'} text-muted`}></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
                         <div className="d-flex justify-content-end mb-4">
-                            <Link to="/forgot-password" className="small text-decoration-none font-weight-bold" style={{ color: '#00f0ff' }}>
+                            <Link 
+                                to="/forgot-password" 
+                                state={{ email: formData.email }}
+                                className="small text-decoration-none font-weight-bold" 
+                                style={{ color: '#00f0ff' }}
+                            >
                                 Quên mật khẩu?
                             </Link>
                         </div>

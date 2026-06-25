@@ -138,11 +138,15 @@ const Home = () => {
 
     const handleCategoryClick = (catId) => {
         setActiveCatId(catId);
-        navigate('/products', { state: { selectedCategoryId: catId } });
     };
 
-    const featuredProducts = products.slice(0, 4);
-    const latestProducts   = products.slice(4, 12);
+    // Lọc sản phẩm theo danh mục được chọn ngay tại trang chủ
+    const displayProducts = activeCatId === null 
+        ? products 
+        : products.filter(p => p.categoryId === activeCatId || p.CategoryId === activeCatId);
+
+    const newProducts         = displayProducts.slice(0, 3);
+    const bestSellingProducts = displayProducts.slice(3, 6);
     const trendingPosts    = posts.slice(0, 3);
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -232,13 +236,17 @@ const Home = () => {
                     </div>
                 </div>
 
-                {/* ══ [4A] SẢN PHẨM NỔI BẬT (.slice 0,4) ════════════════════ */}
+                {/* 🌟 [4A] SẢN PHẨM MỚI 🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟🌟 */}
                 <div className="mb-5">
-                    <SectionTitle icon="bi bi-star-fill" title="Sản Phẩm Nổi Bật" to="/products" linkText="Xem thêm" />
+                    <SectionTitle icon="bi bi-star-fill" title="Sản Phẩm Mới Nhất" to="/products" linkText="Xem thêm" />
                     <div className="row">
                         {loadingProducts
-                            ? [1, 2, 3, 4].map(i => <SkeletonCard key={i} />)
-                            : featuredProducts.length === 0
+                            ? [1, 2, 3].map(i => (
+                                <div className="col-12 col-md-4 mb-4" key={i}>
+                                    <SkeletonCard />
+                                </div>
+                            ))
+                            : newProducts.length === 0
                                 ? (
                                     <div className="col-12">
                                         <div className="text-center py-5 bg-white rounded shadow-sm">
@@ -247,8 +255,8 @@ const Home = () => {
                                         </div>
                                     </div>
                                 )
-                                : featuredProducts.map(product => (
-                                    <div className="col-6 col-md-3 mb-4" key={product.id ?? product.Id}>
+                                : newProducts.map(product => (
+                                    <div className="col-12 col-md-4 mb-4" key={product.id ?? product.Id}>
                                         <ProductCard product={product} />
                                     </div>
                                 ))
@@ -257,12 +265,12 @@ const Home = () => {
                 </div>
 
                 {/* ══ [4B] SẢN PHẨM MỚI NHẤT (.slice 4,12) ══════════════════ */}
-                {!loadingProducts && latestProducts.length > 0 && (
+                {!loadingProducts && bestSellingProducts.length > 0 && (
                     <div className="mb-5">
-                        <SectionTitle icon="bi bi-cpu-fill" title="Sản Phẩm Mới Nhất" to="/products" linkText="Xem tất cả" />
+                        <SectionTitle icon="bi bi-fire" title="Sản Phẩm Bán Chạy" to="/products" linkText="Xem tất cả" />
                         <div className="row">
-                            {latestProducts.map(product => (
-                                <div className="col-6 col-md-3 mb-4" key={product.id ?? product.Id}>
+                            {bestSellingProducts.map(product => (
+                                <div className="col-12 col-md-4 mb-4" key={product.id ?? product.Id}>
                                     <ProductCard product={product} />
                                 </div>
                             ))}

@@ -24,6 +24,10 @@ const Register = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
+    
+    // UI States
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -146,27 +150,49 @@ const Register = () => {
                         <div className="row">
                             <div className="col-md-6 form-group mb-4">
                                 <label className="text-muted small font-weight-bold">Mật khẩu *</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    className="form-control ai-input"
-                                    placeholder="Ít nhất 6 ký tự"
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    style={{ borderRadius: '8px' }}
-                                />
+                                <div className="input-group">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        className="form-control ai-input border-right-0"
+                                        placeholder="Ít nhất 6 kí tự"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        style={{ borderTopLeftRadius: '8px', borderBottomLeftRadius: '8px' }}
+                                    />
+                                    <div className="input-group-append">
+                                        <span 
+                                            className="input-group-text bg-white cursor-pointer" 
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            style={{ borderTopRightRadius: '8px', borderBottomRightRadius: '8px', cursor: 'pointer' }}
+                                        >
+                                            <i className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'} text-muted`}></i>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             <div className="col-md-6 form-group mb-4">
                                 <label className="text-muted small font-weight-bold">Xác nhận mật khẩu *</label>
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    className="form-control ai-input"
-                                    placeholder="Nhập lại mật khẩu"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    style={{ borderRadius: '8px' }}
-                                />
+                                <div className="input-group">
+                                    <input
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        name="confirmPassword"
+                                        className="form-control ai-input border-right-0"
+                                        placeholder="Nhập lại mật khẩu"
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                        style={{ borderTopLeftRadius: '8px', borderBottomLeftRadius: '8px' }}
+                                    />
+                                    <div className="input-group-append">
+                                        <span 
+                                            className="input-group-text bg-white cursor-pointer" 
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            style={{ borderTopRightRadius: '8px', borderBottomRightRadius: '8px', cursor: 'pointer' }}
+                                        >
+                                            <i className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'} text-muted`}></i>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

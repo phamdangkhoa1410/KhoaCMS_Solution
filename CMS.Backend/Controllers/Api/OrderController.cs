@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CMS.Data;
 using CMS.Data.Entities;
+using CMS.Backend.Services;
 using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CMS.Backend.Controllers.Api
 {
@@ -34,10 +36,12 @@ namespace CMS.Backend.Controllers.Api
     public class OrderController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmailService _emailService;
 
-        public OrderController(ApplicationDbContext context)
+        public OrderController(ApplicationDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         private Customer GetCustomerFromToken()
@@ -151,7 +155,32 @@ namespace CMS.Backend.Controllers.Api
                     await _context.SaveChangesAsync();
                 }
 
-                // Trả về Object ẩn danh phẳng để CHỐNG LỖI VÒNG LẶP JSON VÀ LỖI ERR_EMPTY_RESPONSE
+                // Lấy thông tin khách hàng để gửi Email
+                var customer = await _context.Customers.FindAsync(input.CustomerId);
+                if (customer != null && !string.IsNullOrEmpty(customer.Email))
+                {
+                    decimal totalAmount = input.OrderDetails.Sum(d => d.Quantity * d.UnitPrice);
+                    
+                    var emailHtml = $@"
+                        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;'>
+                            <div style='background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%); padding: 20px; text-align: center; color: white;'>
+                                <h2>Cảm ơn bạn đã đặt hàng!</h2>
+                                <p>Đơn hàng #{order.Id} của bạn đã được tiếp nhận.</p>
+                            </div>
+                            <div style='padding: 20px; background-color: #f8fafc;'>
+                                <p><strong>Khách hàng:</strong> {customer.FullName}</p>
+                                <p><strong>Ngày đặt:</strong> {order.OrderDate.ToString("dd/MM/yyyy HH:mm")}</p>
+                                <p><strong>Tổng tiền:</strong> <span style='color: #ef4444; font-size: 1.2rem; font-weight: bold;'>{totalAmount.ToString("N0")} VNĐ</span></p>
+                                <hr style='border-top: 1px dashed #cbd5e1; margin: 20px 0;'/>
+                                <p style='font-size: 0.9rem; color: #64748b;'>Đơn hàng của bạn sẽ sớm được xử lý và giao đến tận nơi. Xin chân thành cảm ơn vì đã lựa chọn Khoa Laptop Management System!</p>
+                            </div>
+                        </div>";
+
+                    // Chạy nền gửi mail (không block luồng trả về)
+                    _ = _emailService.SendEmailAsync(customer.Email, $"[KHOA-CMS] Xác nhận Đơn hàng #{order.Id}", emailHtml);
+                }
+
+                // Trả về Object ẩn danh phòng lỗi CHỐNG LỖI VÒNG LẶP JSON VÀ LỖI ERR_EMPTY_RESPONSE
                 return Ok(new { success = true, message = "Đặt hàng thành công!", orderId = order.Id });
             }
             catch (Exception ex)

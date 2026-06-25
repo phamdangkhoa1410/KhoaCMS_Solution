@@ -133,7 +133,7 @@ const Orders = () => {
                                                 <div key={index} className="d-flex justify-content-between align-items-center py-3 border-bottom" style={{ borderBottomColor: '#edf2f7' }}>
                                                     <div className="d-flex align-items-center">
                                                         {item.imageUrl ? (
-                                                            <img src={`${process.env.REACT_APP_API_URL || 'https://localhost:7243'}${item.imageUrl}`} alt={item.productName} className="rounded mr-3 shadow-sm" style={{ width: '60px', height: '60px', objectFit: 'cover', border: '1px solid #edf2f7' }} />
+                                                            <img src={`${process.env.REACT_APP_API_URL?.replace('/api', '') || 'https://localhost:7243'}${item.imageUrl.startsWith('/') ? '' : '/'}${item.imageUrl}`} alt={item.productName} className="rounded mr-3 shadow-sm" style={{ width: '60px', height: '60px', objectFit: 'cover', border: '1px solid #edf2f7' }} />
                                                         ) : (
                                                             <div className="rounded d-flex align-items-center justify-content-center bg-light text-secondary mr-3 shadow-sm" style={{ width: '60px', height: '60px', border: '1px solid #edf2f7' }}>
                                                                 <i className="bi bi-box-seam" style={{ fontSize: '1.5rem' }}></i>

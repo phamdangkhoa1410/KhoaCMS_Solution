@@ -1,4 +1,4 @@
-﻿@model CMS.Data.Entities.Post
+@model CMS.Data.Entities.Post
 
 @{
     ViewData["Title"] = "Chi tiết bài viết - " + Model.Title;
@@ -51,8 +51,8 @@
                 @Model.Title
             </h1>
 
-            <div class="text-slate-700 text-base sm:text-lg leading-relaxed font-normal whitespace-pre-line antialiased">
-                @Model.Content
+            <div class="text-slate-700 text-base sm:text-lg leading-relaxed font-normal antialiased ckeditor-content">
+                @Html.Raw(Model.Content)
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">

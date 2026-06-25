@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
@@ -8,9 +8,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using CMS.Data;
+using CMS.Backend.Services;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Đăng ký Memory Cache cho OTP
+builder.Services.AddMemoryCache();
+
+// Đăng ký dịch vụ Gửi Mail
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // --- BƯỚC 1: ĐĂNG KÝ DBCONTEXT VÀO HỆ THỐNG ---
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

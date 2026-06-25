@@ -41,11 +41,29 @@ namespace CMS.Backend.Controllers.Api
                 await _context.SaveChangesAsync(); // Lưu để có CartId
             }
 
+            // Kiểm tra tồn kho của sản phẩm
+            var product = await _context.Products.FindAsync(request.ProductId);
+            if (product == null)
+            {
+                return NotFound(new { message = "Không tìm thấy sản phẩm." });
+            }
+
             // Kiểm tra sản phẩm đã có trong giỏ chưa
             var existingDetail = cart.CartDetails.FirstOrDefault(cd => cd.ProductId == request.ProductId);
+            
+            // Tính tổng số lượng nếu thêm vào
+            int totalQuantity = request.Quantity + (existingDetail != null ? existingDetail.Quantity : 0);
+            
+            if (totalQuantity > product.StockQuantity)
+            {
+                return BadRequest(new { 
+                    message = $"Số lượng vượt quá tồn kho! (Trong kho: {product.StockQuantity}, Trong giỏ: {existingDetail?.Quantity ?? 0})" 
+                });
+            }
+
             if (existingDetail != null)
             {
-                existingDetail.Quantity += request.Quantity;
+                existingDetail.Quantity = totalQuantity;
             }
             else
             {

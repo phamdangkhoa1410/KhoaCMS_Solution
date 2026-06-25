@@ -129,11 +129,17 @@ const BlogDetail = () => {
                     </div>
                 )}
 
-                {/* 4. Nội dung bài viết chi tiết đổ mã HTML trơn */}
+                {/* 4. Nội dung bài viết chi tiết đổ mã HTML trần */}
                 <div
-                    className="blog-content-html mt-2 pl-1 pr-1"
+                    className="blog-content-html mt-2 pl-1 pr-1 ckeditor-content"
                     style={{ fontSize: '1.1rem', lineHeight: '1.9', color: '#334155', letterSpacing: '0.2px' }}
-                    dangerouslySetInnerHTML={{ __html: content }}
+                    dangerouslySetInnerHTML={{ 
+                        __html: (() => {
+                            if (!content) return '';
+                            const baseUrl = process.env.REACT_APP_API_URL?.replace('/api', '') || 'https://localhost:7243';
+                            return content.replace(/src="\/uploads\//g, `src="${baseUrl}/uploads/`);
+                        })()
+                    }}
                 />
 
                 {/* Khối bản quyền đồ án ký tên Phạm Đăng Khoa chuyên nghiệp */}

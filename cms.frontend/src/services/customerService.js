@@ -21,3 +21,35 @@ export const getProfile = async (token) => {
     }
     return data;
 };
+
+export const forgotPassword = async (email) => {
+    const response = await fetch(`${API_URL}/forgot-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Yêu cầu thất bại.');
+    }
+    return data;
+};
+
+export const verifyOtpResetPassword = async (email, otp, newPassword) => {
+    const response = await fetch(`${API_URL}/verify-otp-reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, otp, newPassword })
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Khôi phục mật khẩu thất bại.');
+    }
+    return data;
+};
