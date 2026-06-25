@@ -4,7 +4,7 @@
 > **Trường Cao Đẳng Công Thương TP.HCM (HITC)**
 > **Mô hình kiến trúc:** Hybrid Architecture (ASP.NET Core MVC + Web API) & SPA (ReactJS)
 
-![Project Status](https://img.shields.io/badge/Status-Completed-success) ![Backend](https://img.shields.io/badge/Backend-ASP.NET_Core_8-512BD4) ![Frontend](https://img.shields.io/badge/Frontend-React_18-61DAFB) ![Database](https://img.shields.io/badge/Database-SQL_Server-CC292B)
+![Project Status](https://img.shields.io/badge/Status-Completed_Full_8_Chapters-success) ![Backend](https://img.shields.io/badge/Backend-ASP.NET_Core_8-512BD4) ![Frontend](https://img.shields.io/badge/Frontend-React_18-61DAFB) ![Database](https://img.shields.io/badge/Database-SQL_Server-CC292B)
 
 ---
 
@@ -16,27 +16,39 @@
 
 ---
 
-## 🚀 TỔNG QUAN HỆ THỐNG ĐÃ XÂY DỰNG
+## 🚀 TIẾN ĐỘ HOÀN THIỆN TOÀN TẬP (TỪ BUỔI 1 ĐẾN BUỔI 8)
 
-Dự án Khoa Laptop Management System là một giải pháp thương mại điện tử kết hợp quản trị nội dung (CMS) hoàn chỉnh, được thiết kế chuyên biệt cho việc kinh doanh các thiết bị phần cứng tin học (Laptop, PC). Dự án áp dụng phong cách thiết kế **Premium Glassmorphism & Cyber Modern**, mang lại trải nghiệm người dùng (UX/UI) cao cấp nhất.
+Hệ thống đã trải qua 8 giai đoạn phát triển toàn diện, đi từ cấu trúc dữ liệu nền tảng cho đến khi giao diện front-end bóng bẩy tương tác theo thời gian thực:
 
-### 🌟 CÁC TÍNH NĂNG NỔI BẬT ĐÃ HOÀN THIỆN
-1. **Giao diện Premium UI/UX:**
-   * Hệ thống thẻ (Card) sản phẩm và tin tức tích hợp hiệu ứng đổ bóng sâu (Deep Shadow), nhấc bổng 3D (Hover Translate) và viền dạ quang.
-   * Giao diện Responsive 100%, thiết kế theo triết lý *Mobile-first*.
-   * Hệ thống nút bấm Gradient đẳng cấp (Mua ngay, Đọc tiếp, Cấu hình).
-2. **Hệ thống Lọc nâng cao (Advanced Filter) Real-time:**
-   * Bộ lọc giá tiền kéo trượt mượt mà kết hợp từ khóa tìm kiếm và chuyên mục.
-   * Lọc bài viết công nghệ kép (Theo tag và Theo tên).
-3. **Quản lý Đơn hàng (Order History):**
-   * Theo dõi lịch sử mua hàng, tự động hiển thị hình ảnh sản phẩm, trạng thái thanh toán và tổng tiền.
-   * Trạng thái đơn hàng phân màu thông minh (Đang chờ, Đã giao, Hủy).
-4. **Hệ thống Đăng nhập & Bảo mật Kép:**
-   * Xác thực **Cookie Authentication** cho trang quản trị Admin (MVC).
-   * Phân quyền Role-based Access Control (Admin / Editor).
-5. **Giỏ hàng (Cart) & Thanh toán (Checkout) thông minh:**
-   * Nút "Mua ngay" bỏ qua giỏ hàng để bay thẳng đến màn hình thanh toán.
-   * Tự động cộng dồn số lượng, tính tổng hóa đơn thời gian thực.
+### 🔹 Buổi 1 & 2: Khởi tạo Giải pháp Đa tầng & Entity Framework Core
+* Bóc tách Solution thành các dự án độc lập: `CMS.Data` (Xử lý DB) và `CMS.Backend` (Web Controller).
+* Khởi tạo **8 Thực thể cốt lõi**: `Category`, `Post`, `User` (cho CMS) và `CategoryProduct`, `Product`, `Customer`, `Order`, `OrderDetail` (cho E-Commerce).
+* Thực thi Code-First Migration (`Update-Database`) tạo lược đồ CSDL chuẩn hóa trên SQL Server.
+
+### 🔹 Buổi 3 & 4: Xây dựng Trang Quản trị Hệ thống (Admin CRUD)
+* Phát triển bộ điều khiển ASP.NET Core MVC cho việc Thêm/Sửa/Xóa/Xem: `Category`, `Post`, `User`.
+* Tích hợp Tailwind CSS và Bootstrap Icons, mang lại trải nghiệm nhập liệu sạch sẽ cho người quản trị.
+
+### 🔹 Buổi 5: Bảo mật Cookie Authentication & Phân Quyền (Role-based)
+* Thiết lập **Cookie Authentication** trong hệ thống Middleware của `Program.cs`.
+* Khóa an ninh hệ thống bằng Attribute `[Authorize]`. 
+* Phân luồng quyền lực rõ ràng: Quyền `Editor` chỉ được cập nhật bài viết, quyền `Admin` nắm giữ toàn bộ hệ thống (Users/Roles). Trả về lỗi `403 Access Denied` cực kỳ chuyên nghiệp.
+
+### 🔹 Buổi 6: Kiến trúc Lai Hybrid (MVC + RESTful API) & Swagger
+* Cài đặt `Swashbuckle.AspNetCore` để khởi tạo cổng tài liệu **Swagger UI**.
+* Xây dựng loạt API Endpoint trả JSON thô tốc độ cao (`/api/products`, `/api/posts`, `/api/orders`).
+* Mở khóa cấu hình bảo mật **CORS Policy (AllowAll)** để cho phép ReactJS gọi API từ cổng khác.
+
+### 🔹 Buổi 7: Khởi tạo SPA ReactJS (Frontend) & Axios Call
+* Tạo dự án `cms.frontend` bằng Create React App (CRA).
+* Thiết lập `AxiosClient` và quản lý trạng thái bằng **Context API** (AuthContext).
+* Hoàn thiện luồng Đăng ký / Đăng nhập khách hàng song song với việc hiển thị kho Sản phẩm và trang Blog tin tức.
+
+### 🔹 Buổi 8: Premium UI/UX Upgrade & Luồng Thanh Toán (Checkout) Hoàn Hảo
+* **Nâng cấp giao diện (Premium Glassmorphism)**: Thẻ sản phẩm bóng đổ 3D, nút bấm Gradient bốc lửa, hiệu ứng hover mượt mà và Typography cực kỳ hiện đại.
+* Hoàn thiện **Giỏ hàng (Cart)** và luồng **Mua ngay (Buy Now)** thẳng tiến trang thanh toán.
+* Phát triển trang **Lịch sử Đơn hàng (Order History)** load hình ảnh sản phẩm động và trạng thái đơn hàng thời gian thực.
+* Xử lý cực kỳ chặt chẽ logic Check số lượng tồn kho (Stock) từ SQL Server.
 
 ---
 
@@ -44,34 +56,91 @@ Dự án Khoa Laptop Management System là một giải pháp thương mại đi
 * **Backend Framework:** ASP.NET Core 8.0 (Kiến trúc lai Hybrid Web MVC + RESTful Web API)
 * **Database ORM:** Entity Framework Core (Code First Migration)
 * **Database Server:** Microsoft SQL Server
-* **API Documentation:** Swagger UI
+* **API Documentation:** Swagger UI & Postman
 * **Frontend Framework:** React 18 (CRA) + React Router v6
-* **UI/UX Styling:** CSS3 Premium Glassmorphism, Bootstrap 4/5, Bootstrap Icons, FontAwesome
-* **Security:** Cookie Authentication & CORS Policy
+* **UI/UX Styling:** CSS3 Premium Glassmorphism, Bootstrap 4/5, Bootstrap Icons
+* **Security:** Cookie Authentication, JWT Auth Concept & CORS Policy
 
 ---
 
-## 📁 CẤU TRÚC CÂY THƯ MỤC DỰ ÁN
+## 📁 CẤU TRÚC CÂY THƯ MỤC CHI TIẾT ĐẦY ĐỦ
+
+Dưới đây là sơ đồ cây thư mục hoàn chỉnh thể hiện sự đồ sộ và logic chặt chẽ của hệ thống:
 
 ```text
-KhoaCMS_Solution/
-├── CMS.Data/                    --> LỚP DỮ LIỆU CỐT LÕI (CLASS LIBRARY)
-│   ├── Entities/                --> Định nghĩa 8 mô hình thực thể (Product, Order, Post...)
-│   └── ApplicationDbContext.cs  --> Cấu hình ánh xạ Entity Framework
+D:\KHOACMS_SOLUTION
+├── KhoaCMS_Solution.sln         (File quản trị tổng thể Visual Studio)
 │
-├── CMS.Backend/                 --> LỚP BACKEND (ASP.NET CORE 8)
-│   ├── Controllers/             --> (MVC) Xử lý giao diện Admin CMS
-│   ├── Controllers/Api/         --> (API) Cung cấp dữ liệu JSON cho ReactJS
-│   ├── Views/                   --> Kết xuất giao diện quản trị Razor Pages
-│   └── Program.cs               --> Cấu hình CORS, Cookie Auth, DI, Swagger
+├── CMS.Data/                    (LỚP TRUNG TÂM DỮ LIỆU)
+│   ├── Entities/                (8 Models cốt lõi)
+│   │   ├── Banner.cs
+│   │   ├── Category.cs
+│   │   ├── CategoryProduct.cs
+│   │   ├── Customer.cs
+│   │   ├── Order.cs
+│   │   ├── OrderDetail.cs
+│   │   ├── Post.cs
+│   │   ├── Product.cs
+│   │   └── User.cs
+│   ├── Migrations/              (Lịch sử kết xuất cơ sở dữ liệu EF Core)
+│   └── ApplicationDbContext.cs  (Trạm kiểm soát ánh xạ Entity Framework)
 │
-└── cms.frontend/                --> LỚP FRONTEND (REACTJS SPA)
-    ├── src/
-    │   ├── api/                 --> Cấu hình Axios Client
-    │   ├── components/          --> Các Component dùng chung (Header, ProductCard, Footer)
-    │   ├── pages/               --> Chứa giao diện Shop, Blog, Cart, Checkout, Auth
-    │   ├── services/            --> Tương tác gọi API (authService, productService)
-    │   └── index.css            --> Chứa toàn bộ Rule CSS Premium (Glassmorphism, Gradient)
+├── CMS.Backend/                 (LỚP ĐIỀU CHẾ LOGIC & ADMIN MVC & API)
+│   ├── Controllers/             (Các bộ điều khiển)
+│   │   ├── AccountController.cs (Đăng nhập Admin)
+│   │   ├── BannerController.cs  
+│   │   ├── CategoryController.cs
+│   │   ├── CustomerController.cs
+│   │   ├── OrderController.cs
+│   │   ├── PostController.cs
+│   │   ├── ProductController.cs
+│   │   ├── UserController.cs
+│   │   └── Api/                 (Phân hệ Endpoint RESTful Web API)
+│   │       ├── CustomerController.cs
+│   │       ├── OrderController.cs
+│   │       ├── PostController.cs
+│   │       ├── ProductController.cs
+│   │       └── ...
+│   ├── Views/                   (Giao diện Razor MVC quản trị Admin)
+│   │   ├── Account/             (Login/AccessDenied)
+│   │   ├── Category/
+│   │   ├── Product/
+│   │   ├── Order/
+│   │   ├── Shared/              (_Layout.cshtml, Error.cshtml)
+│   │   └── ...
+│   ├── appsettings.json         (Chuỗi kết nối SQL Server Connection String)
+│   └── Program.cs               (Trạm nhúng Dependency Injection, CORS, Authentication)
+│
+└── cms.frontend/                (LỚP ỨNG DỤNG CLIENT REACT SPA)
+    ├── package.json
+    └── src/
+        ├── api/
+        │   └── axiosClient.js   (Cấu hình Interceptors, BaseUrl)
+        ├── components/
+        │   └── ProductCard.jsx  (Thẻ sản phẩm Premium dùng chung)
+        ├── context/
+        │   └── AuthContext.js   (Quản lý trạng thái Đăng nhập User toàn cục)
+        ├── layout/
+        │   ├── Header.jsx       (Thanh Menu điều hướng)
+        │   ├── Footer.jsx
+        │   ├── Banner.jsx
+        │   └── ProtectedRoute.jsx
+        ├── pages/               (Tập hợp các Trang chức năng chính)
+        │   ├── auth/            (Login.jsx, Register.jsx, ForgotPassword.jsx)
+        │   ├── blog/            (PostList.jsx, BlogCategoryList.jsx)
+        │   ├── blog-detail/     (Chi tiết bài viết)
+        │   ├── cart/            (Cart.jsx, Checkout.jsx)
+        │   ├── customer/        (Profile.jsx, Orders.jsx - Lịch sử mua hàng)
+        │   ├── home/            (Trang chủ Premium)
+        │   ├── product-detail/  (Chi tiết Cấu hình phần cứng)
+        │   └── shop/            (ProductList.jsx - Bộ lọc Advanced Filter)
+        ├── services/            (Lớp gọi API theo từng phân hệ)
+        │   ├── authService.js
+        │   ├── orderService.js
+        │   ├── productService.js
+        │   └── ...
+        ├── App.js               (Bản đồ Điều hướng Router)
+        └── index.css            (Bách khoa toàn thư CSS Premium Glassmorphism)
 ```
 
 ---
@@ -89,7 +158,7 @@ KhoaCMS_Solution/
 3. Kiểm tra API bằng Swagger tại: `https://localhost:7243/swagger`
 
 ### Bước 3: Khởi chạy Frontend (ReactJS)
-1. Mở Terminal (Command Prompt) và `cd` vào thư mục `cms.frontend`.
+1. Mở Terminal (Command Prompt) và chuyển hướng (`cd`) vào thư mục `cms.frontend`.
 2. Chạy lệnh cài đặt thư viện: `npm install`
 3. Chạy lệnh khởi động máy chủ React: `npm start`
-4. Truy cập giao diện người dùng tại `http://localhost:3000/`.
+4. Trình duyệt sẽ tự động mở trang web giao diện siêu đẹp tại `http://localhost:3000/`.
