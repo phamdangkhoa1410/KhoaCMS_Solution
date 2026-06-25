@@ -89,6 +89,7 @@ namespace CMS.Backend.Controllers.Api
                     {
                         productId = od.ProductId,
                         productName = od.Product.Name,
+                        imageUrl = od.Product.ImageUrl,
                         quantity = od.Quantity,
                         price = od.UnitPrice
                     }).ToList()

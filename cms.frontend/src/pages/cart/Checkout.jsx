@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Cart.css'; // Dùng chung CSS dập khối
@@ -13,6 +13,7 @@ import './Cart.css'; // Dùng chung CSS dập khối
 const Checkout = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [cartItems, setCartItems] = useState([]);
     const [formData, setFormData] = useState({
@@ -27,28 +28,11 @@ const Checkout = () => {
     // Tải giỏ hàng từ API và điền sẵn thông tin user nếu đã đăng nhập
     useEffect(() => {
         const loadCart = async () => {
-            try {
-                const userStr = localStorage.getItem('user');
-                if (!userStr) {
-                    navigate('/products');
-                    return;
-                }
-                const userData = JSON.parse(userStr);
-                const customerId = userData.id || userData.Id;
-                
-                const res = await fetch(`${process.env.REACT_APP_API_URL}/Cart/${customerId}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.length === 0) {
-                        navigate('/products');
-                        return;
-                    }
-                    setCartItems(data);
-                } else {
-                    navigate('/products');
-                }
-            } catch (error) {
-                navigate('/products');
+            if (location.state && location.state.selectedItems && location.state.selectedItems.length > 0) {
+                setCartItems(location.state.selectedItems);
+            } else {
+                // Nếu không có selectedItems truyền sang thì đá về giỏ hàng
+                navigate('/cart');
             }
         };
         loadCart();
@@ -61,7 +45,7 @@ const Checkout = () => {
                 Notes: ''
             });
         }
-    }, [user, navigate]);
+    }, [user, navigate, location]);
 
     // Các hàm helper định dạng và đọc thuộc tính
     const formatPrice = (price) => {
@@ -117,10 +101,15 @@ const Checkout = () => {
                 body: JSON.stringify(payload)
             });
 
-            if (response.ok || response.status === 201) {
-                // Thành công: Xóa giỏ hàng dưới DB, thông báo Header cập nhật, chuyển về My Orders
+            if (response.ok) {
+                // Chỉ xóa khỏi giỏ hàng Database nếu đi lên từ trang Giỏ hàng (không phải Mua ngay)
                 const customerId = user.id || user.Id;
-                await fetch(`${process.env.REACT_APP_API_URL}/Cart/Clear/${customerId}`, { method: 'DELETE' });
+                if (!location.state?.isBuyNow) {
+                    for (const item of cartItems) {
+                        await fetch(`${process.env.REACT_APP_API_URL}/Cart/Remove/${customerId}/${item.productId || item.id || item.Id}`, { method: 'DELETE' });
+                    }
+                }
+                
                 window.dispatchEvent(new Event('cartUpdate'));
                 alert("🎉 Chúc mừng bạn đã đặt hàng thành công!");
                 navigate('/my-orders');

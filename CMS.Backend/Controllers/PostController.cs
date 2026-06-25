@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
@@ -32,30 +32,31 @@ namespace CMS.Backend.Controllers
         // ===================================================
         // 1. CHỨC NĂNG: TRANG DANH SÁCH BÀI VIẾT (INDEX)
         // ===================================================
-        public IActionResult Index(int? id)
+        public IActionResult Index(int? id, int page = 1)
         {
-            List<Post> data;
+            int pageSize = 5;
+            IQueryable<Post> query;
 
             if (id == null)
             {
-                data = _context.Posts
-                               .Include(p => p.Category)
-                               .OrderByDescending(p => p.Id)
-                               .ToList();
+                query = _context.Posts.Include(p => p.Category).OrderByDescending(p => p.Id);
                 ViewBag.CurrentCategoryName = "Tất cả bài viết";
             }
             else
             {
-                data = _context.Posts
-                               .Where(p => p.CategoryId == id)
-                               .Include(p => p.Category)
-                               .OrderByDescending(p => p.CreatedDate)
-                               .ToList();
-
+                query = _context.Posts.Where(p => p.CategoryId == id).Include(p => p.Category).OrderByDescending(p => p.CreatedDate);
                 var cat = _context.Categories.Find(id);
                 ViewBag.CurrentCategoryName = cat != null ? "Danh mục: " + cat.Name : "Danh mục không tồn tại";
             }
 
+            var totalItems = query.Count();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CategoryId = id;
+
+            var data = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
             return View(data);
         }
 

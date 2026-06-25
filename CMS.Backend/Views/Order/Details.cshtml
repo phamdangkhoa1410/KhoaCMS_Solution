@@ -1,4 +1,9 @@
 ﻿@model CMS.Data.Entities.Order
+@*
+ * Sinh viên: Phạm Đăng Khoa
+ * Mã Sinh Viên : 2123110058
+ * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
+ *@
 
 @{
     ViewData["Title"] = "Chi tiết đơn hàng";
@@ -93,7 +98,7 @@
                                 @detail.UnitPrice.ToString("#,##0") <span class="text-[10px]">VND</span>
                             </td>
                             <td class="p-4 text-center text-sm font-bold text-slate-800">
-                                x@detail.Quantity
+                                x @detail.Quantity
                             </td>
                             <td class="p-4 text-right text-sm font-extrabold text-indigo-600">
                                 @itemTotal.ToString("#,##0") <span class="text-[10px] font-bold text-slate-500">VND</span>

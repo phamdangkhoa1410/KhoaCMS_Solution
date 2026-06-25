@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
@@ -31,10 +31,18 @@ namespace CMS.Backend.Controllers
         // ===================================================
         // 1. CHỨC NĂNG: XEM DANH SÁCH SẢN PHẨM (INDEX)
         // ===================================================
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
-            // Lấy danh sách sản phẩm nạp kèm thông tin bảng danh mục liên kết (Include)
-            var data = _context.Products.Include(p => p.CategoryProduct).OrderByDescending(p => p.Id).ToList();
+            int pageSize = 5;
+            var query = _context.Products.Include(p => p.CategoryProduct).OrderByDescending(p => p.Id);
+            
+            var totalItems = query.Count();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            var data = query.Skip((page - 1) * pageSize).Take(pageSize).ToList();
             return View(data);
         }
 

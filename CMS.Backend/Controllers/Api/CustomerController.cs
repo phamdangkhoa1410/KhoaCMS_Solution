@@ -66,5 +66,47 @@ namespace CMS.Backend.Controllers.Api
                 address = customer.Address
             });
         }
+
+        public class UpdateProfileRequest
+        {
+            public string FullName { get; set; }
+            public string Phone { get; set; }
+            public string Address { get; set; }
+        }
+
+        [HttpPut("update-profile")]
+        public IActionResult UpdateProfile([FromBody] UpdateProfileRequest request)
+        {
+            var customer = GetCustomerFromToken();
+            if (customer == null)
+            {
+                return Unauthorized(new { message = "Vui lòng đăng nhập để tiếp tục." });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.FullName))
+            {
+                return BadRequest(new { message = "Họ và Tên không được để trống." });
+            }
+
+            customer.FullName = request.FullName;
+            customer.Phone = request.Phone;
+            customer.Address = request.Address;
+
+            _context.Customers.Update(customer);
+            _context.SaveChanges();
+
+            return Ok(new
+            {
+                message = "Cập nhật thông tin thành công!",
+                user = new
+                {
+                    id = customer.Id,
+                    fullName = customer.FullName,
+                    email = customer.Email,
+                    phone = customer.Phone,
+                    address = customer.Address
+                }
+            });
+        }
     }
 }

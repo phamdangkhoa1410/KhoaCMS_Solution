@@ -9,7 +9,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import productService from '../../services/productService';
-import categoryProductService from '../../services/categoryProductService';
+import ProductCard from '../../components/ProductCard';
 
 const ProductList = ({ selectedCategoryId, searchTerm, priceRange, page, setPage }) => {
     const [products, setProducts] = useState([]);
@@ -22,7 +22,7 @@ const ProductList = ({ selectedCategoryId, searchTerm, priceRange, page, setPage
                 setLoading(true);
                 const params = {
                     page: page,
-                    pageSize: 6, // Hiển thị 6 sản phẩm mỗi trang cho dễ thấy phân trang
+                    pageSize: 5, // Hiển thị 5 sản phẩm mỗi trang theo đúng yêu cầu
                     keyword: searchTerm || "",
                     minPrice: 0,
                     maxPrice: priceRange || 999999999
@@ -82,51 +82,7 @@ const ProductList = ({ selectedCategoryId, searchTerm, priceRange, page, setPage
                     const id = product.id || product.Id;
                     return (
                         <div className="col-md-6 col-lg-4 mb-4" key={id}>
-                            <div className="card h-100 border-0 rounded-lg overflow-hidden shadow-sm" style={{ borderRadius: '12px' }}>
-                                <div className="position-relative bg-light d-flex align-items-center justify-content-center overflow-hidden" style={{ height: '190px' }}>
-                                    {product.imageUrl ? (
-                                        <img
-                                            src={product.imageUrl.startsWith('http') ? product.imageUrl : `https://localhost:7243${product.imageUrl}`}
-                                            alt={product.name}
-                                            className="w-100 h-100"
-                                            style={{ objectFit: 'contain', padding: '10px' }}
-                                            onError={(e) => {
-                                                e.target.onerror = null;
-                                                e.target.src = 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=400&auto=format&fit=crop';
-                                            }}
-                                        />
-                                    ) : (
-                                        <i className="bi bi-laptop text-muted" style={{ fontSize: '3rem' }}></i>
-                                    )}
-                                </div>
-
-                                <div className="card-body p-3 d-flex flex-column bg-white">
-                                    <h6 className="font-weight-bold text-dark mb-1 text-truncate" style={{ fontSize: '0.92rem' }} title={product.name}>
-                                        {product.name}
-                                    </h6>
-
-                                    <div className="mb-2">
-                                        <span className="badge badge-soft-info text-primary bg-light font-weight-bold" style={{ fontSize: '0.75rem', padding: '3px 6px', borderRadius: '4px' }}>
-                                            {product.categoryProductName || product.CategoryProductName || 'Laptop'}
-                                        </span>
-                                    </div>
-
-                                    <div className="d-flex justify-content-between align-items-center mt-auto mb-3 pt-2 border-top border-light">
-                                        <span className="text-danger font-weight-bold" style={{ fontSize: '1rem' }}>
-                                            {product.price?.toLocaleString('vi-VN')} đ
-                                        </span>
-                                        <span className="small text-secondary bg-light border px-2 py-0.5 rounded" style={{ fontSize: '0.72rem' }}>
-                                            Sẵn: {product.stockQuantity ?? 0} máy
-                                        </span>
-                                    </div>
-
-                                    <div>
-                                        <Link to={`/product/${id}`} className="btn btn-primary btn-block btn-sm font-weight-bold rounded-lg py-2 text-uppercase shadow-sm" style={{ fontSize: '0.8rem', borderRadius: '6px' }}>
-                                            <i className="bi bi-cpu mr-1.5"></i> Cấu hình chi tiết
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
+                            <ProductCard product={product} />
                         </div>
                     );
                 })}

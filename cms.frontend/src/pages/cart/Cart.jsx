@@ -11,6 +11,7 @@ import './Cart.css';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
+    const [selectedItemIds, setSelectedItemIds] = useState(new Set());
     const navigate = useNavigate();
 
     // Tải dữ liệu giỏ hàng từ API
@@ -27,6 +28,7 @@ const Cart = () => {
             if (res.ok) {
                 const data = await res.json();
                 setCartItems(data);
+                setSelectedItemIds(new Set(data.map(item => item.Id || item.id || item.ProductId || item.productId)));
                 window.dispatchEvent(new Event('cartUpdate'));
             }
         } catch (error) {
@@ -78,9 +80,11 @@ const Cart = () => {
     };
 
     // Tính tổng tiền động
-    const totalAmount = cartItems.reduce((total, item) => {
-        return total + (getProductPrice(item) * (item.quantity || 1));
-    }, 0);
+    const totalAmount = cartItems
+        .filter(item => selectedItemIds.has(getProductId(item)))
+        .reduce((total, item) => {
+            return total + (getProductPrice(item) * (item.quantity || 1));
+        }, 0);
 
     return (
         <div className="container mt-5 mb-5">
@@ -103,6 +107,19 @@ const Cart = () => {
                                 <table className="dark-table">
                                     <thead>
                                         <tr>
+                                            <th className="text-center" style={{ width: '50px' }}>
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={selectedItemIds.size === cartItems.length && cartItems.length > 0}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            setSelectedItemIds(new Set(cartItems.map(item => getProductId(item))));
+                                                        } else {
+                                                            setSelectedItemIds(new Set());
+                                                        }
+                                                    }}
+                                                />
+                                            </th>
                                             <th>Sản Phẩm</th>
                                             <th className="text-center">Đơn Giá</th>
                                             <th className="text-center">Số Lượng</th>
@@ -117,6 +134,20 @@ const Cart = () => {
                                             const qty = item.quantity || 1;
                                             return (
                                                 <tr key={`${id}-${index}`}>
+                                                    <td className="text-center">
+                                                        <input 
+                                                            type="checkbox" 
+                                                            checked={selectedItemIds.has(id)}
+                                                            onChange={() => {
+                                                                setSelectedItemIds(prev => {
+                                                                    const newSet = new Set(prev);
+                                                                    if (newSet.has(id)) newSet.delete(id);
+                                                                    else newSet.add(id);
+                                                                    return newSet;
+                                                                });
+                                                            }}
+                                                        />
+                                                    </td>
                                                     <td>
                                                         <div className="d-flex align-items-center">
                                                             <img 
@@ -180,7 +211,14 @@ const Cart = () => {
 
                                 <button 
                                     className="btn-checkout-premium mt-4"
-                                    onClick={() => navigate('/checkout')}
+                                    onClick={() => {
+                                        const itemsToCheckout = cartItems.filter(item => selectedItemIds.has(getProductId(item)));
+                                        if (itemsToCheckout.length === 0) {
+                                            alert("Vui lòng chọn ít nhất 1 sản phẩm để tiến hành thanh toán!");
+                                            return;
+                                        }
+                                        navigate('/checkout', { state: { selectedItems: itemsToCheckout } });
+                                    }}
                                 >
                                     Tiến Hành Thanh Toán <i className="bi bi-arrow-right-circle ml-2"></i>
                                 </button>

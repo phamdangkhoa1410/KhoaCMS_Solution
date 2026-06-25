@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CMS.Data.Entities.Product>
+@model IEnumerable<CMS.Data.Entities.Product>
 
 @{
     ViewData["Title"] = "Quản lý sản phẩm";
@@ -71,7 +71,7 @@
 
                             <td class="p-4">
                                 <div class="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors text-sm sm:text-base">@item.Name</div>
-                                <p class="m-0 mt-1 text-xs text-slate-400 line-clamp-1 max-w-xs">@item.Description</p>
+                                <p class="m-0 mt-1 text-xs text-slate-400 line-clamp-1 max-w-xs">@Html.Raw(item.Description)</p>
                             </td>
 
                             <td class="p-4">
@@ -126,4 +126,24 @@
             </tbody>
         </table>
     </div>
+
+    @* GIAO DIỆN PHÂN TRANG (PAGINATION) *@
+    @if (ViewBag.TotalPages != null && ViewBag.TotalPages > 1)
+    {
+        <div class="mt-6 flex items-center justify-center">
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    if (i == ViewBag.CurrentPage)
+                    {
+                        <a href="?page=@i" aria-current="page" class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 border border-indigo-600">@i</a>
+                    }
+                    else
+                    {
+                        <a href="?page=@i" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-indigo-600 transition-colors focus:z-20">@i</a>
+                    }
+                }
+            </nav>
+        </div>
+    }
 </div>

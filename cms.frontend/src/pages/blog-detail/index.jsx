@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Sinh viên: Phạm Đăng Khoa
  * Mã Sinh Viên : 2123110058
  * Lớp: CCQ2311B - Trường Cao Đẳng Công Thương TP.HCM
@@ -85,38 +85,41 @@ const BlogDetail = () => {
         : 'Vừa xong';
 
     return (
-        <div className="container my-4">
+        <div className="container my-5">
             {/* Nút quay lại thiết kế bo góc sạch sẽ */}
-            <Link to="/blogs" className="btn btn-outline-dark btn-sm font-weight-bold mb-4 rounded-pill px-3 shadow-sm" style={{ fontSize: '0.8rem' }}>
-                <i className="bi bi-arrow-left mr-1.5"></i> Quay lại danh sách tin
+            <Link to="/blogs" className="btn font-weight-bold mb-4 rounded-pill px-4 shadow-sm" style={{ fontSize: '0.85rem', backgroundColor: '#f1f5f9', color: '#475569', transition: 'all 0.2s', border: 'none' }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#e2e8f0'; e.currentTarget.style.color = '#1e293b'; e.currentTarget.style.transform = 'translateX(-3px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#f1f5f9'; e.currentTarget.style.color = '#475569'; e.currentTarget.style.transform = 'translateX(0)'; }}
+            >
+                <i className="bi bi-arrow-left mr-2"></i> Trở về danh mục tin
             </Link>
 
-            <article className="card border-0 shadow-sm bg-white p-4 p-md-5" style={{ borderRadius: '16px' }}>
+            <article className="card border-0 bg-white p-4 p-md-5" style={{ borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.04)' }}>
 
                 {/* 1. Tiêu đề bài viết */}
-                <h1 className="font-weight-bold text-dark mb-3" style={{ fontSize: '1.8rem', lineHeight: '1.4', color: '#111' }}>
+                <h1 className="font-weight-bold mb-4" style={{ fontSize: '2.2rem', lineHeight: '1.4', color: '#0f172a', letterSpacing: '-0.5px' }}>
                     {title}
                 </h1>
 
                 {/* 2. Metadata chuyên mục động */}
-                <div className="d-flex align-items-center text-muted small pb-3 mb-4 border-bottom">
+                <div className="d-flex align-items-center mb-5 pb-4" style={{ borderBottom: '1px solid #f1f5f9' }}>
                     {/* 🎯 HIỂN THỊ CHUẨN TÊN DANH MỤC THẬT ĐƯỢC ĐỔ TỪ DATABASE */}
-                    <span className="badge badge-primary px-3 py-1.5 font-weight-bold mr-3" style={{ fontSize: '0.72rem', borderRadius: '6px', backgroundColor: '#007bff' }}>
-                        <i className="bi bi-cpu-fill text-warning mr-1"></i> {catName}
+                    <span className="font-weight-bold mr-4" style={{ fontSize: '0.85rem', padding: '6px 14px', borderRadius: '8px', backgroundColor: '#eff6ff', color: '#3b82f6', letterSpacing: '0.5px' }}>
+                        <i className="bi bi-bookmark-star-fill text-primary mr-2 opacity-75"></i> {catName}
                     </span>
-                    <span className="font-weight-bold">
-                        <i className="bi bi-calendar3 mr-1.5 text-primary"></i> Xuất bản ngày: {dateFormatted}
+                    <span style={{ fontSize: '0.9rem', color: '#64748b', fontWeight: 500 }}>
+                        <i className="bi bi-calendar-event mr-2 text-muted"></i> Xuất bản: {dateFormatted}
                     </span>
                 </div>
 
                 {/* 3. Ảnh Banner bài viết công nghệ */}
                 {imgUrl && (
-                    <div className="text-center mb-4 rounded-lg overflow-hidden bg-light border-0 shadow-sm" style={{ maxHeight: '420px', borderRadius: '12px' }}>
+                    <div className="text-center mb-5 overflow-hidden bg-light border-0" style={{ maxHeight: '500px', borderRadius: '20px', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }}>
                         <img
                             src={imgUrl.startsWith('http') ? imgUrl : `https://localhost:7243${imgUrl}`}
                             alt={title}
                             className="img-fluid w-100"
-                            style={{ maxHeight: '420px', objectFit: 'cover' }}
+                            style={{ maxHeight: '500px', objectFit: 'cover' }}
                             onError={(e) => {
                                 e.target.onerror = null;
                                 // Đổi ảnh dự phòng thành ảnh linh kiện công nghệ high-tech
@@ -128,17 +131,20 @@ const BlogDetail = () => {
 
                 {/* 4. Nội dung bài viết chi tiết đổ mã HTML trơn */}
                 <div
-                    className="blog-content-html text-secondary mt-3 pl-1 pr-1"
-                    style={{ fontSize: '1.02rem', lineHeight: '1.85', color: '#333', letterSpacing: '0.1px' }}
+                    className="blog-content-html mt-2 pl-1 pr-1"
+                    style={{ fontSize: '1.1rem', lineHeight: '1.9', color: '#334155', letterSpacing: '0.2px' }}
                     dangerouslySetInnerHTML={{ __html: content }}
                 />
 
                 {/* Khối bản quyền đồ án ký tên Phạm Đăng Khoa chuyên nghiệp */}
-                <div className="mt-5 pt-4 border-top text-right" style={{ borderColor: '#f2f2f2' }}>
-                    <p className="font-italic small text-muted mb-0">Hệ thống quản trị nội dung CMS v12.5</p>
-                    <p className="font-weight-bold small text-primary mb-0">
-                        Sinh viên thực hiện: <span className="text-dark">{post.authorName ?? "Phạm Đăng Khoa"}</span> - Lớp: CCQ2311B - HITC
-                    </p>
+                <div className="mt-5 pt-4 text-right" style={{ borderTop: '2px dashed #f1f5f9' }}>
+                    <div className="d-inline-block text-left" style={{ background: '#f8fafc', padding: '15px 25px', borderRadius: '12px' }}>
+                        <p className="font-italic text-muted mb-1" style={{ fontSize: '0.85rem' }}>Hệ thống quản trị nội dung CMS v12.5</p>
+                        <p className="font-weight-bold mb-0" style={{ color: '#1e293b', fontSize: '0.95rem' }}>
+                            Sinh viên thực hiện: <span style={{ color: '#3b82f6' }}>{post.authorName ?? "Phạm Đăng Khoa"}</span><br/>
+                            <span className="font-weight-normal text-muted" style={{ fontSize: '0.85rem' }}>Lớp: CCQ2311B - HITC</span>
+                        </p>
+                    </div>
                 </div>
 
             </article>

@@ -1,4 +1,9 @@
 ﻿@model IEnumerable<CMS.Data.Entities.Post>
+@*
+ * Sinh vi�n: Ph?m �ang Khoa
+ * M� Sinh Vi�n : 2123110058
+ * L?p: CCQ2311B - Tru?ng Cao �?ng C�ng Thuong TP.HCM
+ *@
 
 @{
     ViewData["Title"] = "Quản lý bài viết";
@@ -51,9 +56,7 @@
                             @item.Title
                         </h3>
 
-                        <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1 m-0">
-                            @item.Content
-                        </p>
+                        <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1 m-0">@Html.Raw(item.Content)</p>
 
                         <div class="text-xs text-slate-400 font-medium pt-2 border-t border-slate-100">
                             <i class="bi bi-clock mr-1"></i> Ngày đăng: @item.CreatedDate.ToString("dd/MM/yyyy")
@@ -91,6 +94,27 @@
                     Viết bài mới ngay
                 </a>
             </div>
+        </div>
+    }
+
+    @* GIAO DIỆN PHÂN TRANG (PAGINATION) *@
+    @if (ViewBag.TotalPages != null && ViewBag.TotalPages > 1)
+    {
+        <div class="mt-6 flex items-center justify-center">
+            <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    var idParam = ViewBag.CategoryId != null ? $"id={ViewBag.CategoryId}&" : "";
+                    if (i == ViewBag.CurrentPage)
+                    {
+                        <a href="?@(idParam)page=@i" aria-current="page" class="relative z-10 inline-flex items-center bg-sky-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600 border border-sky-600">@i</a>
+                    }
+                    else
+                    {
+                        <a href="?@(idParam)page=@i" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-sky-600 transition-colors focus:z-20">@i</a>
+                    }
+                }
+            </nav>
         </div>
     }
 </div>

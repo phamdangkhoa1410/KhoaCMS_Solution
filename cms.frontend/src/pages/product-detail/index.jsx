@@ -140,9 +140,11 @@ const ProductDetail = () => {
                         {/* Mô tả chi tiết */}
                         <div className="my-4">
                             <h6 className="font-weight-bold text-dark border-bottom pb-2">📍 Mô tả sản phẩm:</h6>
-                            <p className="text-secondary small mt-2" style={{ lineHeight: '1.6' }}>
-                                {product.description || product.Description || 'Sản phẩm cao cấp thuộc phân hệ Fashion Boutique hiện chưa được cập nhật mô tả chi tiết từ hệ thống quản trị nội dung.'}
-                            </p>
+                            <div 
+                                className="text-secondary small mt-2" 
+                                style={{ lineHeight: '1.6' }}
+                                dangerouslySetInnerHTML={{ __html: product.description || product.Description || 'Sản phẩm cao cấp thuộc phân hệ Fashion Boutique hiện chưa được cập nhật mô tả chi tiết từ hệ thống quản trị nội dung.' }} 
+                            />
                         </div>
 
                         {/* Số lượng tồn kho và nút mua */}

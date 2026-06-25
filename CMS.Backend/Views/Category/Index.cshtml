@@ -1,4 +1,9 @@
 ﻿@model IEnumerable<CMS.Data.Entities.Category>
+@*
+ * Sinh vi�n: Ph?m �ang Khoa
+ * M� Sinh Vi�n : 2123110058
+ * L?p: CCQ2311B - Tru?ng Cao �?ng C�ng Thuong TP.HCM
+ *@
 
 @{
     ViewData["Title"] = "Quản lý danh mục";
@@ -59,7 +64,7 @@
                             </td>
 
                             <td class="p-4">
-                                <p class="m-0 text-sm text-slate-500 max-w-md truncate" title="@item.Description">
+                                <p class="m-0 text-sm text-slate-500 max-w-md truncate" title="@Html.Raw(item.Description)">
                                     @(string.IsNullOrEmpty(item.Description) ? "Không có mô tả" : item.Description)
                                 </p>
                             </td>

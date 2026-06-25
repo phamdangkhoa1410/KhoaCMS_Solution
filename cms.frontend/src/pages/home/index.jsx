@@ -36,16 +36,19 @@ const formatDate = (d) => {
 
 // ─── TIÊU ĐỀ PHÂN KHU ───────────────────────────────────────────────────────
 const SectionTitle = ({ icon, title, to, linkText }) => (
-    <div
-        className="d-flex justify-content-between align-items-center mb-4"
-        style={{ borderBottom: '2px solid #e9ecef', paddingBottom: '10px' }}
-    >
-        <h5 className="font-weight-bold text-dark text-uppercase mb-0" style={{ fontSize: '1rem', letterSpacing: '0.5px' }}>
-            <i className={`${icon} text-primary mr-2`}></i>{title}
-        </h5>
+    <div className="d-flex justify-content-between align-items-end mb-4 position-relative" style={{ paddingBottom: '12px' }}>
+        <h4 className="font-weight-bold text-dark text-uppercase mb-0 position-relative z-index-1" style={{ fontSize: '1.25rem', letterSpacing: '0.5px' }}>
+            <span className="d-inline-flex align-items-center justify-content-center rounded-circle mr-2" style={{ width: '38px', height: '38px', background: 'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)', color: '#fff', boxShadow: '0 4px 10px rgba(142, 197, 252, 0.4)' }}>
+                <i className={`${icon}`}></i>
+            </span>
+            {title}
+        </h4>
+        <div className="position-absolute" style={{ bottom: 0, left: 0, width: '60px', height: '4px', background: 'linear-gradient(90deg, #4facfe 0%, #00f2fe 100%)', borderRadius: '4px' }}></div>
+        <div className="position-absolute" style={{ bottom: 0, left: 0, width: '100%', height: '2px', background: '#edf2f7', zIndex: -1 }}></div>
+        
         {to && (
-            <Link to={to} className="text-primary font-weight-bold small text-decoration-none" style={{ fontSize: '0.82rem' }}>
-                {linkText || 'Xem tất cả'} <i className="bi bi-chevron-right" style={{ fontSize: '0.7rem' }}></i>
+            <Link to={to} className="btn btn-sm px-3 rounded-pill font-weight-bold text-primary" style={{ backgroundColor: '#f0f7ff', transition: 'all 0.3s' }} onMouseEnter={e => { e.target.style.backgroundColor = '#4facfe'; e.target.style.color = 'white'; }} onMouseLeave={e => { e.target.style.backgroundColor = '#f0f7ff'; e.target.style.color = '#007bff'; }}>
+                {linkText || 'Xem tất cả'} <i className="bi bi-arrow-right-short" style={{ fontSize: '1.2rem', verticalAlign: 'middle' }}></i>
             </Link>
         )}
     </div>
@@ -151,25 +154,31 @@ const Home = () => {
 
             <div className="container my-5 px-3 px-md-4">
 
-                {/* ══ [2] CARD TRUNG TÂM "DÀNH TỰ THỰC HÀNH" ════════════════ */}
+                {/* ══ [2] CARD TRUNG TÂM "DÀNH TỰ THỰC HÀNH" (PREMIUM) ════════════════ */}
                 <div
-                    className="text-center mb-5 py-4 px-3 bg-white"
+                    className="text-center mb-5 py-5 px-3 position-relative overflow-hidden"
                     style={{
-                        borderRadius: '12px',
-                        boxShadow: '0 2px 16px rgba(0,0,0,0.06)',
-                        borderTop: '3px solid #007bff',
+                        borderRadius: '24px',
+                        background: 'linear-gradient(135deg, #ffffff 0%, #f8faff 100%)',
+                        boxShadow: '0 10px 40px rgba(0, 123, 255, 0.08)',
+                        border: '1px solid rgba(0, 123, 255, 0.1)',
                     }}
                 >
-                    <div className="d-flex align-items-center justify-content-center mb-2" style={{ gap: '10px' }}>
-                        <span style={{ height: '1px', width: '36px', background: 'linear-gradient(to right, transparent, #007bff)', display: 'inline-block' }} />
-                        <i className="bi bi-mortarboard-fill text-primary" style={{ fontSize: '1.5rem' }}></i>
-                        <span style={{ height: '1px', width: '36px', background: 'linear-gradient(to left, transparent, #007bff)', display: 'inline-block' }} />
+                    <div className="position-absolute" style={{ top: '-50px', left: '-50px', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(79, 172, 254, 0.2) 0%, transparent 70%)', borderRadius: '50%' }}></div>
+                    <div className="position-absolute" style={{ bottom: '-50px', right: '-50px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(142, 197, 252, 0.2) 0%, transparent 70%)', borderRadius: '50%' }}></div>
+                    
+                    <div className="d-flex align-items-center justify-content-center mb-3" style={{ gap: '15px', position: 'relative', zIndex: 1 }}>
+                        <span style={{ height: '2px', width: '60px', background: 'linear-gradient(to right, transparent, #4facfe)', borderRadius: '2px' }} />
+                        <div className="rounded-circle d-flex align-items-center justify-content-center shadow" style={{ width: '50px', height: '50px', background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white' }}>
+                            <i className="bi bi-mortarboard-fill" style={{ fontSize: '1.5rem' }}></i>
+                        </div>
+                        <span style={{ height: '2px', width: '60px', background: 'linear-gradient(to left, transparent, #00f2fe)', borderRadius: '2px' }} />
                     </div>
-                    <h4 className="font-weight-bold text-dark text-uppercase mb-1" style={{ letterSpacing: '3px', fontSize: '1.2rem' }}>
-                        Dành Tự Thực Hành
-                    </h4>
-                    <p className="text-muted mb-0 small">
-                        Đồ án tốt nghiệp — Phạm Đăng Khoa · MSSV: 2123110058 · Lớp CCQ2311B · HITC
+                    <h3 className="font-weight-bold text-dark text-uppercase mb-2 position-relative z-index-1" style={{ letterSpacing: '2px', background: '-webkit-linear-gradient(45deg, #1a2a6c, #b21f1f, #fdbb2d)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                        Đồ Án Tốt Nghiệp CMS
+                    </h3>
+                    <p className="mb-0 font-weight-medium position-relative z-index-1" style={{ color: '#4a5568', fontSize: '1.05rem' }}>
+                        Phạm Đăng Khoa <span className="mx-2 text-muted">|</span> MSSV: 2123110058 <span className="mx-2 text-muted">|</span> Lớp CCQ2311B <span className="mx-2 text-muted">|</span> HITC
                     </p>
                 </div>
 
@@ -202,11 +211,21 @@ const Home = () => {
                                     key={catId}
                                     id={`cat-btn-${catId}`}
                                     type="button"
-                                    className={`btn font-weight-bold ${activeCatId === catId ? 'btn-primary' : 'btn-outline-secondary'}`}
-                                    style={{ borderRadius: '20px', fontSize: '0.8rem', padding: '7px 18px', transition: 'all 0.2s' }}
+                                    className={`btn font-weight-bold ${activeCatId === catId ? 'btn-primary' : 'bg-white text-dark shadow-sm'}`}
+                                    style={{ 
+                                        borderRadius: '20px', 
+                                        fontSize: '0.85rem', 
+                                        padding: '8px 20px', 
+                                        transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
+                                        border: activeCatId === catId ? 'none' : '1px solid #edf2f7',
+                                        background: activeCatId === catId ? 'linear-gradient(to right, #4facfe 0%, #00f2fe 100%)' : 'white',
+                                        color: activeCatId === catId ? 'white' : '#4a5568'
+                                    }}
                                     onClick={() => handleCategoryClick(catId)}
+                                    onMouseEnter={e => { if (activeCatId !== catId) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)'; } }}
+                                    onMouseLeave={e => { if (activeCatId !== catId) { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 .125rem .25rem rgba(0,0,0,.075)'; } }}
                                 >
-                                    <i className="bi bi-laptop mr-1"></i>{catName}
+                                    <i className="bi bi-laptop mr-2" style={{ opacity: 0.7 }}></i>{catName}
                                 </button>
                             );
                         })}
@@ -255,54 +274,66 @@ const Home = () => {
                 <div
                     className="border-0 shadow-lg position-relative overflow-hidden mb-5 p-4 p-md-5"
                     style={{
-                        borderRadius: '12px',
-                        background: 'linear-gradient(135deg, #0d1b2e 0%, #1a2a4a 50%, #0d1b2e 100%)',
+                        borderRadius: '24px',
+                        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+                        boxShadow: '0 20px 40px rgba(15, 23, 42, 0.4)',
+                        border: '1px solid rgba(255, 255, 255, 0.05)'
                     }}
                 >
-                    <div className="row align-items-center">
+                    {/* Glowing Orbs Background */}
+                    <div className="position-absolute" style={{ top: '-10%', left: '-5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(20px)' }}></div>
+                    <div className="position-absolute" style={{ bottom: '-10%', right: '-5%', width: '250px', height: '250px', background: 'radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%)', borderRadius: '50%', filter: 'blur(20px)' }}></div>
+                    
+                    <div className="row align-items-center position-relative z-index-1">
                         <div className="col-lg-8 text-white">
                             <span
-                                className="badge badge-warning text-uppercase font-weight-bold px-3 py-2 mb-3 d-inline-block"
-                                style={{ fontSize: '0.68rem', letterSpacing: '0.5px', borderRadius: '6px' }}
+                                className="badge text-uppercase font-weight-bold px-3 py-2 mb-4 d-inline-flex align-items-center"
+                                style={{ fontSize: '0.75rem', letterSpacing: '1px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.1)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.2)' }}
                             >
-                                <i className="bi bi-shield-check mr-1"></i>Full-Stack Architecture
+                                <i className="bi bi-cpu mr-2" style={{ fontSize: '1rem' }}></i> Kiến Trúc Hệ Thống Full-Stack
                             </span>
-                            <h3 className="font-weight-bold mb-3 text-uppercase text-white" style={{ fontSize: '1.3rem' }}>
+                            <h2 className="font-weight-bold mb-3 text-uppercase" style={{ fontSize: '1.8rem', background: '-webkit-linear-gradient(to right, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '1px' }}>
                                 KHOA LAPTOP MANAGEMENT SYSTEM
-                            </h3>
-                            <p className="small mb-3" style={{ lineHeight: 1.65, opacity: 0.88, color: '#c9d1d9' }}>
-                                Hệ thống thương mại điện tử toàn diện — Kết hợp
-                                <strong className="text-warning"> ASP.NET Core 8 API </strong>
-                                lưu trữ SQL Server, upload ảnh thật
-                                <strong className="text-info"> wwwroot/uploads/</strong>,
-                                hiển thị real-time trên <strong className="text-info">ReactJS SPA</strong>.
+                            </h2>
+                            <p className="mb-4" style={{ lineHeight: 1.8, fontSize: '1.05rem', color: '#94a3b8' }}>
+                                Hệ thống thương mại điện tử toàn diện — Sức mạnh lõi từ
+                                <strong className="text-white mx-1">ASP.NET Core 8 API</strong>
+                                với cơ sở dữ liệu SQL Server, quản lý file thực tế tại
+                                <strong className="text-white mx-1">wwwroot/uploads/</strong>,
+                                kết hợp tốc độ hiển thị siêu tốc (SPA) của <strong style={{ color: '#61dafb' }}>ReactJS</strong>.
                             </p>
-                            <div className="row no-gutters py-2 px-3 rounded" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                <div className="col-sm-5 mb-2 mb-sm-0">
-                                    <small className="d-block text-uppercase font-weight-bold" style={{ fontSize: '10px', color: '#8b949e' }}>Sinh viên thực hiện:</small>
-                                    <strong className="text-white" style={{ fontSize: '0.9rem' }}>Phạm Đăng Khoa</strong>
+                            <div className="row no-gutters py-3 px-4 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)' }}>
+                                <div className="col-sm-5 mb-3 mb-sm-0">
+                                    <small className="d-block text-uppercase font-weight-bold mb-1" style={{ fontSize: '11px', color: '#64748b', letterSpacing: '1px' }}>Sinh viên thực hiện</small>
+                                    <strong className="text-white" style={{ fontSize: '1rem' }}>Phạm Đăng Khoa</strong>
                                 </div>
-                                <div className="col-sm-3 mb-2 mb-sm-0">
-                                    <small className="d-block text-uppercase font-weight-bold" style={{ fontSize: '10px', color: '#8b949e' }}>MSSV:</small>
-                                    <strong className="text-white" style={{ fontSize: '0.9rem' }}>2123110058</strong>
+                                <div className="col-sm-3 mb-3 mb-sm-0">
+                                    <small className="d-block text-uppercase font-weight-bold mb-1" style={{ fontSize: '11px', color: '#64748b', letterSpacing: '1px' }}>Mã SV</small>
+                                    <strong className="text-white" style={{ fontSize: '1rem' }}>2123110058</strong>
                                 </div>
                                 <div className="col-sm-4">
-                                    <small className="d-block text-uppercase font-weight-bold" style={{ fontSize: '10px', color: '#8b949e' }}>Lớp:</small>
-                                    <strong className="text-white" style={{ fontSize: '0.9rem' }}>CCQ2311B — HITC</strong>
+                                    <small className="d-block text-uppercase font-weight-bold mb-1" style={{ fontSize: '11px', color: '#64748b', letterSpacing: '1px' }}>Lớp</small>
+                                    <strong className="text-white" style={{ fontSize: '1rem' }}>CCQ2311B — HITC</strong>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-4 mt-4 mt-lg-0">
-                            <div className="d-flex flex-column" style={{ gap: '10px' }}>
+                        <div className="col-lg-4 mt-5 mt-lg-0">
+                            <div className="d-flex flex-column" style={{ gap: '15px' }}>
                                 <Link to="/products"
-                                    className="btn btn-primary font-weight-bold text-uppercase text-center py-2"
-                                    style={{ borderRadius: '8px', fontSize: '0.8rem' }}>
-                                    <i className="bi bi-display mr-2"></i>Vào Kho Laptop
+                                    className="btn font-weight-bold text-uppercase text-center py-3 shadow"
+                                    style={{ borderRadius: '12px', fontSize: '0.9rem', background: 'linear-gradient(to right, #3b82f6, #2dd4bf)', color: 'white', border: 'none', transition: 'transform 0.2s' }}
+                                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                                >
+                                    <i className="bi bi-controller mr-2" style={{ fontSize: '1.2rem' }}></i> Khám Phá Kho Laptop
                                 </Link>
                                 <Link to="/blogs"
-                                    className="btn btn-outline-light font-weight-bold text-uppercase text-center py-2"
-                                    style={{ borderRadius: '8px', fontSize: '0.8rem' }}>
-                                    <i className="bi bi-newspaper mr-2"></i>Tin tức Công nghệ
+                                    className="btn font-weight-bold text-uppercase text-center py-3"
+                                    style={{ borderRadius: '12px', fontSize: '0.9rem', background: 'rgba(255,255,255,0.05)', color: 'white', border: '1px solid rgba(255,255,255,0.1)', transition: 'all 0.2s' }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'scale(1.02)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'scale(1)'; }}
+                                >
+                                    <i className="bi bi-newspaper mr-2" style={{ fontSize: '1.2rem' }}></i> Tin Tức Công Nghệ
                                 </Link>
                             </div>
                         </div>

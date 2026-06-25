@@ -26,7 +26,7 @@ namespace CMS.Backend.Controllers.Api
 
         // GET: api/Product/paged?page=1&pageSize=12
         [HttpGet("paged")]
-        public async Task<IActionResult> GetPagedProducts(int page = 1, int pageSize = 12)
+        public async Task<IActionResult> GetPagedProducts(int page = 1, int pageSize = 5)
         {
             var totalItems = await _context.Products.CountAsync();
             var totalPages = (int)System.Math.Ceiling(totalItems / (double)pageSize);
@@ -86,7 +86,7 @@ namespace CMS.Backend.Controllers.Api
 
         // GET: api/Product/filter?minPrice=1000000&maxPrice=20000000&page=1&pageSize=12
         [HttpGet("filter")]
-        public async Task<IActionResult> FilterProducts(decimal minPrice = 0, decimal maxPrice = 999999999, int page = 1, int pageSize = 12)
+        public async Task<IActionResult> FilterProducts(decimal minPrice = 0, decimal maxPrice = 999999999, int page = 1, int pageSize = 5)
         {
             var query = _context.Products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
 
@@ -121,7 +121,7 @@ namespace CMS.Backend.Controllers.Api
 
         // GET: api/Product/search?keyword=laptop&page=1&pageSize=12
         [HttpGet("search")]
-        public async Task<IActionResult> SearchProducts(string keyword, int page = 1, int pageSize = 12)
+        public async Task<IActionResult> SearchProducts(string keyword, int page = 1, int pageSize = 5)
         {
             if (string.IsNullOrWhiteSpace(keyword))
             {
@@ -166,7 +166,7 @@ namespace CMS.Backend.Controllers.Api
             decimal minPrice = 0, 
             decimal maxPrice = 999999999, 
             int page = 1, 
-            int pageSize = 12)
+            int pageSize = 5)
         {
             var query = _context.Products.AsQueryable();
 
